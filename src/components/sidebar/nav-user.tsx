@@ -1,0 +1,95 @@
+'use client'
+
+import { FaCirclePlus, FaCircleUser, FaCreditCard, FaIdCard, FaPersonWalkingArrowRight } from "react-icons/fa6";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "../ui/sidebar";
+//import { useUser } from "@/hooks/use-user";
+import { ChevronsUpDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+export function NavUser() {
+  //const { user, signOutUser } = useUser()
+  const { isMobile } = useSidebar()
+  const router = useRouter()
+  
+  const handleSignOut = async () => {
+    //await signOutUser()
+    router.push('/')
+  }
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              {/* <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src={imgRedCar.src} alt={user?.name} />
+                <AvatarFallback className="rounded-lg">
+                  <FaCircleUser />
+                </AvatarFallback>
+              </Avatar> */}
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                {/* <span className="truncate font-medium">{user?.name}</span>
+                <span className="truncate text-xs">{user?.email}</span> */}
+                <span className="truncate font-medium">Vini</span>
+                <span className="truncate text-xs">vini@v.com.br</span>
+              </div>
+              <ChevronsUpDown className="ml-auto size-4" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            side={isMobile ? "bottom" : "right"}
+            align="end"
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                {/* <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={imgRedCar.src} alt={user?.name} />
+                  <AvatarFallback className="rounded-lg">
+                    <FaCircleUser />
+                  </AvatarFallback>
+                </Avatar> */}
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  {/* <span className="truncate font-medium">{user?.name}</span>
+                  <span className="truncate text-xs">{user?.email}</span> */}
+                  <span className="truncate font-medium">Vini</span>
+                  <span className="truncate text-xs">vini@v.com.br</span>
+                </div>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <FaCirclePlus />
+                Criar Frota
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <FaIdCard />
+                Habilitação
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <FaCreditCard />
+                Pagamento
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer" variant='destructive' onSelect={handleSignOut}>
+              <FaPersonWalkingArrowRight />
+              Freiar e Sair do Piloto
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  )
+}
