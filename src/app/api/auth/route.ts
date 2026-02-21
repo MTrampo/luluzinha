@@ -1,5 +1,5 @@
 import { UserRequestBody } from "@/commons/models/user";
-import { signUpUserApi } from "./auth.api";
+import { signUpUserApi } from "../../../back/account/auth.api";
 
 export async function POST(request: Request) {
   try {
@@ -7,6 +7,7 @@ export async function POST(request: Request) {
     
     const result = await signUpUserApi(body);
     return Response.json(result, { status: result?.status ?? 500 });
+
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Erro desconhecido.";
     return Response.json({

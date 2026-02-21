@@ -16,7 +16,8 @@
     "utils": "@/commons/lib/tw-merge",
     "ui": "@/components/ui",
     "lib": "@/commons/lib",
-    "hooks": "@/hooks"
+    "hooks": "@/hooks",
+    "back": "@/back"
   },
   "registries": {}
 }

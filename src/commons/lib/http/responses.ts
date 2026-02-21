@@ -22,6 +22,13 @@ export const ApiResponse = {
     error: input.error
   }),
 
+  Unauthorized: (input: ResponseInput<null>): ResponseProps<null> => ({
+    status: HttpStatusEnum.Unauthorized,
+    message: input.message,
+    data: null,
+    error: input.error
+  }),
+
   NotFound: (input: ResponseInput<null>): ResponseProps<null> => ({
     status: HttpStatusEnum.NotFound,
     message: input.message,

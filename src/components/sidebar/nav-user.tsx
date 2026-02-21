@@ -7,16 +7,12 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "../
 //import { useUser } from "@/hooks/use-user";
 import { ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signOutAction } from "@/actions/auth";
+import { useProfileStore } from "@/store/use-profile";
 
 export function NavUser() {
-  //const { user, signOutUser } = useUser()
+  const profile = useProfileStore((state) => state.profile)
   const { isMobile } = useSidebar()
-  const router = useRouter()
-  
-  const handleSignOut = async () => {
-    //await signOutUser()
-    router.push('/')
-  }
 
   return (
     <SidebarMenu>
@@ -34,10 +30,8 @@ export function NavUser() {
                 </AvatarFallback>
               </Avatar> */}
               <div className="grid flex-1 text-left text-sm leading-tight">
-                {/* <span className="truncate font-medium">{user?.name}</span>
-                <span className="truncate text-xs">{user?.email}</span> */}
-                <span className="truncate font-medium">Vini</span>
-                <span className="truncate text-xs">vini@v.com.br</span>
+                <span className="truncate font-medium">{profile?.name}</span>
+                <span className="truncate text-xs">{profile?.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -57,25 +51,23 @@ export function NavUser() {
                   </AvatarFallback>
                 </Avatar> */}
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  {/* <span className="truncate font-medium">{user?.name}</span>
-                  <span className="truncate text-xs">{user?.email}</span> */}
-                  <span className="truncate font-medium">Vini</span>
-                  <span className="truncate text-xs">vini@v.com.br</span>
+                  <span className="truncate font-medium">{profile?.name}</span>
+                  <span className="truncate text-xs">{profile?.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
+            {/* <DropdownMenuGroup>
               <DropdownMenuItem>
                 <FaCirclePlus />
                 Criar Frota
               </DropdownMenuItem>
-            </DropdownMenuGroup>
+            </DropdownMenuGroup> */}
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <FaIdCard />
-                Habilitação
+                Luluzinha
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <FaCreditCard />
@@ -83,9 +75,9 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer" variant='destructive' onSelect={handleSignOut}>
+            <DropdownMenuItem className="cursor-pointer" variant='destructive' onSelect={signOutAction}>
               <FaPersonWalkingArrowRight />
-              Freiar e Sair do Piloto
+              Encerrar Expediente
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

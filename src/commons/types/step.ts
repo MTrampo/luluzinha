@@ -1,0 +1,1 @@
+export type SignInStepType = 'login' | 'verify' | 'forgot-password';
