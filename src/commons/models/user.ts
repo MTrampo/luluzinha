@@ -20,6 +20,17 @@ export interface Profile {
   updatedAt?: string;
 }
 
+export interface ProfileFormatted {
+  id: string
+  name: string
+  email: string
+  avatar: string | null
+  createdAt: Date
+  updatedAt: Date
+  updatedAtFormatted: string
+  createdAtFormatted: string
+}
+
 export type SignInRequestBody = Omit<UserRequestBody, "name">
 
 export type UserSignUpFormInputs = z.infer<typeof userSignUpFormSchema>

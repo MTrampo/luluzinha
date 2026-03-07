@@ -1,5 +1,5 @@
 import { ResetPasswordRequestBody, SignInRequestBody, UserRequestBody } from "@/commons/models/user";
-import { confirmCodePasswordReset, createAuthSupabase, createProfileSupabase, killAuthSupabase, sendPasswordResetEmail, signInWithEmail, updatePassword, verifyCode } from "./auth.supabase";
+import { confirmCodePasswordReset, createAuthSupabase, createProfileSupabase, getUserLogged, killAuthSupabase, sendPasswordResetEmail, signInWithEmail, updatePassword, verifyCode } from "../repository/auth.supabase";
 import { resolveAuthError } from "@/commons/errors/auth";
 import { ApiResponse } from "@/commons/lib/http/responses";
 
@@ -150,6 +150,21 @@ export const resetUserPasswordApi = async (body: ResetPasswordRequestBody) => {
 
   return ApiResponse.Ok({
     message: `${data.user?.user_metadata.display_name || 'Rainha'}, sua senha foi redefinida com sucesso! Você já pode entrar com a nova senha.`,
+    data: data
+  });
+}
+
+export const getUserLoggedApi = async () => {
+  const { data, error } = await getUserLogged()
+  if (error) {
+    return ApiResponse.InternalError({
+      message: "Não identificado, faça login novamente.",
+      error: error.message
+    });
+  }
+
+  return ApiResponse.Ok({
+    message: "Dados do usuário logado obtidos com sucesso.",
     data: data
   });
 }

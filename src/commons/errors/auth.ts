@@ -1,4 +1,4 @@
-import { AuthErrorCode } from "../enums/auth";
+import { AuthErrorCodeEnum } from "../enums/auth";
 import { HttpStatusEnum } from "../enums/http";
 
 interface ErrorDetail {
@@ -7,23 +7,23 @@ interface ErrorDetail {
 }
 
 export const AuthErrorMap: Record<string, ErrorDetail> = {
-  [AuthErrorCode.UserAlreadyExists]: {
+  [AuthErrorCodeEnum.UserAlreadyExists]: {
     message: "Este e-mail já está cadastrado.",
     status: HttpStatusEnum.Conflict,
   },
-  [AuthErrorCode.WeakPassword]: {
+  [AuthErrorCodeEnum.WeakPassword]: {
     message: "A senha fornecida é muito fraca.",
     status: HttpStatusEnum.BadRequest,
   },
-  [AuthErrorCode.OverEmailSendRateLimit]: {
+  [AuthErrorCodeEnum.OverEmailSendRateLimit]: {
     message: "Muitas solicitações enviadas. Aguarde um momento.",
     status: HttpStatusEnum.BadRequest,
   },
-  [AuthErrorCode.SignupDisabled]: {
+  [AuthErrorCodeEnum.SignupDisabled]: {
     message: "O cadastro de novos usuários está desativado no momento.",
     status: HttpStatusEnum.Forbidden,
   },
-  [AuthErrorCode.InvalidCredentials]: {
+  [AuthErrorCodeEnum.InvalidCredentials]: {
     message: "E-mail ou senha incorretos.",
     status: HttpStatusEnum.Unauthorized,
   },

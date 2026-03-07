@@ -99,3 +99,10 @@ export const updatePassword = async (newPassword: string) => {
   
   return { data, error }
 }
+
+export const getUserLogged = async () => {
+  const supabase = await serverSupabase()
+  const { data, error } = await supabase.auth.getUser()
+
+  return { data, error }
+}

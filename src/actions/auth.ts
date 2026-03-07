@@ -1,6 +1,6 @@
 'use server'
 
-import { confirmUserEmailApi, resetUserPasswordApi, sendPasswordResetEmailApi, signInUserApi, signOutApi, signUpUserApi } from "@/back/account/auth.api";
+import { confirmUserEmailApi, resetUserPasswordApi, sendPasswordResetEmailApi, signInUserApi, signOutApi, signUpUserApi } from "@/back/account/service/auth.api";
 import { HttpStatusEnum } from "@/commons/enums/http";
 import { ForgotPasswordFormInputs, UserSignInFormInputs, UserSignUpFormInputs } from "@/commons/models/user";
 import { revalidatePath } from "next/cache";

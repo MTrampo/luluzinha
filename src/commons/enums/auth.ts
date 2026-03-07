@@ -1,4 +1,4 @@
-export enum AuthErrorCode {
+export enum AuthErrorCodeEnum {
   // Cadastro e Confirmação
   UserAlreadyExists = "user_already_exists",
   SignupDisabled = "signup_disabled",
