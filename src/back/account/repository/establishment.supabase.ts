@@ -11,3 +11,15 @@ export const selectIdAndSubscriptionIdEstablishmentByUserIdSupabase = async (use
 
   return {  data, error }
 }
+
+export const getEstablishmentBySubscriptionIdSupabase = async (subscriptionId: string) => {
+  const supabase = await serverSupabase()
+
+  const { data } = await supabase
+    .from('establishments')
+    .select('id')
+    .eq('subscription_id', subscriptionId)
+    .single()
+
+  return data
+}

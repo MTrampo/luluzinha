@@ -16,8 +16,8 @@ export const AuthErrorMap: Record<string, ErrorDetail> = {
     status: HttpStatusEnum.BadRequest,
   },
   [AuthErrorCodeEnum.OverEmailSendRateLimit]: {
-    message: "Muitas solicitações enviadas. Aguarde um momento.",
-    status: HttpStatusEnum.BadRequest,
+    message: "Acesso temporariamente bloqueado.Muitas solicitações de e-mail enviadas.",
+    status: HttpStatusEnum.Forbidden,
   },
   [AuthErrorCodeEnum.SignupDisabled]: {
     message: "O cadastro de novos usuários está desativado no momento.",
@@ -27,7 +27,31 @@ export const AuthErrorMap: Record<string, ErrorDetail> = {
     message: "E-mail ou senha incorretos.",
     status: HttpStatusEnum.Unauthorized,
   },
-  // ...
+  [AuthErrorCodeEnum.SamePassword]: {
+    message: "A nova senha deve ser diferente da anterior.",
+    status: HttpStatusEnum.UnprocessableEntity,
+  },
+  [AuthErrorCodeEnum.InvalidPassword]: {
+    message: "Senha inválida ou não atende aos requisitos mínimos de segurança.",
+    status: HttpStatusEnum.BadRequest,
+  },
+  [AuthErrorCodeEnum.UserNotFound]: {
+    message: "Luluzinha não encontrada.",
+    status: HttpStatusEnum.NotFound,
+  },
+  [AuthErrorCodeEnum.InvalidConfirmationToken]: {
+    message: "Código de confirmação inválido.",
+    status: HttpStatusEnum.BadRequest,
+  },
+  [AuthErrorCodeEnum.TokenExpired]: {
+    message: "O token expirou.",
+    status: HttpStatusEnum.BadRequest,
+  },
+
+  [AuthErrorCodeEnum.UndErrConnectTimeout]: {
+    message: "Sobrecarga de conexão. Por favor, tente novamente mais tarde.",
+    status: HttpStatusEnum.InternalServerError,
+  },
 };
 
 export function resolveAuthError(code?: string): ErrorDetail {

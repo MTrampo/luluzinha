@@ -2,7 +2,8 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 const publicApiRoutes = ['/api/auth']
-const publicPaths = ['/', '/entrar', '/cadastrar', '/documento/termo', '/documento/politica']
+const publicPaths = ['/', '/entrar', '/cadastrar', '/assinatura', '/documento/termo', '/documento/politica']
+const authPaths = ['/entrar', '/cadastrar']
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -50,7 +51,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Se tem usuário e ele tenta ir para /entrar ou /cadastrar -> Manda para a Agenda (Fluxo)
-  if (user && isPublicPath && pathname !== '/') {
+  if (user && authPaths.includes(pathname)) {
     const url = request.nextUrl.clone()
     url.pathname = '/painel'
     

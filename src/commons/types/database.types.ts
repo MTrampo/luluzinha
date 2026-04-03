@@ -112,6 +112,75 @@ export type Database = {
           },
         ]
       }
+      invoices: {
+        Row: {
+          amount: number | null
+          created_at: string | null
+          currency: string | null
+          establishment_id: string | null
+          id: string
+          mp_payer_email: string | null
+          mp_payer_id: string | null
+          mp_payment_id: string
+          mp_preapproval_id: string | null
+          mp_subscription_id: string | null
+          paid_at: string | null
+          raw_payload: Json | null
+          status: string | null
+          subscription_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string | null
+          currency?: string | null
+          establishment_id?: string | null
+          id?: string
+          mp_payer_email?: string | null
+          mp_payer_id?: string | null
+          mp_payment_id: string
+          mp_preapproval_id?: string | null
+          mp_subscription_id?: string | null
+          paid_at?: string | null
+          raw_payload?: Json | null
+          status?: string | null
+          subscription_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string | null
+          currency?: string | null
+          establishment_id?: string | null
+          id?: string
+          mp_payer_email?: string | null
+          mp_payer_id?: string | null
+          mp_payment_id?: string
+          mp_preapproval_id?: string | null
+          mp_subscription_id?: string | null
+          paid_at?: string | null
+          raw_payload?: Json | null
+          status?: string | null
+          subscription_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_establishment_id_fkey"
+            columns: ["establishment_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       procedures: {
         Row: {
           created_at: string | null
@@ -180,6 +249,42 @@ export type Database = {
         }
         Relationships: []
       }
+      subscription_inconsistencies: {
+        Row: {
+          created_at: string | null
+          id: string
+          issue_reason: string | null
+          mp_payer_id: number | null
+          mp_preapproval_id: string
+          payer_email_received: string | null
+          payment: string | null
+          preapproval_data: Json | null
+          resolved: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          issue_reason?: string | null
+          mp_payer_id?: number | null
+          mp_preapproval_id: string
+          payer_email_received?: string | null
+          payment?: string | null
+          preapproval_data?: Json | null
+          resolved?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          issue_reason?: string | null
+          mp_payer_id?: number | null
+          mp_preapproval_id?: string
+          payer_email_received?: string | null
+          payment?: string | null
+          preapproval_data?: Json | null
+          resolved?: boolean | null
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           base_value: number
@@ -189,6 +294,8 @@ export type Database = {
           extra_user_price: number | null
           extra_users_count: number | null
           id: string
+          mp_payer_email: string | null
+          mp_payer_id: number | null
           mp_preapproval_plan_id: string | null
           mp_status: string
           mp_subscription_id: string | null
@@ -203,6 +310,8 @@ export type Database = {
           extra_user_price?: number | null
           extra_users_count?: number | null
           id?: string
+          mp_payer_email?: string | null
+          mp_payer_id?: number | null
           mp_preapproval_plan_id?: string | null
           mp_status?: string
           mp_subscription_id?: string | null
@@ -217,6 +326,8 @@ export type Database = {
           extra_user_price?: number | null
           extra_users_count?: number | null
           id?: string
+          mp_payer_email?: string | null
+          mp_payer_id?: number | null
           mp_preapproval_plan_id?: string | null
           mp_status?: string
           mp_subscription_id?: string | null

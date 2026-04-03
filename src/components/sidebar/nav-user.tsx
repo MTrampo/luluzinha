@@ -12,7 +12,15 @@ import { useProfileStore } from "@/store/use-profile";
 
 export function NavUser() {
   const profile = useProfileStore((state) => state.profile)
+  const luluzinha = useProfileStore((state) => state.luluzinha)
+  const clearStore = useProfileStore((state) => state.clearStore)
+
   const { isMobile } = useSidebar()
+
+  const handleSignOut = async () => {
+    await signOutAction()
+    clearStore()
+  }
 
   return (
     <SidebarMenu>
@@ -30,7 +38,7 @@ export function NavUser() {
                 </AvatarFallback>
               </Avatar> */}
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{profile?.name}</span>
+                <span className="truncate font-medium">{luluzinha}</span>
                 <span className="truncate text-xs">{profile?.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -51,7 +59,7 @@ export function NavUser() {
                   </AvatarFallback>
                 </Avatar> */}
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{profile?.name}</span>
+                  <span className="truncate font-medium">{luluzinha}</span>
                   <span className="truncate text-xs">{profile?.email}</span>
                 </div>
               </div>
@@ -75,7 +83,7 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer" variant='destructive' onSelect={signOutAction}>
+            <DropdownMenuItem className="cursor-pointer" variant='destructive' onSelect={handleSignOut}>
               <FaPersonWalkingArrowRight />
               Encerrar Expediente
             </DropdownMenuItem>

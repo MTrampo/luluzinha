@@ -1,0 +1,20 @@
+{
+  "servers": {
+    "my-mcp-server-edfd5983": {
+      "url": "https://mcp.mercadopago.com/mcp",
+      "type": "http"
+    },
+    "my-mcp-server-62f42eeb": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=blcyebxdociwnkejacog",
+      "type": "http"
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
+    }
+  },
+  "inputs": []
+}

@@ -1,6 +1,6 @@
 'use server'
 
-import { confirmUserEmailApi, resetUserPasswordApi, sendPasswordResetEmailApi, signInUserApi, signOutApi, signUpUserApi } from "@/back/account/service/auth.api";
+import { confirmUserEmailApi, getUserLoggedApi, resetUserPasswordApi, sendPasswordResetEmailApi, signInUserApi, signOutApi, signUpUserApi } from "@/back/account/service/auth.api";
 import { HttpStatusEnum } from "@/commons/enums/http";
 import { ForgotPasswordFormInputs, UserSignInFormInputs, UserSignUpFormInputs } from "@/commons/models/user";
 import { revalidatePath } from "next/cache";
@@ -45,8 +45,12 @@ export const resetPasswordAction = async (email: string, input: ForgotPasswordFo
   const response = await resetUserPasswordApi(requestBody)
   if (response.status === HttpStatusEnum.Ok) {
     revalidatePath('/', 'layout')
-    redirect('/painel')
   }
 
+  return response
+}
+
+export const getUserLoggedAction = async () => {
+  const response = await getUserLoggedApi()
   return response
 }

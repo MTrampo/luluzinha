@@ -1,6 +1,7 @@
 'use client'
 
 import { resetPasswordAction, sendForgotPasswordEmailAction, signInUserAction } from "@/actions/auth";
+import { manageSubscriptionEndpointAction } from "@/actions/subscription";
 import { HttpStatusEnum } from "@/commons/enums/http";
 import { ForgotPasswordFormInputs, OtpFormInputs, SendEmailFormInputs, UserSignInFormInputs } from "@/commons/models/user";
 import { SignInStepType } from "@/commons/types/step";
@@ -8,6 +9,7 @@ import { ConfirmEmailForm } from "@/components/forms/confirm-email-form";
 import { ForgotPasswordForm } from "@/components/forms/forgot-password-form";
 import { SignInForm } from "@/components/forms/signin-form";
 import { useProfileStore } from "@/store/use-profile";
+import { useSubscriptionStore } from "@/store/use-subscription";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -17,19 +19,28 @@ export function SignInFlow() {
   const [step, setStep] = useState<SignInStepType>('login')
   const [email, setEmail] = useState('')
   const setProfile = useProfileStore((state) => state.setProfile)
+  const setSubscription = useSubscriptionStore((state) => state.setSubscription)
 
   const signInUser = async (data: UserSignInFormInputs) => {
     try {
       const response = await signInUserAction(data)
       if (response.status === HttpStatusEnum.Ok && response.data?.user) {
+        const userId = response.data.user.id
+
         setProfile({
-          id: response.data.user.id,
+          id: userId,
           email: response.data.user.email || '',
           name: response.data.user.user_metadata.display_name,
           avatarUrl: null,
           createdAt: response.data.user.created_at.toString(),
           updatedAt: response.data.user.updated_at?.toString() || response.data.user.created_at.toString(),
         })
+
+        const subscriptionResponse = await manageSubscriptionEndpointAction(userId)
+        if (subscriptionResponse.data) {
+          setSubscription(subscriptionResponse.data)
+        }
+
         route.push('/painel')
         return
       }
@@ -43,6 +54,18 @@ export function SignInFlow() {
   const sendEmailUser = async (data: SendEmailFormInputs) => {
     try {
       const response = await sendForgotPasswordEmailAction(data.email)
+      if (response.status !== HttpStatusEnum.Ok) {
+        switch (response.status) {
+          case HttpStatusEnum.Forbidden:
+            toast.warning(response.message)
+            break
+          default:
+            toast.error(response.message)
+            break
+        }
+        return
+      }
+      
       toast.success(response.message)
       setStep('forgot-password')
       setEmail(data.email)
@@ -65,8 +88,10 @@ export function SignInFlow() {
         return
       }
       toast.error(response.message)
-    } catch {
+    } catch(error) {
+      console.log('Error in forgotPassword:', error)
       toast.error('Ocorreu um erro ao redefinir sua senha. Por favor, tente novamente mais tarde.')
+      console.error('Error in forgotPassword:', error)
     }
   }
   

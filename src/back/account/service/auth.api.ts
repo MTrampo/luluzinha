@@ -129,6 +129,7 @@ export const confirmUserEmailApi = async (email: string, code: string) => {
 export const resetUserPasswordApi = async (body: ResetPasswordRequestBody) => {
   const { error } = await confirmCodePasswordReset(body.email, body.code)
   if (error) {
+    console.error("Erro ao confirmar código de recuperação:", error);
     const { message, status } = resolveAuthError(error.code);
     const response = {
       status,
@@ -142,14 +143,19 @@ export const resetUserPasswordApi = async (body: ResetPasswordRequestBody) => {
 
   const { data, error: updateError } = await updatePassword(body.password)
   if (updateError) {
-    return ApiResponse.InternalError({
-      message: "Erro ao atualizar a senha do usuário.",
-      error: updateError.message
-    });
+    const { message, status } = resolveAuthError(updateError.code)
+    const response = {
+      status,
+      message,
+      data: null,
+      error: updateError,
+    }
+
+    return response
   }
 
   return ApiResponse.Ok({
-    message: `${data.user?.user_metadata.display_name || 'Rainha'}, sua senha foi redefinida com sucesso! Você já pode entrar com a nova senha.`,
+    message: `${data.user?.user_metadata.display_name || 'Luluzinha'}, sua senha foi redefinida com sucesso! Você já pode entrar com a nova senha.`,
     data: data
   });
 }

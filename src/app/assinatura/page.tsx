@@ -1,9 +1,7 @@
 import Header from "@/components/header";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SiMercadopago } from "react-icons/si";
 import Link from "next/link";
-import { FaCalendarDay, FaCalendarWeek, FaCashRegister, FaClockRotateLeft, FaHandcuffs, FaHandshakeSimple, FaMobileButton, FaPaintbrush, FaUserLock } from "react-icons/fa6";
+import { FaCalendarDay, FaCalendarWeek, FaCashRegister, FaClockRotateLeft, FaHandcuffs, FaHandshakeSimple, FaMobileButton, FaPaintbrush } from "react-icons/fa6";
 import { IoWomanSharp } from "react-icons/io5";
 import { ButtonSubscription } from "@/components/buttons/subscription";
 
@@ -125,7 +123,9 @@ export default function Subscription() {
             </div>
           </div>
         </div>
-        <ButtonSubscription className="w-full" text="TORNAR-ME UMA LULUZINHA"/>
+        <ButtonSubscription variant="theme" size="lg" className="w-full">
+          TORNAR-ME UMA LULUZINHA
+        </ButtonSubscription>
         <p className="text-muted-foreground text-sm leading-normal font-normal text-center">
           Ao assinar, você concorda com nossos <Link className="text-purple-950" href="/documento/termo">Termos de Serviço</Link>{" "}
           e <Link className="text-purple-950" href="/documento/politica">Política de Privacidade</Link>.
