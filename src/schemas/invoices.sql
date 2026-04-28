@@ -12,7 +12,7 @@ CREATE TABLE public.invoices (
   mp_preapproval_id TEXT,
 
   -- Dados do pagador
-  mp_payer_id TEXT,
+  mp_payer_id BIGINT,
   mp_payer_email TEXT,
 
   -- Valores e status

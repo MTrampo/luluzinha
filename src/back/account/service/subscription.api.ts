@@ -9,7 +9,7 @@ import { saveInvoiceFromAuthorizedPaymentApi } from "@/back/payment/service/invo
 import { getPreapprovalApi } from "@/back/payment/service/payment.api"
 import { MercadoPagoStatusEnum } from "@/commons/enums/subscription"
 import { PreApprovalResponse } from "mercadopago/dist/clients/preApproval/commonTypes"
-import { clearToken, getToken, setToken } from "@/commons/lib/auth/subscription"
+import { clearCookieSubscription, getCookieSubscription, setCookieSubscription } from "@/commons/lib/auth/subscription"
 import { nowBrazilIso, toIsoOrNull } from "@/commons/utils/helper"
 
 export const getSubscriptionByIdApi = async (subscriptionId: string) => {
@@ -296,7 +296,7 @@ export const subscriptionAuthorizedPaymentApi = async (authorizedPaymentId: stri
 }
 
 export const manageUserSubscriptionApi = async (userId: string) => {
-  const subscriptionCookieData = await getToken()
+  const subscriptionCookieData = await getCookieSubscription()
   if (subscriptionCookieData) {
     const subscriptionParsedData: SubscriptionPayloadCookie = JSON.parse(subscriptionCookieData)
     return ApiResponse.Ok({
@@ -319,7 +319,7 @@ export const manageUserSubscriptionApi = async (userId: string) => {
   }
 
   const payloadString = JSON.stringify(payload)
-  await setToken(payloadString)
+  await setCookieSubscription(payloadString)
 
   return ApiResponse.Ok({
     message: "Dados de assinatura encontrados e armazenados no cookie.",
@@ -328,7 +328,7 @@ export const manageUserSubscriptionApi = async (userId: string) => {
 }
 
 export const refreshSubscriptionApi = async (userId: string) => {
-  await clearToken()
+  await clearCookieSubscription()
 
   const subscription = await getSubscriptionIdByUserIdSupabase(userId)
   if (!subscription) {
@@ -344,7 +344,7 @@ export const refreshSubscriptionApi = async (userId: string) => {
   }
 
   const payloadString = JSON.stringify(payload)
-  await setToken(payloadString)
+  await setCookieSubscription(payloadString)
 
   return ApiResponse.Ok({
     message: "Dados de assinatura atualizados com sucesso.",

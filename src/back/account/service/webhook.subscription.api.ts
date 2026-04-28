@@ -102,10 +102,10 @@ const webhookSaveInvoiceFromAuthorizedPaymentApi = async (authorizedPayment: Inv
     const establishment = await webhookGetEstablishmentBySubscriptionIdSupabase(subscription.id)
 
     const payload: InvoiceInsertPayload = {
-      mp_payment_id: authorizedPayment.id!,
+      mp_invoice_id: authorizedPayment.id!,
       mp_subscription_id: authorizedPayment.preapproval_id,
       mp_preapproval_id: authorizedPayment.preapproval_id,
-      mp_payer_id: authorizedPayment.payer_id?.toString() ?? null,
+      mp_payer_id: authorizedPayment.payer_id ?? null,
       mp_payer_email: subscription.mp_payer_email,
       amount: authorizedPayment.transaction_amount ?? 0,
       currency: authorizedPayment.currency_id ?? 'BRL',

@@ -1,6 +1,5 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/sidebar"
-import { ExpiredDialog } from "@/components/dialogs/subscription/expired"
 import { SubscriptionHydrator } from "@/components/subscription/hydrator"
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
@@ -17,9 +16,8 @@ export default async function Layout({ children }: { children: React.ReactNode }
         <AppSidebar />
       </aside>
       <SidebarInset>
-        <SubscriptionHydrator/>
         {children}
-        <ExpiredDialog/>
+        <SubscriptionHydrator/>
       </SidebarInset>
     </SidebarProvider>
   )

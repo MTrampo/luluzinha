@@ -121,7 +121,7 @@ export type Database = {
           id: string
           mp_payer_email: string | null
           mp_payer_id: string | null
-          mp_payment_id: string
+          mp_invoice_id: string
           mp_preapproval_id: string | null
           mp_subscription_id: string | null
           paid_at: string | null
@@ -137,8 +137,8 @@ export type Database = {
           establishment_id?: string | null
           id?: string
           mp_payer_email?: string | null
-          mp_payer_id?: string | null
-          mp_payment_id: string
+          mp_payer_id?: number | null
+          mp_invoice_id: string
           mp_preapproval_id?: string | null
           mp_subscription_id?: string | null
           paid_at?: string | null
@@ -155,7 +155,7 @@ export type Database = {
           id?: string
           mp_payer_email?: string | null
           mp_payer_id?: string | null
-          mp_payment_id?: string
+          mp_invoice_id?: string
           mp_preapproval_id?: string | null
           mp_subscription_id?: string | null
           paid_at?: string | null

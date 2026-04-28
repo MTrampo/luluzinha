@@ -1,8 +1,10 @@
 import { type NextRequest } from "next/server"
-import { updateSession } from "@/commons/lib/supabase/proxy"
+import { updateSession } from "@/commons/lib/supabase/session"
+import { handleRouteAccess } from "./commons/lib/http/security"
 
 export async function proxy(request: NextRequest) {
-  return await updateSession(request)
+  const { user, supabaseResponse } = await updateSession(request)
+  return handleRouteAccess(request, user, supabaseResponse)
 }
 
 export const config = {

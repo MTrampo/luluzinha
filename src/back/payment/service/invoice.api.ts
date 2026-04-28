@@ -30,13 +30,13 @@ export const saveInvoiceFromAuthorizedPaymentApi = async (authorizedPayment: Inv
     const establishment = await getEstablishmentBySubscriptionIdSupabase(subscription.id)
 
     const payload: InvoiceInsertPayload = {
-      mp_payment_id: authorizedPayment.id!,
+      mp_invoice_id: authorizedPayment.id!,
       mp_subscription_id: authorizedPayment.preapproval_id,
       mp_preapproval_id: authorizedPayment.preapproval_id,
-      mp_payer_id: authorizedPayment.payer_id?.toString() ?? null,
+      mp_payer_id: authorizedPayment.payer_id,
       mp_payer_email: subscription.mp_payer_email,
-      amount: authorizedPayment.transaction_amount ?? 0,
-      currency: authorizedPayment.currency_id ?? 'BRL',
+      amount: authorizedPayment.transaction_amount,
+      currency: authorizedPayment.currency_id,
       status: authorizedPayment.payment?.status ?? authorizedPayment.status ?? null,
       paid_at: toIsoOrNull(authorizedPayment.debit_date),
       establishment_id: establishment?.id ?? null,

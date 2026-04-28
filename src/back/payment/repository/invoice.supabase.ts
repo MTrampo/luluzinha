@@ -6,7 +6,7 @@ export const upsertInvoiceSupabase = async (payload: InvoiceInsertPayload) => {
 
   const { data, error } = await supabase
     .from('invoices')
-    .upsert(payload, { onConflict: 'mp_payment_id' })
+    .upsert(payload, { onConflict: 'mp_invoice_id' })
     .select('id')
     .single()
 
@@ -25,25 +25,25 @@ export const getInvoicesByEstablishmentIdSupabase = async (establishmentId: stri
   return { data, error }
 }
 
-export const getInvoiceByMpPaymentIdSupabase = async (mpPaymentId: string) => {
+export const getInvoiceByMpInvoiceIdSupabase = async (mpInvoiceId: string) => {
   const supabase = await serverSupabase()
 
   const { data, error } = await supabase
     .from('invoices')
     .select()
-    .eq('mp_payment_id', mpPaymentId)
+    .eq('mp_invoice_id', mpInvoiceId)
     .single()
 
   return { data, error }
 }
 
-export const updateInvoiceByMpPaymentIdSupabase = async (mpPaymentId: string, payload: InvoiceUpdatePayload) => {
+export const updateInvoiceByMpInvoiceIdSupabase = async (mpInvoiceId: string, payload: InvoiceUpdatePayload) => {
   const supabase = await serverSupabase()
 
   const { data, error } = await supabase
     .from('invoices')
     .update(payload)
-    .eq('mp_payment_id', mpPaymentId)
+    .eq('mp_invoice_id', mpInvoiceId)
     .select('id')
     .single()
 

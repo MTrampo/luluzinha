@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { inter, lexend } from "@/commons/styles/fonts";
 import "@/commons/styles/globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { SubscriptionGuard } from "@/components/subscription/guard";
 
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${lexend.variable} antialiased`}
       >
+        <SubscriptionGuard />
         {children}
         <Toaster richColors position="top-right"/>
       </body>

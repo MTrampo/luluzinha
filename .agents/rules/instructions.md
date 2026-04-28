@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Diretrizes de Desenvolvimento e Arquitetura do Projeto
 
 Você é um assistente de codificação sênior atuando neste projeto. Siga rigorosamente as regras abaixo para garantir a consistência, segurança e qualidade do código.

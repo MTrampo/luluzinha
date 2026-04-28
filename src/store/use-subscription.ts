@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { SubscriptionPayloadCookie } from '@/commons/models/subscription'
-import { MercadoPagoStatusEnum } from '@/commons/enums/subscription'
+import { isSubscriptionActive } from '@/commons/lib/http/security'
 
 interface SubscriptionStore {
 	subscription: SubscriptionPayloadCookie | null
@@ -24,32 +24,13 @@ export const useSubscriptionStore = create<SubscriptionStore>()((set, get) => ({
 
 	isActive: () => {
 		const sub = get().subscription
-
 		if (!sub) return false
-		if (sub.status !== MercadoPagoStatusEnum.Authorized) return false
-		if (!sub.currentPeriodEnd) return true
-
-		return new Date(sub.currentPeriodEnd).getTime() > Date.now()
+		return isSubscriptionActive(sub)
 	},
 
 	isExpired: () => {
 		const sub = get().subscription
 		if (!sub) return false
-
-		const status = sub.status as MercadoPagoStatusEnum
-
-		if (
-			status === MercadoPagoStatusEnum.Cancelled ||
-			status === MercadoPagoStatusEnum.Paused ||
-			status === MercadoPagoStatusEnum.Rejected
-		) {
-			return true
-		}
-
-		if (status === MercadoPagoStatusEnum.Authorized && sub.currentPeriodEnd) {
-			return new Date(sub.currentPeriodEnd).getTime() <= Date.now()
-		}
-
-		return false
+		return !isSubscriptionActive(sub)
 	},
 }))
