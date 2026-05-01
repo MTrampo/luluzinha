@@ -1,3 +1,5 @@
+import { format, parseISO } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 /**
  * Converte um nome completo para formato título seguindo regras comuns
@@ -36,4 +38,38 @@ function formatPart(part: string, isFirstWord: boolean) {
 	if (LOWER_PARTICLES.has(part) && !isFirstWord) return part
 
 	return part.charAt(0).toUpperCase() + part.slice(1)
+}
+
+export const formatCurrencyBRL = (value: number): string => {
+	return new Intl.NumberFormat('pt-BR', {
+		style: 'currency',
+		currency: 'BRL',
+	}).format(value)
+}
+
+export const formatPhone = (phone?: string | null): string => {
+	if (!phone) return ""
+
+	const digits = phone.replace(/\D/g, "")
+	if (digits.length !== 11) return phone
+
+	return `(${digits.slice(0, 2)}) ${digits.slice(2, 3)} ${digits.slice(3, 7)}-${digits.slice(7)}`
+}
+
+export const formatDate = (date?: string | null): string => {
+	if (!date) return ""
+	try {
+		return format(parseISO(date), 'dd/MM/yyyy', { locale: ptBR })
+	} catch {
+		return ""
+	}
+}
+
+export const formatDuration = (minutes?: number | null): string => {
+	if (!minutes) return "0min"
+	if (minutes < 60) return `${minutes}min`
+	const h = Math.floor(minutes / 60)
+	const m = minutes % 60
+	if (m === 0) return `${h}h`
+	return `${h}h ${m}min`
 }

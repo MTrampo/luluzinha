@@ -1,10 +1,11 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/sidebar"
 import { SubscriptionHydrator } from "@/components/subscription/hydrator"
+import { EstablishmentHydrator } from "@/components/establishment/hydrator"
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider 
+    <SidebarProvider
       style={
         {
           "--sidebar-width": "calc(var(--spacing) * 72)",
@@ -12,12 +13,11 @@ export default async function Layout({ children }: { children: React.ReactNode }
         } as React.CSSProperties
       }
     >
-      <aside>
-        <AppSidebar />
-      </aside>
+      <AppSidebar variant="inset" />
       <SidebarInset>
+        <EstablishmentHydrator />
+        <SubscriptionHydrator />
         {children}
-        <SubscriptionHydrator/>
       </SidebarInset>
     </SidebarProvider>
   )

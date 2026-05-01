@@ -47,3 +47,14 @@ export const deleteProcedureSupabase = async (id: string) => {
 
   return { data, error }
 }
+
+export const getProceduresByEstablishmentSupabase = async (establishmentId: string) => {
+  const supabase = await serverSupabase()
+  const { data, error } = await supabase
+    .from('procedures')
+    .select('*')
+    .eq('establishment_id', establishmentId)
+    .order('created_at', { ascending: false })
+
+  return { data, error }
+}

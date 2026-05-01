@@ -1,7 +1,6 @@
 'use client'
 
 import { resetPasswordAction, sendForgotPasswordEmailAction, signInUserAction } from "@/actions/auth";
-import { manageSubscriptionEndpointAction } from "@/actions/subscription";
 import { HttpStatusEnum } from "@/commons/enums/http";
 import { ForgotPasswordFormInputs, OtpFormInputs, SendEmailFormInputs, UserSignInFormInputs } from "@/commons/models/user";
 import { SignInStepType } from "@/commons/types/step";
@@ -9,39 +8,55 @@ import { ConfirmEmailForm } from "@/components/forms/confirm-email-form";
 import { ForgotPasswordForm } from "@/components/forms/forgot-password-form";
 import { SignInForm } from "@/components/forms/signin-form";
 import { useProfileStore } from "@/store/use-profile";
-import { useSubscriptionStore } from "@/store/use-subscription";
+import { useEstablishmentStore } from "@/store/use-establishment";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { setEstablishmentCookie } from "@/commons/lib/auth/establishment";
 
 export function SignInFlow() {
   const route = useRouter()
   const [step, setStep] = useState<SignInStepType>('login')
   const [email, setEmail] = useState('')
   const setProfile = useProfileStore((state) => state.setProfile)
-  const setSubscription = useSubscriptionStore((state) => state.setSubscription)
+  const setEstablishments = useEstablishmentStore((state) => state.setEstablishments)
+  const setActiveEstablishment = useEstablishmentStore((state) => state.setActiveEstablishment)
 
   const signInUser = async (data: UserSignInFormInputs) => {
     try {
       const response = await signInUserAction(data)
       if (response.status === HttpStatusEnum.Ok && response.data?.user) {
-        const userId = response.data.user.id
+        const { user, establishments, subscription, redirectPath } = response.data;
+        const userId = user.id
 
+        // 1. Salva o perfil
         setProfile({
           id: userId,
-          email: response.data.user.email || '',
-          name: response.data.user.user_metadata.display_name,
+          email: user.email || '',
+          name: user.user_metadata.display_name,
           avatarUrl: null,
-          createdAt: response.data.user.created_at.toString(),
-          updatedAt: response.data.user.updated_at?.toString() || response.data.user.created_at.toString(),
+          createdAt: user.created_at.toString(),
+          updatedAt: user.updated_at?.toString() || user.created_at.toString(),
         })
 
-        const subscriptionResponse = await manageSubscriptionEndpointAction(userId)
-        if (subscriptionResponse.data) {
-          setSubscription(subscriptionResponse.data)
+        // 2. Salva estabelecimentos e define o ativo
+        setEstablishments(establishments || [])
+
+        let active = null
+        if (Array.isArray(establishments) && establishments.length > 0) {
+          active = establishments[0]
         }
 
-        route.push('/painel')
+        console.log('SignInFlow: establishments found:', establishments)
+        console.log('SignInFlow: selected active establishment:', active)
+        setActiveEstablishment(active)
+
+        if (active) {
+          await setEstablishmentCookie(active.id)
+        }
+
+        // 3. Redireciona conforme recomendado pelo servidor
+        route.push(redirectPath)
         return
       }
 
@@ -65,7 +80,7 @@ export function SignInFlow() {
         }
         return
       }
-      
+
       toast.success(response.message)
       setStep('forgot-password')
       setEmail(data.email)
@@ -85,21 +100,26 @@ export function SignInFlow() {
       const response = await resetPasswordAction(email, data)
       if (response.status === HttpStatusEnum.Ok) {
         toast.success(response.message)
+
+        // Melhoria: Realizar login automático após alteração de senha
+        await signInUser({
+          email,
+          password: data.password
+        })
         return
       }
       toast.error(response.message)
-    } catch(error) {
-      console.log('Error in forgotPassword:', error)
+    } catch (error) {
       toast.error('Ocorreu um erro ao redefinir sua senha. Por favor, tente novamente mais tarde.')
       console.error('Error in forgotPassword:', error)
     }
   }
-  
+
   return (
-     <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm md:max-w-4xl">
         {step === 'login' ? (
-          <SignInForm signInUser={signInUser} sendEmailUser={sendEmailUser}/>
+          <SignInForm signInUser={signInUser} sendEmailUser={sendEmailUser} />
         ) : step === 'forgot-password' ? (
           <ForgotPasswordForm forgotPassword={forgotPassword} />
         ) : (

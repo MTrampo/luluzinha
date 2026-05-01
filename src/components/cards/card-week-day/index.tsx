@@ -8,21 +8,21 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/commons/lib/tw-merge"
 
 const variants = cva(
-  "p-5 flex flex-col items-center justify-center gap-0.5 rounded-lg transition cursor-pointer",
+  "w-16 h-20 p-2 flex flex-col items-center justify-center gap-1 rounded-lg transition cursor-pointer shrink-0",
   {
     variants: {
       state: {
-        default: "bg-gray-200 text-gray-600 hover:bg-violet-400 hover:text-white",
-        selected: "bg-violet-600 text-white border-violet-800",
-        past: "bg-gray-200 opacity-40 cursor-not-allowed",
+        default: "bg-muted text-muted-foreground hover:bg-primary/80 hover:text-primary-foreground",
+        selected: "bg-primary text-primary-foreground border-primary",
+        past: "bg-muted opacity-40 cursor-not-allowed",
       },
       bordered: {
-        true: "border border-gray-300",
+        true: "border border-border",
         false: "",
       },
     },
     compoundVariants: [
-      { state: "past", bordered: true, className: "border border-gray-300" },
+      { state: "past", bordered: true, className: "border border-border" },
     ],
     defaultVariants: {
       state: "default",
@@ -34,13 +34,13 @@ const variants = cva(
 export type DayCardProps = VariantProps<typeof variants> & { className?: string }
 
 const detailVariants = cva(
-  "p-3 rounded-e border transition cursor-pointer",
+  "p-3 rounded-lg border transition cursor-pointer shadow-sm hover:shadow-md",
   {
     variants: {
       state: {
-        default: "border border-gray-300",
-        active: "border-l-8 border-violet-500 bg-violet-50",
-        past: "opacity-40 cursor-not-allowed border border-gray-300",
+        default: "border-border bg-card",
+        active: "border-l-4 border-primary bg-card border-y-border border-r-border",
+        past: "opacity-40 cursor-not-allowed border-border bg-muted/30 hover:shadow-sm",
       },
     },
     defaultVariants: {
@@ -109,10 +109,16 @@ export function CardWeekDay() {
         aria-pressed={!serviceIsPast}
         aria-label={`Serviço ${svc.title} às ${timeLabel}`}
       >
-        <p className="text-xs text-gray-500">{timeLabel}</p>
-        <div className="my-2">
-          <p className="capitalize font-bold text-gray-600">{svc.title}</p>
-          <p className="text-gray-500">{svc.count} serviços agendados</p>
+        <div className="mb-2">
+          <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+            {timeLabel}
+          </span>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <p className="capitalize text-sm font-semibold text-foreground line-clamp-1">{svc.title}</p>
+          <p className="text-xs text-muted-foreground">
+            {svc.count} {svc.count === 1 ? 'serviço agendado' : 'serviços agendados'}
+          </p>
         </div>
       </div>
     )
@@ -150,11 +156,13 @@ export function CardWeekDay() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
         {services.length === 0 ? (
-          <div className={cn(detailVariants({ state: dayIsPast ? "past" : "default" }))}>
-            <p className="text-xs text-gray-500">{format(selectedDay, "d MMM yyyy", { locale: ptBR })}</p>
-            <div className="my-2">
-              <h3 className="capitalize text-gray-600">Nenhum serviço</h3>
-            </div>
+          <div className={cn(detailVariants({ state: dayIsPast ? "past" : "default" }), "flex flex-col items-center justify-center text-center py-8")}>
+            <p className="text-sm font-medium text-foreground">
+              Nenhum serviço agendado
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {format(selectedDay, "d 'de' MMMM", { locale: ptBR })}
+            </p>
           </div>
         ) : (
           services.map((svc) => <ServiceCard key={svc.id} svc={svc} />)

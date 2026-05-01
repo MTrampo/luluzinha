@@ -19,18 +19,20 @@ export const useProfileStore = create<ProfileStore>()(
       profile: null,
       luluzinha: DEFAULT_NAME,
 
-      // Salva o usuário (Zustand + LocalStorage)
-      setProfile: (userData) =>
+      setProfile: (userData) => {
         set({
           profile: userData,
           luluzinha: userData ? formatCaseName(userData.name) : DEFAULT_NAME,
-        }),
+        });
+      },
 
-      // Limpa tudo
-      clearStore: () => set({ profile: null, luluzinha: DEFAULT_NAME }),
+      clearStore: () => {
+        set({ profile: null, luluzinha: DEFAULT_NAME })
+        localStorage.removeItem(PROFILE_KEY)
+      },
     }),
     {
-      name: PROFILE_KEY, // Nome da chave no localStorage
+      name: PROFILE_KEY,
     }
   )
 )

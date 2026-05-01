@@ -1,32 +1,27 @@
 "use client"
 
-import { useEffect, useCallback } from "react"
+import { useEffect, useCallback, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { manageSubscriptionEndpointAction, refreshSubscriptionAction } from "@/actions/subscription"
-import { useProfileStore } from "@/store/use-profile"
-import { useSubscriptionStore } from "@/store/use-subscription"
 import { isSubscriptionActive } from "@/commons/lib/http/security"
 
 export function SubscriptionGuard() {
-  const userId = useProfileStore((state) => state.profile?.id)
-  const setSubscription = useSubscriptionStore((state) => state.setSubscription)
   const router = useRouter()
   const pathname = usePathname()
+  const [checked, setChecked] = useState(false)
 
-  const ensureSubscription = useCallback(async (uid: string) => {
+  const ensureSubscription = useCallback(async () => {
     try {
-      let response = await manageSubscriptionEndpointAction(uid)
+      let response = await manageSubscriptionEndpointAction()
 
       if (response?.data && !isSubscriptionActive(response.data)) {
-        const refreshResponse = await refreshSubscriptionAction(uid)
+        const refreshResponse = await refreshSubscriptionAction()
         if (refreshResponse?.data) {
           response = refreshResponse
         }
       }
 
       if (response?.data) {
-        setSubscription(response.data)
-
         const isActive = isSubscriptionActive(response.data)
 
         if (pathname === '/assinatura' && isActive) {
@@ -35,30 +30,16 @@ export function SubscriptionGuard() {
       }
     } catch (error) {
       console.error("Failed to ensure subscription", error)
+    } finally {
+      setChecked(true)
     }
-  }, [setSubscription, router, pathname])
+  }, [router, pathname])
 
   useEffect(() => {
-    if (!userId) return
-
-    const store = useSubscriptionStore.getState()
-    const current = store.subscription
-
-    if (current) {
-      const isActive = store.isActive()
-      if (isActive && pathname === '/assinatura') {
-        router.replace('/painel')
-        return
-      }
-
-      if (!isActive && pathname === '/assinatura') {
-        ensureSubscription(userId)
-      }
-      return
+    if (pathname === '/assinatura' && !checked) {
+      ensureSubscription()
     }
-
-    ensureSubscription(userId)
-  }, [ensureSubscription, userId, pathname, router])
+  }, [ensureSubscription, pathname, checked])
 
   return null
 }

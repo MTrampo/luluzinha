@@ -11,19 +11,17 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { useSubscriptionStore } from "@/store/use-subscription"
 import { FaTriangleExclamation, FaUserCheck, FaUserLock } from "react-icons/fa6"
 
 type ExpiredDialogProps = {
   name: string
   open: boolean
+  onDismiss: () => void
 }
 
-export function ExpiredDialog({ name, open }: ExpiredDialogProps) {
-  const dismiss = useSubscriptionStore((state) => state.dismiss)
-
+export function ExpiredDialog({ name, open, onDismiss }: ExpiredDialogProps) {
   return (
-    <AlertDialog open={open} onOpenChange={(value) => { if (!value) dismiss() }}>
+    <AlertDialog open={open} onOpenChange={(value) => { if (!value) onDismiss() }}>
       <AlertDialogContent className="bg-red-100">
         <AlertDialogHeader>
           <AlertDialogMedia className="bg-red-200">
@@ -38,7 +36,7 @@ export function ExpiredDialog({ name, open }: ExpiredDialogProps) {
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="text-red-700 border-red-700 hover:text-red-800" onClick={dismiss}>
+          <AlertDialogCancel className="text-red-700 border-red-700 hover:text-red-800" onClick={onDismiss}>
             <FaUserLock/> MANTER
           </AlertDialogCancel>
           <AlertDialogAction onClick={() => {}}>

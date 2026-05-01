@@ -4,7 +4,6 @@ import { confirmUserEmailApi, getUserLoggedApi, resetUserPasswordApi, sendPasswo
 import { HttpStatusEnum } from "@/commons/enums/http";
 import { ForgotPasswordFormInputs, UserSignInFormInputs, UserSignUpFormInputs } from "@/commons/models/user";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 export const signInUserAction = async (input: UserSignInFormInputs) => {
   const response = await signInUserApi(input)
@@ -25,7 +24,6 @@ export const signOutAction = async () => {
   const response = await signOutApi()
   if (response.status === HttpStatusEnum.Ok) {
     revalidatePath('/', 'layout')
-    redirect('/')
   }
   return response
 }
@@ -41,7 +39,7 @@ export const resetPasswordAction = async (email: string, input: ForgotPasswordFo
     code: input.code,
     password: input.password,
   }
-  
+
   const response = await resetUserPasswordApi(requestBody)
   if (response.status === HttpStatusEnum.Ok) {
     revalidatePath('/', 'layout')

@@ -1,17 +1,17 @@
 import { ApiResponse } from "@/commons/lib/http/responses";
-import { selectIdAndSubscriptionIdEstablishmentByUserIdSupabase } from "../repository/establishment.supabase"
+import { getEstablishmentsByOwnerIdSupabase } from "../repository/establishment.supabase"
 
-export const selectIdAndSubscriptionIdEstablishmentByUserIdApi = async (userId: string) => {
-  const { data, error } = await selectIdAndSubscriptionIdEstablishmentByUserIdSupabase(userId)
+export const getEstablishmentsByOwnerIdApi = async (userId: string) => {
+  const { data, error } = await getEstablishmentsByOwnerIdSupabase(userId)
   if (error) {
     return ApiResponse.InternalError({
-      message: "Erro ao buscar estabelecimento.",
+      message: "Erro ao buscar estabelecimentos.",
       error: error.message
     });
   }
 
   return ApiResponse.Ok({
-    message: "Estabelecimento obtidos com sucesso.",
+    message: "Estabelecimentos obtidos com sucesso.",
     data: data
   });
 }

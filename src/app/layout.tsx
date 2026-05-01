@@ -16,13 +16,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${lexend.variable} antialiased`}
+        className={`${inter.variable} ${lexend.variable} theme-luluzinha antialiased`}
+        suppressHydrationWarning
       >
         <SubscriptionGuard />
         {children}
-        <Toaster richColors position="top-right"/>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

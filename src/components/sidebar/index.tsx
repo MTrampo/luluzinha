@@ -60,7 +60,7 @@ const navigation: NavRoot = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar aria-label="Navigation sidebar" collapsible="icon" {...props}>
       <SidebarHeader>
         <NavTeamSwitcher />
       </SidebarHeader>

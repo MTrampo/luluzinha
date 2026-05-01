@@ -1,10 +1,11 @@
 import { ApiResponse } from "@/commons/lib/http/responses";
-import { ProcedureInsertPayload, ProcedureUpdatePayload } from "@/commons/models/procedure";
+import { ProcedureInsertPayload, ProcedureUpdatePayload, proceduresFormatter } from "@/commons/models/procedure";
 import {
   addProcedureSupabase,
   updateProcedureSupabase,
   setProcedureActiveSupabase,
   deleteProcedureSupabase,
+  getProceduresByEstablishmentSupabase,
 } from "../repository/procedure.supabase";
 import { nowBrazilIso } from "@/commons/utils/helper";
 
@@ -85,5 +86,21 @@ export const deleteProcedureApi = async (id: string) => {
   return ApiResponse.Ok({
     message: "Procedimento excluído com sucesso.",
     data: data
+  })
+}
+
+export const listProceduresApi = async (establishmentId: string) => {
+  const { data, error } = await getProceduresByEstablishmentSupabase(establishmentId)
+
+  if (error) {
+    return ApiResponse.InternalError({
+      message: "Erro ao buscar procedimentos.",
+      error: error.message
+    })
+  }
+
+  return ApiResponse.Ok({
+    message: "Procedimentos obtidos com sucesso.",
+    data: proceduresFormatter(data)
   })
 }

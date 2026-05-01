@@ -2,27 +2,71 @@ import { ResetPasswordRequestBody, SignInRequestBody, UserRequestBody } from "@/
 import { confirmCodePasswordReset, createAuthSupabase, createProfileSupabase, getUserLogged, killAuthSupabase, sendPasswordResetEmail, signInWithEmail, updatePassword, verifyCode } from "../repository/auth.supabase";
 import { resolveAuthError } from "@/commons/errors/auth";
 import { ApiResponse } from "@/commons/lib/http/responses";
+import { getEstablishmentsByOwnerIdAuthSupabase } from "../repository/establishment.supabase";
+import { getSubscriptionIdByUserIdAuthSupabase } from "../repository/subscription.supabase";
+import { MercadoPagoStatusEnum } from "@/commons/enums/subscription";
+import { SubscriptionPayloadCookie } from "@/commons/models/subscription";
+import { establishmentsFormatter } from "@/commons/models/establishment";
+import { clearCookieSubscription, setCookieSubscription } from "@/commons/lib/auth/subscription";
+import { clearEstablishmentCookie } from "@/commons/lib/auth/establishment";
 
 export const signInUserApi = async (body: SignInRequestBody) => {
   const { data, error } = await signInWithEmail(body.email, body.password)
-  console.log('data:', data) // Log para depuração
-  console.log('error:', error) // Log para depuração
 
   if (error) {
     const { message, status } = resolveAuthError(error.code);
-    const response = {
+    return {
       status,
       message,
       data: null,
       error: error.message
     };
-    
-    return response;
+  }
+
+  if (!data.user || !data.session) {
+    return ApiResponse.Unauthorized({
+      message: "Falha na autenticação.",
+      error: "Sessão ou usuário não retornados."
+    });
+  }
+
+  const userId = data.user.id;
+  const token = data.session.access_token;
+
+  // Buscar estabelecimentos vinculados (Usando o cliente com RLS do usuário via Token)
+  const { data: establishments } = await getEstablishmentsByOwnerIdAuthSupabase(userId, token);
+
+  // Buscar dados da assinatura (Usando o cliente com RLS do usuário via Token)
+  const subscription = await getSubscriptionIdByUserIdAuthSupabase(userId, token);
+
+  // Definir o caminho de redirecionamento recomendado
+  let redirectPath = '/assinatura';
+  let subscriptionPayload: SubscriptionPayloadCookie | null = null;
+
+  if (subscription) {
+    subscriptionPayload = {
+      subscriptionId: subscription.id,
+      status: subscription.mp_status,
+      currentPeriodEnd: subscription.current_period_end
+    };
+
+    // Se estiver autorizado, manda para o painel
+    if (subscription.mp_status === MercadoPagoStatusEnum.Authorized) {
+      redirectPath = '/painel';
+    }
+
+    // Salva o cookie de assinatura já no servidor para o Middleware enxergar no próximo request
+    await setCookieSubscription(JSON.stringify(subscriptionPayload));
   }
 
   return ApiResponse.Ok({
     message: "Login realizado com sucesso.",
-    data: data
+    data: {
+      ...data,
+      establishments: establishmentsFormatter(establishments),
+      subscription: subscriptionPayload,
+      redirectPath
+    }
   });
 }
 
@@ -59,13 +103,16 @@ export const signUpUserApi = async (body: UserRequestBody) => {
 
 export const signOutApi = async () => {
   const error = await killAuthSupabase()
-  
+
   if (error) {
     return ApiResponse.InternalError({
       message: "Erro ao deslogar usuário.",
       error: error.message,
     });
   }
+
+  await clearCookieSubscription()
+  await clearEstablishmentCookie()
 
   return ApiResponse.Ok({
     message: "Usuário deslogado com sucesso.",
@@ -84,7 +131,7 @@ export const sendPasswordResetEmailApi = async (email: string) => {
       data: null,
       error: error.message
     };
-    
+
     return response;
   }
 
@@ -128,8 +175,8 @@ export const confirmUserEmailApi = async (email: string, code: string) => {
 
 export const resetUserPasswordApi = async (body: ResetPasswordRequestBody) => {
   const { error } = await confirmCodePasswordReset(body.email, body.code)
+
   if (error) {
-    console.error("Erro ao confirmar código de recuperação:", error);
     const { message, status } = resolveAuthError(error.code);
     const response = {
       status,
@@ -137,40 +184,42 @@ export const resetUserPasswordApi = async (body: ResetPasswordRequestBody) => {
       data: null,
       error: error.message
     };
-    
+
     return response;
   }
 
   const { data, error: updateError } = await updatePassword(body.password)
+
   if (updateError) {
-    const { message, status } = resolveAuthError(updateError.code)
+    const { message, status } = resolveAuthError(updateError.code);
     const response = {
       status,
       message,
       data: null,
-      error: updateError,
-    }
+      error: updateError.message
+    };
 
-    return response
+    return response;
   }
 
   return ApiResponse.Ok({
-    message: `${data.user?.user_metadata.display_name || 'Luluzinha'}, sua senha foi redefinida com sucesso! Você já pode entrar com a nova senha.`,
+    message: "Senha alterada com sucesso.",
     data: data
   });
 }
 
 export const getUserLoggedApi = async () => {
   const { data, error } = await getUserLogged()
+
   if (error) {
-    return ApiResponse.InternalError({
-      message: "Não identificado, faça login novamente.",
-      error: error.message
+    return ApiResponse.Unauthorized({
+      message: "Erro ao buscar usuário logado.",
+      error: error.message,
     });
   }
 
   return ApiResponse.Ok({
-    message: "Dados do usuário logado obtidos com sucesso.",
+    message: "Usuário buscado com sucesso.",
     data: data
   });
 }

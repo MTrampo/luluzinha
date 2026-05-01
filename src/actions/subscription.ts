@@ -7,13 +7,13 @@ export const getSubscriptionEndpointAction = async (mpPayerEmail: string) => {
   return response
 }
 
-export const manageSubscriptionEndpointAction = async (userId: string) => {
-  const response = await manageUserSubscriptionApi(userId)
+export const manageSubscriptionEndpointAction = async () => {
+  const response = await manageUserSubscriptionApi()
   return response
 }
 
-export const refreshSubscriptionAction = async (userId: string) => {
-  const response = await refreshSubscriptionApi(userId)
+export const refreshSubscriptionAction = async () => {
+  const response = await refreshSubscriptionApi()
   return response
 }
 

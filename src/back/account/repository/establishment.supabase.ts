@@ -1,4 +1,4 @@
-import { serverSupabase } from "@/commons/lib/supabase/server";
+import { authSupabase, serverSupabase } from "@/commons/lib/supabase/server";
 
 export const selectIdAndSubscriptionIdEstablishmentByUserIdSupabase = async (userId: string) => {
   const supabase = await serverSupabase()
@@ -22,4 +22,26 @@ export const getEstablishmentBySubscriptionIdSupabase = async (subscriptionId: s
     .single()
 
   return data
+}
+
+export const getEstablishmentsByOwnerIdSupabase = async (userId: string) => {
+  const supabase = await serverSupabase()
+
+  const { data, error } = await supabase
+    .from('establishments')
+    .select('*')
+    .eq('owner_id', userId)
+
+  return {  data, error }
+}
+
+export const getEstablishmentsByOwnerIdAuthSupabase = async (userId: string, token: string) => {
+  const supabase = authSupabase(token)
+
+  const { data, error } = await supabase
+    .from('establishments')
+    .select('*')
+    .eq('owner_id', userId)
+
+  return {  data, error }
 }
