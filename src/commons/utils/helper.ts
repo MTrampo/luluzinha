@@ -16,7 +16,6 @@ export const toIsoOrNull = (value?: string | null) => {
 export const parseCurrencyBRLToNumber = (value: string): number => {
   if (!value) return 0
 
-  // Remove "R$", espaços, pontos de milhar e substitui vírgula por ponto
   const cleanValue = value
     .replace(/[R$\s.]/g, '')
     .replace(',', '.')
@@ -33,4 +32,21 @@ export const convertMinutesToTime = (totalMinutes: number): string => {
   const hours = Math.floor(totalMinutes / 60)
   const minutes = totalMinutes % 60
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
+}
+
+export const getInitials = (name: string): string => {
+  const words = name.trim().split(/\s+/);
+  if (words.length >= 2) {
+    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+  } else if (words.length === 1 && words[0].length > 0) {
+    return words[0].substring(0, 2).toUpperCase();
+  }
+  return "??";
+}
+
+export const checkIsBirthdayToday = (birthday: string | null): boolean => {
+  if (!birthday) return false;
+  const today = new Date();
+  const bday = new Date(birthday + 'T12:00:00Z');
+  return today.getDate() === bday.getDate() && today.getMonth() === bday.getMonth();
 }

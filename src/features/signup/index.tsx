@@ -13,7 +13,7 @@ import { useState } from "react";
 export function SignUpFlow() {
   const route = useRouter()
   const [email, setEmail] = useState('')
-  const [step, setStep] = useState<SignUpStepType>('subscription')
+  const [step, setStep] = useState<SignUpStepType>('register')
 
   const signUpUser = async (data: UserSignUpFormInputs) => {
     const toastId = loadingToast('Criando seu espaço...');
@@ -42,14 +42,12 @@ export function SignUpFlow() {
   }
 
   return (
-     <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm md:max-w-4xl">
-        {step === 'register' ? (
-          <SignupForm signUpUser={signUpUser} />
-        ) : (
-          <ConfirmEmailForm verifyCode={verifyCode} />
-        )}
-      </div>
-    </div>
+    <>
+      {step === 'register' ? (
+        <SignupForm signUpUser={signUpUser} />
+      ) : (
+        <ConfirmEmailForm verifyCode={verifyCode} />
+      )}
+    </>
   )
 }

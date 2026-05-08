@@ -27,7 +27,7 @@ type SignupFormProps = {
 
 export function SignupForm({ signUpUser }: SignupFormProps) {
   const [showPassword, setShowPassword] = useState(false)
-  
+
   const formUser = useForm<UserSignUpFormInputs>({
     resolver: zodResolver(userSignUpFormSchema),
     defaultValues: {
@@ -36,7 +36,7 @@ export function SignupForm({ signUpUser }: SignupFormProps) {
       password: '',
     }
   })
-  
+
   return (
     <div className="flex flex-col gap-6">
       <Card className="overflow-hidden p-0">
@@ -58,7 +58,7 @@ export function SignupForm({ signUpUser }: SignupFormProps) {
                     <Input
                       id="name"
                       type="text"
-                      placeholder="Beatriz Morais"
+                      placeholder="Luciana Silva"
                       required
                       {...field}
                     />
@@ -94,14 +94,14 @@ export function SignupForm({ signUpUser }: SignupFormProps) {
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="password">Senha</FieldLabel>
                     <InputGroup>
-                      <InputGroupInput 
-                        id="password" 
-                        type={showPassword ? "text" : "password"} 
-                        placeholder="!S3nh4" 
-                        required 
+                      <InputGroupInput
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="!S3nh4"
+                        required
                         {...field}
                       />
-                      <InputGroupAddon 
+                      <InputGroupAddon
                         align="inline-end"
                         className="cursor-pointer"
                         onClick={() => setShowPassword(!showPassword)}
@@ -133,8 +133,8 @@ export function SignupForm({ signUpUser }: SignupFormProps) {
               preload
               width={1200}
               height={800}
-              src='/hero-register.png' 
-              alt='Capa Luluzinha' 
+              src='/hero-register.png'
+              alt='Capa Luluzinha'
               className="absolute h-full w-full object-cover"
             />
           </div>

@@ -6,24 +6,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 export default async function Home() {
   return (
     <>
-      <Header title="Início"/>
+      <Header title="Início" />
       <div className="main-content">
-        <h4>Semana</h4>
-        <CardWeekDay/>
-        {/* <Card size="sm" className="mx-auto w-full">
-          <CardHeader>
-            <CardTitle>Small Card</CardTitle>
-            <CardDescription>
-              This card uses the small size variant.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>
-              The card component supports a size prop that can be set to
-              &quot;sm&quot; for a more compact appearance.
-            </p>
-          </CardContent>
-        </Card> */}
+        <h4 className="text-purple-900">Semana</h4>
+        <CardWeekDay />
       </div>
     </>
   )

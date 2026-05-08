@@ -45,6 +45,10 @@ const statusToastMap: Record<HttpStatusEnum, ToastConfig> = {
     type: "warning",
     defaultMessage: "Conflito na operação",
   },
+  [HttpStatusEnum.UnprocessableEntity]: {
+    type: "warning",
+    defaultMessage: "Dados não processáveis",
+  },
   [HttpStatusEnum.InternalServerError]: {
     type: "error",
     defaultMessage: "Erro interno no servidor",

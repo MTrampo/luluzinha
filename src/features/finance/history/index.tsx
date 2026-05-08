@@ -1,21 +1,39 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { ReactNode } from "react"
+import { StandardAvatar } from "@/components/avatar"
+import { cn } from "@/commons/lib/tw-merge"
 
-export function Transaction() {
+interface TransactionProps {
+  customerName: string
+  initials: string
+  type: string
+  amount: string
+  date: string
+  isEntry?: boolean
+}
+
+export function Transaction({ customerName, initials, type, amount, date, isEntry = true }: TransactionProps) {
   return (
-    <div className="flex items-center justify-between cursor-pointer transition-all p-4 hover:bg-gray-50 rounded-xl first:rounded-b-none not-first:rounded-none last:rounded-b-xl not-first:border-t">
+    <div className="flex items-center justify-between cursor-pointer transition-all p-4 hover:bg-purple-50/50 group border-b border-purple-100/30 last:border-0">
       <div className="flex items-center gap-4">
-        <Avatar size="xl">
-          <AvatarFallback className="bg-purple-100 text-purple-900 border-purple-900">BM</AvatarFallback>
-        </Avatar>
-        <div>
-          <span className="block font-medium">Beatriz Morais</span>
-          <small className="text-muted-foreground">Transferência recebida</small>
+        <StandardAvatar size="lg" initials={initials} />
+        <div className="flex flex-col">
+          <span className="font-semibold text-gray-800 group-hover:text-purple-700 transition-colors">
+            {customerName}
+          </span>
+          <small className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">
+            {type}
+          </small>
         </div>
       </div>
-      <div className="flex flex-col items-end justify-end">
-        <span className="block font-semibold text-green-600">+R$ 75,00</span>
-        <small className="text-xs text-muted-foreground">01 de fevereiro</small>
+      <div className="flex flex-col items-end">
+        <span className={cn(
+          "font-bold text-base tabular-nums",
+          isEntry ? "text-green-600" : "text-red-500"
+        )}>
+          {isEntry ? "+" : "-"} {amount}
+        </span>
+        <small className="text-[10px] font-semibold text-gray-400 uppercase">
+          {date}
+        </small>
       </div>
     </div>
   )

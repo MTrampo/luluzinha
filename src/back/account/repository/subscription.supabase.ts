@@ -13,6 +13,18 @@ export const getSubscriptionIdByUserIdSupabase = async (userId: string) => {
   return data?.subscriptions ?? null
 }
 
+export const getSubscriptionByMpSubscriptionIdSupabase = async (mpSubscriptionId: string) => {
+  const supabase = await serverSupabase()
+
+  const { data } = await supabase
+    .from('subscriptions')
+    .select('*')
+    .eq('mp_preapproval_id', mpSubscriptionId)
+    .single()
+
+  return data ?? null
+}
+
 export const upsertSubscriptionSupabase = async (
   subscriptionData: SubscriptionPreApprovalPayload,
   subscriptionId: string | null,

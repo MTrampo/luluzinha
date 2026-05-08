@@ -44,11 +44,12 @@ export function ConfirmDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>{cancelText}</AlertDialogCancel>
-          <AlertDialogAction 
-            disabled={isPending} 
-            onClick={(e) => { 
-              e.preventDefault(); 
-              onConfirm(); 
+          <AlertDialogAction
+            variant={confirmText === "Excluir" ? "destructive" : "default"}
+            disabled={isPending}
+            onClick={(e) => {
+              e.preventDefault();
+              onConfirm();
             }}
           >
             {isPending ? "Aguarde..." : confirmText}

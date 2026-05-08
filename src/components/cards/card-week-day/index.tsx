@@ -12,7 +12,7 @@ const variants = cva(
   {
     variants: {
       state: {
-        default: "bg-muted text-muted-foreground hover:bg-primary/80 hover:text-primary-foreground",
+        default: "bg-white text-muted-foreground hover:bg-primary/80 hover:text-primary-foreground",
         selected: "bg-primary text-primary-foreground border-primary",
         past: "bg-muted opacity-40 cursor-not-allowed",
       },

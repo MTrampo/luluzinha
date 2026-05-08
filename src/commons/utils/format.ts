@@ -1,14 +1,6 @@
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, parse, isValid } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-/**
- * Converte um nome completo para formato título seguindo regras comuns
- * em Português:
- * - Primeira letra de cada parte do nome em maiúscula
- * - Partículas e artigos (de, do, da, dos, das, e) permanecem em
- *   minúscula quando não são a primeira palavra
- * - Partes ligadas por hífen são tratadas individualmente
- */
 const LOWER_PARTICLES = new Set(["de", "do", "da", "dos", "das", "e"])
 
 export const formatCaseName = (value?: string): string => {
@@ -19,7 +11,6 @@ export const formatCaseName = (value?: string): string => {
 		.toLowerCase()
 		.split(/\s+/)
 		.map((word, wordIndex) => {
-			// trata partes com hífen (ex.: joão-pedro)
 			if (word.includes("-")) {
 				return word
 					.split("-")
@@ -72,4 +63,35 @@ export const formatDuration = (minutes?: number | null): string => {
 	const m = minutes % 60
 	if (m === 0) return `${h}h`
 	return `${h}h ${m}min`
+}
+
+export const formatPhoneInput = (value: string): string => {
+  const digits = value.replace(/\D/g, "");
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
+};
+
+export const formatDateInput = (date?: Date | null): string => {
+	if (!date || !isValid(date)) return ""
+	return format(date, 'dd/MM/yyyy')
+}
+
+export const parseDateInput = (dateStr: string): Date | undefined => {
+  const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+  if (!dateRegex.test(dateStr)) return undefined;
+
+	const parsed = parse(dateStr, 'dd/MM/yyyy', new Date())
+  
+	return isValid(parsed) && format(parsed, 'dd/MM/yyyy') === dateStr ? parsed : undefined
+}
+
+export const toIsoDateInput = (date?: Date | null): string => {
+	if (!date) return ""
+	return format(date, 'yyyy-MM-dd')
+}
+
+export const isIsoDateString = (value?: string | null): boolean => {
+  return !!value && /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
