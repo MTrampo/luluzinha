@@ -1,11 +1,12 @@
 'use client'
 
-import { FaCirclePlus, FaCircleUser, FaCreditCard, FaIdCard, FaPersonWalkingArrowRight } from "react-icons/fa6";
+import { FaCirclePlus, FaCircleUser, FaCreditCard, FaIdCard, FaPersonWalkingArrowRight, FaLock } from "react-icons/fa6";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "../ui/sidebar";
 import { ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { signOutAction } from "@/actions/auth";
 import { useProfileStore } from "@/store/use-profile";
 import { useEstablishmentStore } from "@/store/use-establishment";
@@ -76,6 +77,12 @@ export function NavUser() {
             </DropdownMenuGroup> */}
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuItem asChild>
+                <Link href="/painel/bloqueios">
+                  <FaLock />
+                  Meus Bloqueios
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <FaIdCard />
                 Luluzinha

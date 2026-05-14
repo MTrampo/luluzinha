@@ -6,9 +6,9 @@ import { IoWomanSharp } from "react-icons/io5";
 import { ButtonSubscription } from "@/components/buttons/subscription";
 
 export default function Subscription() {
-  return(
+  return (
     <>
-      <Header/>
+      <Header />
       <main className="mx-auto px-6 py-12 sm:py-24 max-w-5xl md:max-w-7xl">
         <h1>Seja uma Luluzinha</h1>
         <p>Tudo o que você precisa para dominar sua agenda e valorizar seu trabalho, por apenas <span className="font-medium">R$ 9,90/mês</span>.</p>
@@ -16,8 +16,8 @@ export default function Subscription() {
           <div className="grid grid-cols-3 my-6 gap-4">
             <Card className="gap-1">
               <CardHeader className="flex items-center gap-1">
-                <FaCalendarWeek className="text-purple-900"/>
-                <CardTitle>Agenda de Ciclos</CardTitle>
+                <FaCalendarWeek className="text-purple-900" />
+                <CardTitle>Agenda de Atendimentos</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription>
@@ -27,7 +27,7 @@ export default function Subscription() {
             </Card>
             <Card className="gap-1">
               <CardHeader className="flex items-center gap-1">
-                <IoWomanSharp className="text-purple-900"/>
+                <IoWomanSharp className="text-purple-900" />
                 <CardTitle>Minhas Poderosas</CardTitle>
               </CardHeader>
               <CardContent>
@@ -38,7 +38,7 @@ export default function Subscription() {
             </Card>
             <Card className="gap-1">
               <CardHeader className="flex items-center gap-1">
-                <FaCashRegister className="text-purple-900"/>
+                <FaCashRegister className="text-purple-900" />
                 <CardTitle>Fluxo de Caixa</CardTitle>
               </CardHeader>
               <CardContent>
@@ -49,7 +49,7 @@ export default function Subscription() {
             </Card>
             <Card className="gap-1">
               <CardHeader className="flex items-center gap-1">
-                <FaPaintbrush className="text-purple-900"/>
+                <FaPaintbrush className="text-purple-900" />
                 <CardTitle>Menu de Procedimentos</CardTitle>
               </CardHeader>
               <CardContent>
@@ -60,7 +60,7 @@ export default function Subscription() {
             </Card>
             <Card className="gap-1">
               <CardHeader className="flex items-center gap-1">
-                <FaClockRotateLeft className="text-purple-900"/>
+                <FaClockRotateLeft className="text-purple-900" />
                 <CardTitle>Histórico</CardTitle>
               </CardHeader>
               <CardContent>
@@ -71,12 +71,12 @@ export default function Subscription() {
             </Card>
             <Card className="gap-1">
               <CardHeader className="flex items-center gap-1">
-                <FaMobileButton className="text-purple-900"/>
+                <FaMobileButton className="text-purple-900" />
                 <CardTitle>Baixe o App</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Adicione o atalho na tela inicial do seu dispositivo para acessar sua agenda em qualquer lugar. 
+                  Adicione o atalho na tela inicial do seu dispositivo para acessar sua agenda em qualquer lugar.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -89,7 +89,7 @@ export default function Subscription() {
             <div className="grid grid-cols-3 my-6 gap-4">
               <Card className="gap-1">
                 <CardHeader className="flex items-center gap-1">
-                  <FaHandshakeSimple className="text-purple-900"/>
+                  <FaHandshakeSimple className="text-purple-900" />
                   <CardTitle>Transparência</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -100,7 +100,7 @@ export default function Subscription() {
               </Card>
               <Card className="gap-1">
                 <CardHeader className="flex items-center gap-1">
-                  <FaHandcuffs className="text-purple-900"/>
+                  <FaHandcuffs className="text-purple-900" />
                   <CardTitle>Sem Fidelidade</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -111,7 +111,7 @@ export default function Subscription() {
               </Card>
               <Card className="gap-1">
                 <CardHeader className="flex items-center gap-1">
-                  <FaCalendarDay className="text-purple-900"/>
+                  <FaCalendarDay className="text-purple-900" />
                   <CardTitle>Vencimento</CardTitle>
                 </CardHeader>
                 <CardContent>

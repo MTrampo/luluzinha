@@ -1,15 +1,17 @@
-import { CardWeekDay } from "@/components/cards/card-week-day";
 import Header from "@/components/header/dashboard";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { getSchedulesWeekAction } from "@/actions/schedule";
+import { CardWeekDay } from "@/features/dashboard";
 
 export default async function Home() {
+  const schedulesRes = await getSchedulesWeekAction();
+  const schedules = schedulesRes.data || [];
+
   return (
     <>
       <Header title="Início" />
       <div className="main-content">
         <h4 className="text-purple-900">Semana</h4>
-        <CardWeekDay />
+        <CardWeekDay initialSchedules={schedules} />
       </div>
     </>
   )

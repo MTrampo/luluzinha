@@ -7,6 +7,10 @@ export const nowBrazilIso = (): string => {
   return format(new TZDate(new Date(), TIMEZONE), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
 }
 
+export const todayBrazilIso = (): string => {
+  return format(new TZDate(new Date(), TIMEZONE), "yyyy-MM-dd")
+}
+
 export const toIsoOrNull = (value?: string | null) => {
   if (!value) return null
   const date = new Date(value)
@@ -49,4 +53,13 @@ export const checkIsBirthdayToday = (birthday: string | null): boolean => {
   const today = new Date();
   const bday = new Date(birthday + 'T12:00:00Z');
   return today.getDate() === bday.getDate() && today.getMonth() === bday.getMonth();
+}
+
+export const checkIsNewCustomer = (createdAt: string | null): boolean => {
+  if (!createdAt) return false;
+  const created = new Date(createdAt);
+  const today = new Date();
+  const diffTime = Math.abs(today.getTime() - created.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays <= 7;
 }

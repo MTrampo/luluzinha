@@ -49,3 +49,33 @@ ON public.establishments
 FOR UPDATE
 TO authenticated
 USING (auth.uid() = owner_id);
+
+-- 2. Tabela de Bloqueios de Horários
+CREATE TABLE public.establishment_blocks (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  establishment_id UUID NOT NULL REFERENCES public.establishments(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  
+  reason TEXT,
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  date DATE,
+  day_of_week INT CHECK (day_of_week BETWEEN 0 AND 6),
+  
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  
+  CONSTRAINT block_type_check CHECK (
+    (date IS NOT NULL AND day_of_week IS NULL) OR 
+    (date IS NULL AND day_of_week IS NOT NULL)
+  )
+);
+
+ALTER TABLE public.establishment_blocks ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Donos podem gerenciar seus próprios bloqueios"
+ON public.establishment_blocks
+FOR ALL
+TO authenticated
+USING (user_id = auth.uid())
+WITH CHECK (user_id = auth.uid());

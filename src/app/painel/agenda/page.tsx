@@ -1,12 +1,22 @@
 import Header from "@/components/header/dashboard";
-import { Schedule } from "@/features/schedule";
-import { mockSchedules } from "@/commons/models/schedule";
+import { Schedule } from "@/features/dashboard/schedule";
 import { headers } from "next/headers";
+import { getSchedulesByDateAction } from "@/actions/schedule";
+import { getBlocksByDateAction } from "@/actions/establishment-blocks";
+import { todayBrazilIso } from "@/commons/utils/helper";
 
-export default async function SchedulePage() {
-  const schedules = mockSchedules;
+export default async function SchedulePage({ searchParams }: { searchParams: Promise<{ date?: string }> }) {
+  const { date } = await searchParams;
+  const targetDate = date || todayBrazilIso();
 
-  // Detecção simples de mobile no servidor para evitar flashes de hidratação
+  const [schedulesRes, blocksRes] = await Promise.all([
+    getSchedulesByDateAction(targetDate),
+    getBlocksByDateAction(targetDate)
+  ]);
+
+  const schedules = schedulesRes.data || [];
+  const blocks = blocksRes.data || [];
+
   const headersList = await headers();
   const userAgent = headersList.get("user-agent") || "";
   const isMobileServer = /mobile|android|iphone|ipad|phone/i.test(userAgent);
@@ -15,7 +25,11 @@ export default async function SchedulePage() {
     <>
       <Header title="Agenda" />
       <div className="main-content">
-        <Schedule schedules={schedules} isMobileServer={isMobileServer} />
+        <Schedule
+          schedules={schedules}
+          blocks={blocks}
+          isMobileServer={isMobileServer}
+        />
       </div>
     </>
   )

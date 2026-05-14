@@ -5,8 +5,8 @@ import { HttpStatusEnum } from "@/commons/enums/http";
 import { OtpFormInputs, UserSignUpFormInputs } from "@/commons/models/user";
 import { SignUpStepType } from "@/commons/types/step";
 import { loadingToast, updateToast } from "@/commons/utils/toast-handler";
-import { ConfirmEmailForm } from "@/components/forms/confirm-email-form";
-import { SignupForm } from "@/components/forms/signup-form";
+import { ConfirmEmailForm } from "@/components/forms/auth/confirm-email-form";
+import { SignupForm } from "@/components/forms/auth/signup-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -20,7 +20,7 @@ export function SignUpFlow() {
     try {
       const response = await signUpUserAction(data)
       updateToast(toastId, response.status, response.message);
-      
+
       if (response.status === HttpStatusEnum.Ok) {
         setEmail(data.email)
         setStep('verify')

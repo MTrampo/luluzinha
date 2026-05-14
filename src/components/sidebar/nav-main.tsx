@@ -27,7 +27,10 @@ export type NavMainProps = {
 
 export function NavMain({ nav, items, groups }: NavMainProps) {
   const pathname = usePathname()
-  const isActive = (url: string) => pathname === url
+  const isActive = (url: string) => {
+    if (url === '/painel') return pathname === url;
+    return pathname === url || pathname.startsWith(`${url}/`);
+  }
 
   const groupsToRender = groups ?? nav?.groups ?? (nav?.main ? [{ label: undefined, items: nav.main }] : (items ? [{ label: undefined, items }] : []))
 

@@ -1,6 +1,6 @@
 import { getProceduresAction } from "@/actions/procedure";
 import { ProcedureFormatted } from "@/commons/models/procedure";
-import Procedures from "@/features/procedures";
+import Procedures from "@/features/dashboard/procedures";
 import { ProcedureFeedbackEmpty, ProcedureFeedbackError } from "@/features/procedures/feaadback";
 
 type ProceduresPageProps = {

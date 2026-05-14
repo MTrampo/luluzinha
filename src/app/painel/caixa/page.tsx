@@ -1,6 +1,6 @@
 import Header from "@/components/header/dashboard";
-import { Transaction } from "@/features/finance/history";
-import { Overview } from "@/features/finance/overview";
+import { Transaction } from "@/features/dashboard/finance/history";
+import { Overview } from "@/features/dashboard/finance/overview";
 
 export default async function CashRegister() {
   return (
@@ -20,28 +20,28 @@ export default async function CashRegister() {
               <Transaction
                 customerName="Beatriz Morais"
                 initials="BM"
-                type="Ciclo: Pé e Mão"
+                type="Atendimento: Pé e Mão"
                 amount="R$ 75,00"
                 date="Hoje, 14:00"
               />
               <Transaction
                 customerName="Clara Silva"
                 initials="CS"
-                type="Ciclo: Alongamento em Gel"
+                type="Atendimento: Alongamento em Gel"
                 amount="R$ 120,00"
                 date="Hoje, 11:30"
               />
               <Transaction
                 customerName="Mariana Oliveira"
                 initials="MO"
-                type="Ciclo: Blindagem"
+                type="Atendimento: Blindagem"
                 amount="R$ 90,00"
                 date="Ontem, 16:45"
               />
               <Transaction
                 customerName="Adriana Costa"
                 initials="AC"
-                type="Ciclo: Esmaltação em Gel"
+                type="Atendimento: Esmaltação em Gel"
                 amount="R$ 65,00"
                 date="05 de Maio, 10:00"
               />

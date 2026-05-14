@@ -4,9 +4,9 @@ import { resetPasswordAction, sendForgotPasswordEmailAction, signInUserAction } 
 import { HttpStatusEnum } from "@/commons/enums/http";
 import { ForgotPasswordFormInputs, OtpFormInputs, SendEmailFormInputs, UserSignInFormInputs } from "@/commons/models/user";
 import { SignInStepType } from "@/commons/types/step";
-import { ConfirmEmailForm } from "@/components/forms/confirm-email-form";
-import { ForgotPasswordForm } from "@/components/forms/forgot-password-form";
-import { SignInForm } from "@/components/forms/signin-form";
+import { ConfirmEmailForm } from "@/components/forms/auth/confirm-email-form";
+import { ForgotPasswordForm } from "@/components/forms/auth/forgot-password-form";
+import { SignInForm } from "@/components/forms/auth/signin-form";
 import { useProfileStore } from "@/store/use-profile";
 import { useEstablishmentStore } from "@/store/use-establishment";
 import { useRouter } from "next/navigation";

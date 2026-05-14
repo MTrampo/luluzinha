@@ -2,7 +2,7 @@ import { Database } from "@/commons/types/database.types";
 import { formatCaseName, formatDate, formatPhone } from "../utils/format";
 import { z } from "zod";
 import { customerFormSchema } from "@/commons/validations/customer";
-import { getInitials, checkIsBirthdayToday } from "../utils/helper";
+import { getInitials, checkIsBirthdayToday, checkIsNewCustomer } from "../utils/helper";
 
 export type CustomerSupabase = Database['public']['Tables']['customers']['Row']
 export type CustomerInsertPayload = Database['public']['Tables']['customers']['Insert']
@@ -24,6 +24,7 @@ export interface CustomerFormatted {
   phoneFormatted: string;
   birthdayFormatted: string;
   isBirthdayToday: boolean;
+  isNew: boolean;
   hasNotes: boolean;
   waLink: string | null;
 }
@@ -44,6 +45,7 @@ export const customerFormatter = (data: CustomerSupabase): CustomerFormatted => 
     phoneFormatted: formatPhone(data.phone),
     birthdayFormatted: formatDate(data.birthday),
     isBirthdayToday: checkIsBirthdayToday(data.birthday),
+    isNew: checkIsNewCustomer(data.created_at),
     hasNotes: !!data.notes && data.notes.trim().length > 0,
     waLink: data.phone ? `https://wa.me/55${data.phone}` : null,
   };

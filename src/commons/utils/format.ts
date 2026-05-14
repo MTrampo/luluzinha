@@ -1,7 +1,7 @@
 import { format, parseISO, parse, isValid } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-const LOWER_PARTICLES = new Set(["de", "do", "da", "dos", "das", "e"])
+const LOWER_PARTICLES = new Set(["de", "do", "da", "dos", "das", "e", "da", "do", "dos", "das", "em"])
 
 export const formatCaseName = (value?: string): string => {
 	if (!value) return ""
@@ -27,16 +27,13 @@ function formatPart(part: string, isFirstWord: boolean) {
 	if (!part) return part
 
 	if (LOWER_PARTICLES.has(part) && !isFirstWord) return part
-
 	return part.charAt(0).toUpperCase() + part.slice(1)
 }
 
-export const formatCurrencyBRL = (value: number): string => {
-	return new Intl.NumberFormat('pt-BR', {
-		style: 'currency',
-		currency: 'BRL',
-	}).format(value)
-}
+export const formatCurrencyBRL = (value: number): string => new Intl.NumberFormat('pt-BR', {
+	style: 'currency',
+	currency: 'BRL',
+}).format(value)
 
 export const formatPhone = (phone?: string | null): string => {
 	if (!phone) return ""
@@ -66,11 +63,11 @@ export const formatDuration = (minutes?: number | null): string => {
 }
 
 export const formatPhoneInput = (value: string): string => {
-  const digits = value.replace(/\D/g, "");
-  if (digits.length <= 2) return digits;
-  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-  if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
-  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
+	const digits = value.replace(/\D/g, "");
+	if (digits.length <= 2) return digits;
+	if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+	if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+	return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
 };
 
 export const formatDateInput = (date?: Date | null): string => {
@@ -79,11 +76,11 @@ export const formatDateInput = (date?: Date | null): string => {
 }
 
 export const parseDateInput = (dateStr: string): Date | undefined => {
-  const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-  if (!dateRegex.test(dateStr)) return undefined;
+	const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+	if (!dateRegex.test(dateStr)) return undefined;
 
 	const parsed = parse(dateStr, 'dd/MM/yyyy', new Date())
-  
+
 	return isValid(parsed) && format(parsed, 'dd/MM/yyyy') === dateStr ? parsed : undefined
 }
 
@@ -93,5 +90,5 @@ export const toIsoDateInput = (date?: Date | null): string => {
 }
 
 export const isIsoDateString = (value?: string | null): boolean => {
-  return !!value && /^\d{4}-\d{2}-\d{2}$/.test(value);
+	return !!value && /^\d{4}-\d{2}-\d{2}$/.test(value);
 }

@@ -1,6 +1,6 @@
 import { getCustomersAction } from "@/actions/customer";
-import { CustomerFeedbackEmpty, CustomerFeedbackError } from "@/features/customers/feedback";
-import Customers from "@/features/customers";
+import { CustomerFeedbackEmpty, CustomerFeedbackError } from "@/features/dashboard/customers/feedback";
+import Customers from "@/features/dashboard/customers";
 
 type PageProps = {
   searchParams: Promise<{ q?: string }>;
