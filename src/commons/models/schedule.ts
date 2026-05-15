@@ -6,7 +6,8 @@ import { ptBR } from "date-fns/locale";
 import { ScheduleStatusEnum, formatScheduleStatus } from "@/commons/enums/schedule";
 import { Database } from "@/commons/types/database.types";
 import { blockScheduleSchema } from "../validations/schedule";
-import { formatCurrencyBRL, formatDuration } from "../utils/format";
+import { formatCurrencyBRL, formatDuration, formatCaseName } from "../utils/format";
+import { getInitials, checkIsBirthdayToday, checkIsNewCustomer } from "../utils/helper";
 
 export interface ScheduleProcedureFormatted extends ProcedureSupabase {
   priceAtTime: number;
@@ -42,6 +43,36 @@ export interface ScheduleWeekDay {
   status: ScheduleStatusEnum;
 }
 
+export interface ScheduleFilters {
+  statuses: number[];
+  highlights: string[];
+}
+
+export interface CustomerDash {
+  id: string;
+  nameFormatted: string;
+  initials: string;
+  isNew: boolean;
+  isBirthdayToday: boolean;
+  waLink: string | null;
+}
+
+export interface ScheduleDash {
+  id: string;
+  customer: CustomerDash;
+  procedures: { id: string; name: string }[];
+  startAt: string;
+  endAt: string;
+  startTimeFormatted: string;
+  endTimeFormatted: string;
+  totalDurationFormatted: string;
+  totalPriceFormatted: string;
+  totalPrice: number;
+  totalDuration: number;
+  status: ScheduleStatusEnum;
+  statusFormatted: string;
+}
+
 export type BlockScheduleFormValues = z.infer<typeof blockScheduleSchema>
 
 export type ScheduleSupabase = Database['public']['Tables']['schedules']['Row'];
@@ -54,11 +85,37 @@ export type ScheduleProcedureJoined = ScheduleProcedureSupabase & {
 };
 export type ScheduleProcedureInsertPayload = Database['public']['Tables']['schedule_procedures']['Insert'];
 
+export type BlockScheduleSupabase = Database['public']['Tables']['establishment_blocks']['Row'];
 export type BlockScheduleInsertPayload = Database['public']['Tables']['establishment_blocks']['Insert'];
 
 export type ScheduleSupabaseJoined = ScheduleSupabase & {
   customer: Database['public']['Tables']['customers']['Row'] | null;
   schedule_procedures: ScheduleProcedureJoined[];
+};
+
+export type ScheduleDashSupabase = {
+  id: string;
+  start_at: string;
+  end_at: string;
+  status: number;
+  total_price: number;
+  total_duration: number;
+  notes: string | null;
+  customer: {
+    id: string;
+    name: string;
+    phone: string | null;
+    birthday: string | null;
+    created_at: string | null;
+  } | null;
+  schedule_procedures: {
+    price_at_time: number;
+    duration_at_time: number;
+    procedure: {
+      id: string;
+      name: string;
+    } | null;
+  }[];
 };
 
 export const proceduresJoinedFormatter = (data: ScheduleProcedureJoined[] | null): ScheduleProcedureFormatted[] => {
@@ -108,7 +165,47 @@ export function schedulesFormatter(data: ScheduleSupabaseJoined[] | null): Sched
   return data ? data.map(formatSchedule) : [];
 }
 
-export function formatScheduleWeekDay(schedule: ScheduleSupabaseJoined): ScheduleWeekDay {
+export function formatScheduleDash(
+  schedule: ScheduleDashSupabase,
+): ScheduleDash {
+  const start = parseISO(schedule.start_at);
+  const end = parseISO(schedule.end_at);
+  const customer = schedule.customer;
+
+  return {
+    id: schedule.id,
+    startAt: schedule.start_at,
+    endAt: schedule.end_at,
+    status: schedule.status as ScheduleStatusEnum,
+    statusFormatted: formatScheduleStatus(schedule.status),
+    startTimeFormatted: format(start, "HH:mm", { locale: ptBR }),
+    endTimeFormatted: format(end, "HH:mm", { locale: ptBR }),
+    totalPriceFormatted: formatCurrencyBRL(schedule.total_price),
+    totalDurationFormatted: formatDuration(schedule.total_duration),
+    totalPrice: schedule.total_price,
+    totalDuration: schedule.total_duration,
+    customer: {
+      id: customer?.id || '',
+      nameFormatted: customer ? formatCaseName(customer.name) : "Poderosa",
+      initials: customer ? getInitials(customer.name) : "P",
+      isNew: checkIsNewCustomer(customer?.created_at ?? null),
+      isBirthdayToday: checkIsBirthdayToday(customer?.birthday ?? null),
+      waLink: customer?.phone ? `https://wa.me/55${customer.phone}` : null,
+    },
+    procedures: (schedule.schedule_procedures || [])
+      .filter(sp => !!sp.procedure)
+      .map(sp => ({
+        id: sp.procedure!.id,
+        name: sp.procedure!.name
+      }))
+  };
+}
+
+export function schedulesDashFormatter(data: ScheduleDashSupabase[] | null): ScheduleDash[] {
+  return data ? data.map(formatScheduleDash) : [];
+}
+
+export function formatScheduleWeekDay(schedule: ScheduleDashSupabase): ScheduleWeekDay {
   const start = parseISO(schedule.start_at);
 
   return {
@@ -121,6 +218,6 @@ export function formatScheduleWeekDay(schedule: ScheduleSupabaseJoined): Schedul
   };
 }
 
-export function schedulesWeekDayFormatter(data: ScheduleSupabaseJoined[] | null): ScheduleWeekDay[] {
+export function schedulesWeekDayFormatter(data: ScheduleDashSupabase[] | null): ScheduleWeekDay[] {
   return data ? data.map(formatScheduleWeekDay) : [];
 }

@@ -1,7 +1,7 @@
 import { addScheduleSupabase, deleteScheduleSupabase, getScheduleByIdSupabase, getSchedulesByEstablishmentSupabase, updateScheduleSupabase, getSchedulesByDateSupabase, getSchedulesByRangeSupabase } from "../repository/schedule.supabase";
 import { ApiResponse } from "@/commons/lib/http/responses";
 import { nowBrazilIso } from "@/commons/utils/helper";
-import { ScheduleInsertPayload, ScheduleUpdatePayload, ScheduleProcedureInsertPayload, schedulesFormatter, formatSchedule, schedulesWeekDayFormatter } from "@/commons/models/schedule";
+import { ScheduleInsertPayload, ScheduleUpdatePayload, ScheduleProcedureInsertPayload, schedulesFormatter, formatSchedule, schedulesWeekDayFormatter, schedulesDashFormatter, ScheduleDashSupabase } from "@/commons/models/schedule";
 import { startOfWeek, endOfWeek } from "date-fns";
 
 export const createScheduleApi = async (schedule: ScheduleInsertPayload, procedures: Omit<ScheduleProcedureInsertPayload, 'schedule_id'>[]) => {
@@ -39,7 +39,7 @@ export const getSchedulesApi = async (establishmentId: string) => {
 
   return ApiResponse.Ok({
     message: "Agendamentos obtidos com sucesso.",
-    data: schedulesFormatter(data)
+    data: schedulesDashFormatter(data)
   });
 }
 
@@ -55,7 +55,7 @@ export const getSchedulesByDateApi = async (establishmentId: string, dateIsoStri
 
   return ApiResponse.Ok({
     message: "Agendamentos da data obtidos com sucesso.",
-    data: schedulesFormatter(data)
+    data: schedulesDashFormatter(data)
   });
 }
 
@@ -65,8 +65,8 @@ export const getSchedulesWeekApi = async (establishmentId: string) => {
   const end = endOfWeek(today, { weekStartsOn: 0 }); // Sábado
 
   const { data, error } = await getSchedulesByRangeSupabase(
-    establishmentId, 
-    start.toISOString(), 
+    establishmentId,
+    start.toISOString(),
     end.toISOString()
   );
 

@@ -10,7 +10,7 @@ export default async function Home() {
     <>
       <Header title="Início" />
       <div className="main-content">
-        <h4 className="text-purple-900">Semana</h4>
+        <h2 className="text-purple-900">Semana</h2>
         <CardWeekDay initialSchedules={schedules} />
       </div>
     </>

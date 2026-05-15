@@ -117,7 +117,7 @@ export function SelectDateTimeForm({
       <div className="flex-1 p-6 md:p-8 bg-gray-50/30">
         {!selectedDate ? (
           <div className="h-full flex flex-col items-center justify-center text-center min-h-[300px]">
-            <Image src={svgSelectDay} alt="Selecione um dia" className="w-56 h-56 drop-shadow-sm opacity-90" />
+            <Image src={svgSelectDay} alt="Selecione um dia" className="w-56 h-56 drop-shadow-sm opacity-90" priority />
             <h3 className="text-gray-900">Qual o melhor dia?</h3>
             <p className="text-gray-500 text-sm">
               Selecione uma data no calendário ao lado para ver os horários que a sua bancada está livre.

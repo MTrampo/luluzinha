@@ -56,7 +56,7 @@ interfaces, evitando criar componentes do zero sem necessidade.
 * Trate os erros nas camadas adequadas (Repository lança o erro, Service trata ou repassa, Action formata para a UI).
 * Evite duplicação de código e siga os princípios SOLID.
 * Mantenha a consistência com o estilo de código do projeto (indentação, nomenclatura, etc.).
-* Evite o uso de `any` e prefira tipos explícitos e interfaces.
+* Nunca use `any`, `as any` ou qualquer coisa do tipo que envolva `any`, prefira tipos explícitos e interfaces.
 * Evite o uso de `.then()` e prefira `async/await` para lidar com promessas sempre.
 * Ao construir uma função, sempre pense na performance, segurança e legibilidade do código. Estamos construindo um
 monolito, então cada função deve ser otimizada e segura para evitar problemas futuros.

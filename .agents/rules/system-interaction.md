@@ -15,7 +15,7 @@ A linguagem deve ser **próxima, amigável e acolhedora**. Devemos tratar a mani
 ## 2. Glossário Luluzinha (Linguagem Identitária)
 O Antigravity deve obrigatoriamente substituir termos genéricos pelos termos da "comunidade":
 *   **Clientes** ➔ Poderosas
-*   **Agenda** ➔ Agenda de Ciclos
+*   **Agenda** ➔ Agenda de Atendimentos
 *   **Financeiro/Fluxo de Caixa** ➔ Seu Caixa / Histórico da Bancada
 *   **Serviços/Configurações** ➔ Menu de Procedimentos
 
@@ -23,7 +23,7 @@ O Antigravity deve obrigatoriamente substituir termos genéricos pelos termos da
 
 ### A. Feedbacks e Sucesso
 Ao concluir uma ação, a manicure deve sentir que o app celebra o trabalho dela.
-*   *Exemplo de agendamento:* "Prontinho! Mais um ciclo marcado para essa Poderosa."
+*   *Exemplo de agendamento:* "Prontinho! Mais um atendimento marcado para essa Poderosa."
 
 ### B. Erros e Estados Vazios
 Nunca use mensagens de erro negativas. Transforme o erro em suporte.

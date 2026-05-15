@@ -1,8 +1,10 @@
-import { format, isToday, isTomorrow, isSameDay } from "date-fns";
+import { format, isToday, isTomorrow, isYesterday, isSameDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export const getFriendlyDateTitle = (date: Date | undefined, prefix = "Atendimentos") => {
   if (!date) return prefix;
+
+  if (isYesterday(date)) return `${prefix} de Ontem`;
   if (isToday(date)) return `${prefix} de Hoje`;
   if (isTomorrow(date)) return `${prefix} de Amanhã`;
 

@@ -46,11 +46,25 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-lexend);
 }
 
-span, p, a, li, div, input, button, textarea, label, select {
+span,
+p,
+a,
+li,
+div,
+input,
+button,
+textarea,
+label,
+select {
   font-family: var(--font-inter);
 }
 
@@ -63,28 +77,33 @@ span, p, a, li, div, input, button, textarea, label, select {
     @apply bg-background text-muted-foreground;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply text-foreground;
   }
 
   h1 {
-    @apply scroll-m-20 text-4xl font-extrabold tracking-tight text-balance;
+    @apply scroll-m-20 text-2xl md:text-4xl font-black leading-tight tracking-tight text-balance;
   }
 
   h2 {
-    @apply scroll-m-20 text-2xl font-semibold tracking-tight first:mt-0
+    @apply scroll-m-20 text-xl md:text-2xl font-black leading-tight tracking-tight first:mt-0
   }
 
   h3 {
-    @apply scroll-m-20 text-xl font-semibold tracking-tight
+    @apply scroll-m-20 text-lg md:text-xl font-black leading-tight tracking-tight
   }
 
   h4 {
-    @apply scroll-m-20 text-lg font-semibold tracking-tight
+    @apply scroll-m-20 text-base md:text-lg font-black leading-tight tracking-tight
   }
 
   p {
-    @apply not-first:mt-6;
+    @apply not-first:mt-1;
   }
 }
 

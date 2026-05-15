@@ -5,22 +5,23 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ScheduleCard } from "./card/schedule-card";
 import { ScheduleBlockCard } from "./card/schedule-block-card";
 import { NavCalendar } from "./nav-calendar";
-import { ScheduleFormatted } from "@/commons/models/schedule";
-import { FaCalendarDays, FaLock, FaClock } from "react-icons/fa6";
+import { ScheduleFilters, ScheduleDash } from "@/commons/models/schedule";
+import { FaCalendarDays } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ScheduleFeedbackEmpty } from "./feedback";
 import { getFriendlyDateTitle } from "@/commons/utils/date";
+import { SCHEDULE_TIMEZONE } from "@/commons/constants/schedule";
+import { BlockScheduleSupabase } from "@/commons/models/schedule";
 
-export interface ScheduleFilters {
-  statuses: number[];
-  highlights: string[];
-}
+type TimelineItem = 
+  | { type: 'schedule'; id: string; time: number; data: ScheduleDash }
+  | { type: 'block'; id: string; time: number; data: BlockScheduleSupabase };
 
 interface ScheduleProps {
-  schedules: ScheduleFormatted[];
-  blocks: any[];
+  schedules: ScheduleDash[];
+  blocks: BlockScheduleSupabase[];
   isMobileServer?: boolean;
 }
 
@@ -30,7 +31,7 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
   const dateParam = searchParams.get("date");
 
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    dateParam ? new Date(dateParam + "T00:00:00") : new Date()
+    dateParam ? new Date(dateParam + SCHEDULE_TIMEZONE) : new Date()
   );
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [filters, setFilters] = useState<ScheduleFilters>({
@@ -41,10 +42,9 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
   const isMobileClient = useIsMobile();
   const isMobile = isMobileClient ?? isMobileServer;
 
-  // Sincronizar estado local se o parâmetro da URL mudar (ex: botão voltar)
   useEffect(() => {
     if (dateParam) {
-      const newDate = new Date(dateParam + "T00:00:00");
+      const newDate = new Date(dateParam + SCHEDULE_TIMEZONE);
       setSelectedDate(newDate);
     } else {
       setSelectedDate(new Date());
@@ -78,14 +78,14 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
   }, [schedules, filters]);
 
   const timelineItems = useMemo(() => {
-    const scheduleItems = filteredSchedules.map(s => ({
+    const scheduleItems: TimelineItem[] = filteredSchedules.map(s => ({
       type: 'schedule' as const,
       id: s.id,
       time: new Date(s.startAt).getTime(),
       data: s
     }))
 
-    const blockItems = blocks.map(b => {
+    const blockItems: TimelineItem[] = blocks.map(b => {
       const [hours, minutes] = b.start_time.split(':');
       const blockDate = new Date(selectedDate || new Date());
       blockDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
@@ -98,7 +98,7 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
       };
     })
 
-    const items = [
+    const items: TimelineItem[] = [
       ...scheduleItems,
       ...blockItems
     ];
@@ -111,11 +111,12 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
       <div className="flex flex-col flex-1 gap-6">
         <div className="flex items-center justify-between shrink-0">
           <div>
-            <h2 className="text-xl md:text-2xl font-black text-purple-900 leading-tight tracking-tight">
+            <h2 className="text-purple-900 leading-tight tracking-tight">
               {getFriendlyDateTitle(selectedDate)}
             </h2>
-            <p className="text-xs md:text-sm text-gray-500 mt-1 font-medium">
-              Acompanhe o ritmo da sua bancada e brilhe com suas <span className="text-purple-600 font-semibold">Poderosas</span>.
+            <p className="text-xs md:text-sm text-gray-500 font-medium">
+              Acompanhe o ritmo da sua bancada e brilhe com suas{" "}
+              <span className="text-purple-600 font-semibold">Poderosas</span>.
             </p>
           </div>
 

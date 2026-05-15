@@ -20,6 +20,7 @@ export function AppointmentFeedbackEmpty({ availableDays = [] }: AppointmentFeed
           alt="Sem agendamentos"
           fill
           className="object-contain opacity-80"
+          priority
         />
       </div>
 

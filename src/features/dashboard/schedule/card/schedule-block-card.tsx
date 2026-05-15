@@ -1,6 +1,7 @@
 import { FaClock, FaLock } from "react-icons/fa6";
+import { BlockScheduleSupabase } from "@/commons/models/schedule";
 
-export function ScheduleBlockCard({ block }: { block: any }) {
+export function ScheduleBlockCard({ block }: { block: BlockScheduleSupabase }) {
   return (
     <div className="bg-gray-50/50 border border-dashed border-gray-200 rounded-md p-4 flex items-center justify-between group hover:border-purple-200 transition-colors">
       <div className="flex items-center gap-4">

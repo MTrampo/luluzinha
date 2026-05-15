@@ -17,6 +17,7 @@ export default function Header() {
               alt="Luluzinha Logo"
               width={40}
               height={40}
+              priority
             />
           </Link>
           <div className="flex items-center gap-4">
