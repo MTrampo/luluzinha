@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ScheduleCard } from "./card/schedule-card";
 import { ScheduleBlockCard } from "./card/schedule-block-card";
 import { NavCalendar } from "./nav-calendar";
-import { ScheduleFilters, ScheduleDash } from "@/commons/models/schedule";
+import { ScheduleFilters, ScheduleDash, BlockFormatted } from "@/commons/models/schedule";
 import { FaCalendarDays } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -13,15 +13,14 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { ScheduleFeedbackEmpty } from "./feedback";
 import { getFriendlyDateTitle } from "@/commons/utils/date";
 import { SCHEDULE_TIMEZONE } from "@/commons/constants/schedule";
-import { BlockScheduleSupabase } from "@/commons/models/schedule";
 
 type TimelineItem = 
   | { type: 'schedule'; id: string; time: number; data: ScheduleDash }
-  | { type: 'block'; id: string; time: number; data: BlockScheduleSupabase };
+  | { type: 'block'; id: string; time: number; data: BlockFormatted };
 
 interface ScheduleProps {
   schedules: ScheduleDash[];
-  blocks: BlockScheduleSupabase[];
+  blocks: BlockFormatted[];
   isMobileServer?: boolean;
 }
 
@@ -36,7 +35,9 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [filters, setFilters] = useState<ScheduleFilters>({
     statuses: [],
-    highlights: []
+    highlights: [],
+    showBlocks: false,
+    search: ""
   });
 
   const isMobileClient = useIsMobile();
@@ -61,6 +62,8 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
   };
 
   const filteredSchedules = useMemo(() => {
+    if (filters.showBlocks) return [];
+
     return schedules.filter(s => {
       if (filters.statuses.length > 0 && !filters.statuses.includes(s.status)) {
         return false;
@@ -73,9 +76,27 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
         if (!matchesNew && !matchesBirthday) return false;
       }
 
+      if (filters.search) {
+        const search = filters.search.toLowerCase();
+        const customerName = s.customer.nameFormatted.toLowerCase();
+        const procedures = s.procedures.map(p => p.name.toLowerCase()).join(" ");
+        if (!customerName.includes(search) && !procedures.includes(search)) {
+          return false;
+        }
+      }
+
       return true;
     });
   }, [schedules, filters]);
+
+  const filteredBlocks = useMemo(() => {
+    if (filters.search) {
+      const search = filters.search.toLowerCase();
+      return blocks.filter(b => b.reason.toLowerCase().includes(search));
+    }
+    
+    return blocks;
+  }, [blocks, filters.search]);
 
   const timelineItems = useMemo(() => {
     const scheduleItems: TimelineItem[] = filteredSchedules.map(s => ({
@@ -85,8 +106,8 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
       data: s
     }))
 
-    const blockItems: TimelineItem[] = blocks.map(b => {
-      const [hours, minutes] = b.start_time.split(':');
+    const blockItems: TimelineItem[] = filteredBlocks.map(b => {
+      const [hours, minutes] = b.startTime.split(':');
       const blockDate = new Date(selectedDate || new Date());
       blockDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 

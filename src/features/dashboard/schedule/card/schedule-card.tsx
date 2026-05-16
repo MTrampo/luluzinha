@@ -9,8 +9,8 @@ import { Card } from "@/components/ui/card"
 import { FaClock } from "react-icons/fa6"
 import { cn } from "@/commons/lib/tw-merge"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { statusMap } from "@/commons/utils/status-map"
-import { Menu } from "./menu"
+import { statusMap } from "@/components/maps/status-map"
+import { AppointmentMenu } from "./appointment-menu"
 
 type ScheduleCardProps = {
   schedule: ScheduleDash;
@@ -32,8 +32,8 @@ export function ScheduleCard({ schedule, isMobileServer }: ScheduleCardProps) {
       "border-l-4",
       currentStatus.border
     )}>
-      
-      <Link 
+
+      <Link
         href={`/painel/agenda/atendimento/${schedule.id}`}
         className="flex-1 flex flex-row items-center min-h-24"
       >
@@ -97,9 +97,11 @@ export function ScheduleCard({ schedule, isMobileServer }: ScheduleCardProps) {
         </div>
       </Link>
 
-      <div className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-10">
-        <Menu schedule={schedule} />
-      </div>
+      {schedule.status !== ScheduleStatusEnum.COMPLETED && (
+        <div className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-10">
+          <AppointmentMenu schedule={schedule} />
+        </div>
+      )}
     </Card>
   )
 }

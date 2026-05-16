@@ -1,5 +1,6 @@
 import { format, parseISO, parse, isValid } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { convertTimeToMinutes } from './helper'
 
 const LOWER_PARTICLES = new Set(["de", "do", "da", "dos", "das", "e", "da", "do", "dos", "das", "em"])
 
@@ -60,6 +61,19 @@ export const formatDuration = (minutes?: number | null): string => {
 	const m = minutes % 60
 	if (m === 0) return `${h}h`
 	return `${h}h ${m}min`
+}
+
+export const formatTimeRangeToDuration = (startTime: string, endTime: string): string => {
+	if (!startTime || !endTime) return "0min"
+
+	// Caso especial para o dia todo
+	if (startTime === "00:00" && endTime === "23:59") return "24h"
+
+	const start = convertTimeToMinutes(startTime)
+	const end = convertTimeToMinutes(endTime)
+	const diff = end - start
+
+	return formatDuration(diff)
 }
 
 export const formatPhoneInput = (value: string): string => {

@@ -2,7 +2,7 @@ import { cn } from "@/commons/lib/tw-merge"
 import { cva } from "class-variance-authority"
 import { ScheduleWeekDay } from "@/commons/models/schedule"
 import { formatScheduleStatus } from "@/commons/enums/schedule"
-import { statusMap } from "@/commons/utils/status-map"
+import { statusMap } from "@/components/maps/status-map"
 
 const appointmentCardVariants = cva(
   "p-3 rounded-lg border transition cursor-pointer shadow-sm hover:shadow-md duration-300 bg-white",

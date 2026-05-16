@@ -3,21 +3,23 @@
 import { useTransition } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { format } from "date-fns"
+import { format, isBefore, startOfDay, isToday } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { FaLock, FaClock, FaRepeat, FaArrowsRotate } from "react-icons/fa6"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { createEstablishmentBlockAction } from "@/actions/establishment-blocks"
+import { createScheduleBlockAction } from "@/actions/schedule-blocks"
 import { toast } from "sonner"
 import { HttpStatusEnum } from "@/commons/enums/http"
+import { BlockRecurringTypeEnum } from "@/commons/enums/schedule"
 import { cn } from "@/commons/lib/tw-merge"
 import { Switch } from "@/components/ui/switch"
 import { BlockScheduleFormValues } from "@/commons/models/schedule"
 import { blockScheduleSchema } from "@/commons/validations/schedule"
-import { useProfileStore } from "@/store/use-profile"
 
 type BlockTimeFormProps = {
   selectedDate: Date
@@ -33,7 +35,6 @@ const PREDEFINED_REASONS = [
 ]
 
 export function BlockTimeForm({ selectedDate, onSuccess }: BlockTimeFormProps) {
-  const profile = useProfileStore((state) => state.profile)
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<BlockScheduleFormValues>({
@@ -44,7 +45,7 @@ export function BlockTimeForm({ selectedDate, onSuccess }: BlockTimeFormProps) {
       isAllDay: false,
       startTime: "12:00",
       endTime: "13:00",
-      isRecurring: false,
+      recurringType: BlockRecurringTypeEnum.NONE,
     },
   })
 
@@ -52,12 +53,40 @@ export function BlockTimeForm({ selectedDate, onSuccess }: BlockTimeFormProps) {
   const watchAllDay = form.watch("isAllDay")
 
   const onSubmit = (values: BlockScheduleFormValues) => {
+    if (isBefore(startOfDay(selectedDate), startOfDay(new Date()))) {
+      toast.error("Não é possível bloquear dias que já passaram.")
+      return
+    }
+
+    if (!values.isAllDay && isToday(selectedDate)) {
+      const [hours, minutes] = values.startTime.split(':');
+      const selectedTimeDate = new Date();
+      selectedTimeDate.setHours(Number(hours), Number(minutes), 0, 0);
+
+      if (isBefore(selectedTimeDate, new Date())) {
+        toast.error("Não é possível bloquear um horário que já passou.")
+        return
+      }
+    }
+
+    if (!values.isAllDay) {
+      const [startH, startM] = values.startTime.split(':');
+      const [endH, endM] = values.endTime.split(':');
+      const startTotal = Number(startH) * 60 + Number(startM);
+      const endTotal = Number(endH) * 60 + Number(endM);
+
+      if (endTotal <= startTotal) {
+        toast.error("O horário de término deve ser após o horário de início.")
+        return
+      }
+    }
+
     startTransition(async () => {
       try {
-        const response = await createEstablishmentBlockAction({
+        const response = await createScheduleBlockAction({
           ...values,
           date: format(selectedDate, 'yyyy-MM-dd')
-        }, profile?.id!)
+        })
 
         if (response.status === HttpStatusEnum.Ok || response.status === HttpStatusEnum.Created) {
           toast.success("Horário bloqueado com sucesso!")
@@ -80,22 +109,18 @@ export function BlockTimeForm({ selectedDate, onSuccess }: BlockTimeFormProps) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="reasonSelect">Por que você vai bloquear?</FieldLabel>
-              <select
-                id="reasonSelect"
-                className={cn(
-                  "border-input dark:bg-input/30 h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] md:text-sm",
-                  "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-                  "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-                  "bg-purple-50/50 border-purple-100 cursor-pointer"
-                )}
-                {...field}
-              >
-                {PREDEFINED_REASONS.map((reason) => (
-                  <option key={reason.value} value={reason.value}>
-                    {reason.label}
-                  </option>
-                ))}
-              </select>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger id="reasonSelect" className="bg-purple-50/50 border-purple-100 w-full">
+                  <SelectValue placeholder="Selecione um motivo" />
+                </SelectTrigger>
+                <SelectContent>
+                  {PREDEFINED_REASONS.map((reason) => (
+                    <SelectItem key={reason.value} value={reason.value}>
+                      {reason.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -150,7 +175,7 @@ export function BlockTimeForm({ selectedDate, onSuccess }: BlockTimeFormProps) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="startTime" className="text-[10px] uppercase font-black text-purple-400 tracking-wider">Início</FieldLabel>
-                  <Input type="time" id="startTime" className="bg-white border-purple-100" {...field} />
+                  <Input type="time" id="startTime" step="1" className="bg-white border-purple-100" {...field} />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
@@ -161,7 +186,7 @@ export function BlockTimeForm({ selectedDate, onSuccess }: BlockTimeFormProps) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="endTime" className="text-[10px] uppercase font-black text-purple-400 tracking-wider">Término</FieldLabel>
-                  <Input type="time" id="endTime" className="bg-white border-purple-100" {...field} />
+                  <Input type="time" id="endTime" step="1" className="bg-white border-purple-100" {...field} />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
@@ -175,28 +200,56 @@ export function BlockTimeForm({ selectedDate, onSuccess }: BlockTimeFormProps) {
       </div>
 
       {/* Recorrência */}
-      <Controller
-        control={form.control}
-        name="isRecurring"
-        render={({ field }) => (
-          <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-purple-100 p-4 bg-white shadow-sm">
-            <Checkbox
-              checked={field.value}
-              onCheckedChange={field.onChange}
-              className="data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
-            />
-            <div className="space-y-1 leading-none">
-              <label className="text-sm font-bold text-purple-900 flex items-center gap-2 cursor-pointer">
-                <FaRepeat className="text-purple-400 text-xs" />
-                Repetir Semanalmente
-              </label>
-              <p className="text-xs text-gray-500">
-                Bloquear todas as {format(selectedDate, "eeee", { locale: ptBR })}s neste horário.
-              </p>
-            </div>
-          </div>
-        )}
-      />
+      <div className="space-y-3">
+        <h4 className="text-[10px] font-black text-purple-400 uppercase tracking-widest px-1">Recorrência</h4>
+        <Controller
+          control={form.control}
+          name="recurringType"
+          render={({ field }) => (
+            <RadioGroup
+              value={field.value.toString()}
+              onValueChange={(val) => field.onChange(parseInt(val))}
+              className="grid grid-cols-1 gap-2"
+            >
+              {/* Opção 0: Não se repete */}
+              <div className={cn(
+                "flex items-center gap-3 rounded-xl border p-3 transition-all cursor-pointer",
+                field.value === BlockRecurringTypeEnum.NONE ? "border-purple-200 bg-purple-50/50" : "border-gray-100 bg-white"
+              )}>
+                <RadioGroupItem value={BlockRecurringTypeEnum.NONE.toString()} id="none" className="text-purple-600 border-purple-200" />
+                <Label htmlFor="none" className="flex-1 cursor-pointer">
+                  <span className="block text-sm font-bold text-gray-700">Não se repete</span>
+                  <span className="block text-[10px] text-gray-400 uppercase font-medium">Apenas para {format(selectedDate, "dd/MM")}</span>
+                </Label>
+              </div>
+
+              {/* Opção 1: Diária */}
+              <div className={cn(
+                "flex items-center gap-3 rounded-xl border p-3 transition-all cursor-pointer",
+                field.value === BlockRecurringTypeEnum.DAILY ? "border-purple-600 bg-purple-50 shadow-sm" : "border-gray-100 bg-white"
+              )}>
+                <RadioGroupItem value={BlockRecurringTypeEnum.DAILY.toString()} id="daily" className="text-purple-600 border-purple-200" />
+                <Label htmlFor="daily" className="flex-1 cursor-pointer">
+                  <span className="block text-sm font-bold text-gray-700">Repetir Diariamente</span>
+                  <span className="block text-[10px] text-gray-400 font-medium">Bloquear todos os dias neste horário</span>
+                </Label>
+              </div>
+
+              {/* Opção 2: Semanal */}
+              <div className={cn(
+                "flex items-center gap-3 rounded-xl border p-3 transition-all cursor-pointer",
+                field.value === BlockRecurringTypeEnum.WEEKLY ? "border-purple-600 bg-purple-50 shadow-sm" : "border-gray-100 bg-white"
+              )}>
+                <RadioGroupItem value={BlockRecurringTypeEnum.WEEKLY.toString()} id="weekly" className="text-purple-600 border-purple-200" />
+                <Label htmlFor="weekly" className="flex-1 cursor-pointer">
+                  <span className="block text-sm font-bold text-gray-700">Repetir Semanalmente</span>
+                  <span className="block text-[10px] text-gray-400 font-medium">Toda {format(selectedDate, "eeee", { locale: ptBR })}</span>
+                </Label>
+              </div>
+            </RadioGroup>
+          )}
+        />
+      </div>
 
       <Button
         type="submit"

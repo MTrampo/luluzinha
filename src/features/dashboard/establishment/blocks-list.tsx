@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { listEstablishmentBlocksAction, deleteEstablishmentBlockAction } from "@/actions/establishment-blocks"
-import { FaLock, FaTrashCan, FaCalendarCheck, FaClock } from "react-icons/fa6"
+import { listScheduleBlocksAction, deleteScheduleBlockAction } from "@/actions/schedule-blocks"
+import { FaLock, FaTrashCan, FaCalendarCheck, FaClock, FaRepeat } from "react-icons/fa6"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { HttpStatusEnum } from "@/commons/enums/http"
+import { BlockRecurringTypeEnum } from "@/commons/enums/schedule"
+import { BlockFormatted } from "@/commons/models/schedule"
 
 const DAYS_OF_WEEK = [
   "Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", 
@@ -13,11 +15,11 @@ const DAYS_OF_WEEK = [
 ]
 
 export function BlocksList({ establishmentId }: { establishmentId: string }) {
-  const [blocks, setBlocks] = useState<any[]>([])
+  const [blocks, setBlocks] = useState<BlockFormatted[]>([])
   const [loading, setLoading] = useState(true)
 
   const fetchBlocks = async () => {
-    const response = await listEstablishmentBlocksAction()
+    const response = await listScheduleBlocksAction()
     if (response.status === HttpStatusEnum.Ok) {
       setBlocks(response.data || [])
     }
@@ -29,7 +31,7 @@ export function BlocksList({ establishmentId }: { establishmentId: string }) {
   }, [])
 
   const handleDelete = async (id: string) => {
-    const response = await deleteEstablishmentBlockAction(id)
+    const response = await deleteScheduleBlockAction(id)
     if (response.status === HttpStatusEnum.Ok) {
       toast.success("Bloqueio removido com sucesso!")
       fetchBlocks()
@@ -84,21 +86,26 @@ export function BlocksList({ establishmentId }: { establishmentId: string }) {
                       <FaLock className="text-sm" />
                     </div>
                     <span className="text-sm font-bold text-purple-900">
-                      {block.reason || "Não informado"}
+                      {block.reason}
                     </span>
                   </div>
                 </td>
                 <td className="px-6 py-5">
                   <div className="flex items-center gap-2.5 text-xs">
-                    {block.day_of_week !== null ? (
+                    {block.recurringType === BlockRecurringTypeEnum.DAILY ? (
+                      <div className="flex items-center gap-2 bg-purple-600 text-white px-3 py-1.5 rounded-full font-bold shadow-sm">
+                        <FaRepeat className="text-[10px] animate-pulse" />
+                        <span>Repete Diariamente</span>
+                      </div>
+                    ) : block.recurringType === BlockRecurringTypeEnum.WEEKLY ? (
                       <div className="flex items-center gap-2 bg-purple-100/30 text-purple-700 px-3 py-1.5 rounded-full font-semibold border border-purple-100">
-                        <div className="h-1.5 w-1.5 bg-purple-600 rounded-full animate-pulse" />
-                        <span>Toda {DAYS_OF_WEEK[block.day_of_week]}</span>
+                        <FaRepeat className="text-[10px]" />
+                        <span>Toda {DAYS_OF_WEEK[block.dayOfWeek!]}</span>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2 text-gray-600 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-100">
                         <FaCalendarCheck className="text-purple-400" />
-                        <span>{new Date(block.date!).toLocaleDateString('pt-BR')}</span>
+                        <span>{block.date ? new Date(block.date).toLocaleDateString('pt-BR') : '-'}</span>
                       </div>
                     )}
                   </div>
@@ -106,7 +113,9 @@ export function BlocksList({ establishmentId }: { establishmentId: string }) {
                 <td className="px-6 py-5 text-xs font-medium text-gray-600">
                   <div className="flex items-center gap-2.5 bg-white border border-purple-50 px-3 py-1.5 rounded-lg w-fit">
                     <FaClock className="text-purple-400" />
-                    <span>{block.start_time.substring(0, 5)} às {block.end_time.substring(0, 5)}</span>
+                    <span>
+                      {block.isAllDay ? "Dia Todo" : `${block.startTime} às ${block.endTime}`}
+                    </span>
                   </div>
                 </td>
                 <td className="px-6 py-5 text-right">

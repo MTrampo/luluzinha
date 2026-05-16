@@ -3,10 +3,10 @@ import { customerFormatter, CustomerFormatted } from "./customer";
 import { procedureFormatter, ProcedureSupabase } from "./procedure";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ScheduleStatusEnum, formatScheduleStatus } from "@/commons/enums/schedule";
+import { ScheduleStatusEnum, formatScheduleStatus, BlockRecurringTypeEnum } from "@/commons/enums/schedule";
 import { Database } from "@/commons/types/database.types";
 import { blockScheduleSchema } from "../validations/schedule";
-import { formatCurrencyBRL, formatDuration, formatCaseName } from "../utils/format";
+import { formatCurrencyBRL, formatDuration, formatCaseName, formatTimeRangeToDuration } from "../utils/format";
 import { getInitials, checkIsBirthdayToday, checkIsNewCustomer } from "../utils/helper";
 
 export interface ScheduleProcedureFormatted extends ProcedureSupabase {
@@ -46,6 +46,8 @@ export interface ScheduleWeekDay {
 export interface ScheduleFilters {
   statuses: number[];
   highlights: string[];
+  showBlocks: boolean;
+  search: string;
 }
 
 export interface CustomerDash {
@@ -85,8 +87,21 @@ export type ScheduleProcedureJoined = ScheduleProcedureSupabase & {
 };
 export type ScheduleProcedureInsertPayload = Database['public']['Tables']['schedule_procedures']['Insert'];
 
-export type BlockScheduleSupabase = Database['public']['Tables']['establishment_blocks']['Row'];
-export type BlockScheduleInsertPayload = Database['public']['Tables']['establishment_blocks']['Insert'];
+export type BlockScheduleSupabase = Database['public']['Tables']['schedule_blocks']['Row'];
+export type BlockScheduleInsertPayload = Database['public']['Tables']['schedule_blocks']['Insert'];
+
+export interface BlockFormatted {
+  id: string;
+  reason: string;
+  startTime: string;
+  endTime: string;
+  isAllDay: boolean;
+  durationFormatted: string;
+  recurringType: number;
+  recurringTypeFormatted?: string;
+  dayOfWeek?: number | null;
+  date?: string | null;
+}
 
 export type ScheduleSupabaseJoined = ScheduleSupabase & {
   customer: Database['public']['Tables']['customers']['Row'] | null;
@@ -220,4 +235,29 @@ export function formatScheduleWeekDay(schedule: ScheduleDashSupabase): ScheduleW
 
 export function schedulesWeekDayFormatter(data: ScheduleDashSupabase[] | null): ScheduleWeekDay[] {
   return data ? data.map(formatScheduleWeekDay) : [];
+}
+
+export function formatBlock(block: BlockScheduleSupabase): BlockFormatted {
+  const isAllDay = block.start_time === "00:00" && block.end_time === "23:59";
+
+  let recurringTypeFormatted = "";
+  if (block.recurring_type === BlockRecurringTypeEnum.DAILY) recurringTypeFormatted = "Diário";
+  else if (block.recurring_type === BlockRecurringTypeEnum.WEEKLY) recurringTypeFormatted = "Semanal";
+
+  return {
+    id: block.id,
+    reason: block.reason || "Horário Bloqueado",
+    startTime: block.start_time.substring(0, 5),
+    endTime: block.end_time.substring(0, 5),
+    isAllDay,
+    durationFormatted: formatTimeRangeToDuration(block.start_time, block.end_time),
+    recurringType: block.recurring_type || 0,
+    recurringTypeFormatted,
+    dayOfWeek: block.day_of_week,
+    date: block.date,
+  };
+}
+
+export function blocksFormatter(data: BlockScheduleSupabase[] | null): BlockFormatted[] {
+  return data ? data.map(formatBlock) : [];
 }

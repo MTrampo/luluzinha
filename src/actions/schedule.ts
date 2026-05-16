@@ -1,6 +1,6 @@
 'use server'
 
-import { createScheduleApi, deleteScheduleApi, getScheduleByIdApi, getSchedulesApi, updateScheduleApi, getSchedulesByDateApi, getSchedulesWeekApi } from "@/back/establishment/service/schedule.api";
+import { createScheduleApi, deleteScheduleApi, getScheduleByIdApi, getSchedulesApi, updateScheduleApi, getSchedulesByDateApi, getSchedulesWeekApi, updateScheduleWithProceduresApi, resumeScheduleApi } from "@/back/establishment/service/schedule.api";
 import { revalidatePath } from "next/cache";
 import { HttpStatusEnum } from "@/commons/enums/http";
 import { ScheduleInsertPayload, ScheduleUpdatePayload, ScheduleProcedureInsertPayload } from "@/commons/models/schedule";
@@ -53,5 +53,31 @@ export const deleteScheduleAction = async (id: string) => {
     revalidatePath('/agenda');
   }
   
+  return response;
+}
+
+export const updateScheduleWithProceduresAction = async (
+  scheduleId: string,
+  schedule: ScheduleUpdatePayload,
+  procedures: Omit<ScheduleProcedureInsertPayload, 'schedule_id'>[]
+) => {
+  const establishmentId = (await getEstablishmentCookie())!;
+  const response = await updateScheduleWithProceduresApi(establishmentId, scheduleId, schedule, procedures);
+
+  if (response.status === HttpStatusEnum.Ok) {
+    revalidatePath('/agenda');
+  }
+
+  return response;
+}
+
+export const resumeScheduleAction = async (scheduleId: string, startAt: string, endAt: string) => {
+  const establishmentId = (await getEstablishmentCookie())!;
+  const response = await resumeScheduleApi(establishmentId, scheduleId, startAt, endAt);
+
+  if (response.status === HttpStatusEnum.Ok) {
+    revalidatePath('/agenda');
+  }
+
   return response;
 }

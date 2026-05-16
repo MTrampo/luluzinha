@@ -20,6 +20,9 @@ CREATE TABLE public.schedules (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Índice para otimizar a busca na agenda (Dashboard e Novo Atendimento)
+CREATE INDEX IF NOT EXISTS idx_schedules_establishment_date ON public.schedules (establishment_id, start_at);
+
 -- 2. Tabela de Relacionamento Agendamento <-> Procedimentos
 CREATE TABLE public.schedule_procedures (
   schedule_id UUID NOT NULL REFERENCES public.schedules(id) ON DELETE CASCADE,

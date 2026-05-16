@@ -19,3 +19,9 @@ export const formatScheduleStatus = (status: number): string => {
       return "DESCONHECIDO";
   }
 };
+
+export enum BlockRecurringTypeEnum {
+  NONE = 0,
+  DAILY = 1,
+  WEEKLY = 2,
+}

@@ -8,14 +8,14 @@ export interface TimeSlot {
 }
 
 export interface ScheduleInterval {
-  start_at: string;
-  end_at: string;
+  startAt: string;
+  endAt: string;
 }
 
 export function getAvailableSlots(
   date: Date,
   openingHours: OpeningHours | null,
-  schedules: ScheduleInterval[],
+  busyIntervals: ScheduleInterval[],
   totalDurationMinutes: number
 ): TimeSlot[] {
   if (!openingHours) return [];
@@ -46,7 +46,6 @@ export function getAvailableSlots(
 
     // Se o procedimento não couber até o horário de fechamento
     if (slotEnd > endTime) {
-      // Avança para ver se por acaso tem um slot válido depois? Não, se não cabe agora, horários posteriores também não caberão (já que o close time é fixo e a duração é a mesma).
       break;
     }
 
@@ -56,14 +55,19 @@ export function getAvailableSlots(
       continue;
     }
 
-    // Verifica sobreposição com agendamentos existentes
+    // Verifica sobreposição com intervalos ocupados (agendamentos ou bloqueios)
     let hasOverlap = false;
-    for (const schedule of schedules) {
-      const scheduleStart = parseISO(schedule.start_at);
-      const scheduleEnd = parseISO(schedule.end_at);
+    for (const interval of busyIntervals) {
+      const startIso = interval.startAt || (interval as any).start_at;
+      const endIso = interval.endAt || (interval as any).end_at;
 
-      // Overlap: Slot inicia antes do fim do agendamento E Slot termina depois do início do agendamento
-      if (currentSlot < scheduleEnd && slotEnd > scheduleStart) {
+      if (!startIso || !endIso) continue;
+
+      const intervalStart = parseISO(startIso);
+      const intervalEnd = parseISO(endIso);
+
+      // Overlap: Slot inicia antes do fim do intervalo E Slot termina depois do início do intervalo
+      if (currentSlot < intervalEnd && slotEnd > intervalStart) {
         hasOverlap = true;
         break;
       }
@@ -74,7 +78,7 @@ export function getAvailableSlots(
       available: !hasOverlap
     });
 
-    currentSlot = addMinutes(currentSlot, 20); // Geração a cada 20 minutos
+    currentSlot = addMinutes(currentSlot, 20);
   }
 
   return slots;

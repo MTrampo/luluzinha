@@ -46,12 +46,12 @@ export function SelectDateTimeForm({
       startTransition(async () => {
         const dateIso = format(selectedDate, "yyyy-MM-dd");
         const response = await getSchedulesByDateAction(dateIso);
-        const schedules = response.data || [];
+        const { busyIntervals = [] } = response.data || {};
 
         const slots = getAvailableSlots(
           selectedDate,
           activeEstablishment.openingHours,
-          schedules as any,
+          busyIntervals,
           totalDuration
         );
 

@@ -101,7 +101,7 @@ export type Database = {
           },
         ]
       }
-      establishment_blocks: {
+      schedule_blocks: {
         Row: {
           created_at: string | null
           date: string | null
@@ -110,6 +110,7 @@ export type Database = {
           establishment_id: string
           id: string
           reason: string | null
+          recurring_type: number
           start_time: string
           updated_at: string | null
           user_id: string
@@ -122,6 +123,7 @@ export type Database = {
           establishment_id: string
           id?: string
           reason?: string | null
+          recurring_type?: number
           start_time: string
           updated_at?: string | null
           user_id: string
@@ -134,13 +136,14 @@ export type Database = {
           establishment_id?: string
           id?: string
           reason?: string | null
+          recurring_type?: number
           start_time?: string
           updated_at?: string | null
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "establishment_blocks_establishment_id_fkey"
+            foreignKeyName: "schedule_blocks_establishment_id_fkey"
             columns: ["establishment_id"]
             isOneToOne: false
             referencedRelation: "establishments"

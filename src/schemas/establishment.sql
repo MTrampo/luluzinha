@@ -51,7 +51,7 @@ TO authenticated
 USING (auth.uid() = owner_id);
 
 -- 2. Tabela de Bloqueios de Horários
-CREATE TABLE public.establishment_blocks (
+CREATE TABLE public.schedule_blocks (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   establishment_id UUID NOT NULL REFERENCES public.establishments(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -61,20 +61,25 @@ CREATE TABLE public.establishment_blocks (
   end_time TIME NOT NULL,
   date DATE,
   day_of_week INT CHECK (day_of_week BETWEEN 0 AND 6),
+  recurring_type INT DEFAULT 0,
   
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now(),
   
   CONSTRAINT block_type_check CHECK (
-    (date IS NOT NULL AND day_of_week IS NULL) OR 
-    (date IS NULL AND day_of_week IS NOT NULL)
+    (recurring_type = 0 AND date IS NOT NULL AND day_of_week IS NULL) OR 
+    (recurring_type = 1 AND date IS NULL AND day_of_week IS NULL) OR
+    (recurring_type = 2 AND date IS NULL AND day_of_week IS NOT NULL)
   )
 );
 
-ALTER TABLE public.establishment_blocks ENABLE ROW LEVEL SECURITY;
+-- Índice para otimizar a busca de bloqueios
+CREATE INDEX IF NOT EXISTS idx_blocks_establishment_date ON public.schedule_blocks (establishment_id, date);
+
+ALTER TABLE public.schedule_blocks ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Donos podem gerenciar seus próprios bloqueios"
-ON public.establishment_blocks
+ON public.schedule_blocks
 FOR ALL
 TO authenticated
 USING (user_id = auth.uid())

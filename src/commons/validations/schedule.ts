@@ -6,6 +6,6 @@ export const blockScheduleSchema = z.object({
   isAllDay: z.boolean(),
   startTime: z.string().min(1, "Início obrigatório"),
   endTime: z.string().min(1, "Fim obrigatório"),
-  isRecurring: z.boolean(),
+  recurringType: z.number(),
   date: z.string().optional(),
 })

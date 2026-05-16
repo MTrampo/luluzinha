@@ -1,12 +1,13 @@
 "use client"
 
+import { useState, useTransition } from "react"
 import { ScheduleFormatted } from "@/commons/models/schedule"
 import { StandardAvatar } from "@/components/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { statusMap } from "@/commons/utils/status-map"
+import { statusMap } from "@/components/maps/status-map"
 import {
   FaWhatsapp,
   FaCalendarDay,
@@ -23,21 +24,95 @@ import {
   FaCalendarXmark,
   FaFlagCheckered,
   FaStopwatch,
-  FaCheckDouble
+  FaCheckDouble,
+  FaRotateLeft
 } from "react-icons/fa6"
 import Link from "next/link"
 import { cn } from "@/commons/lib/tw-merge"
+import { ConfirmDialog } from "@/components/dialogs/confirm-dialog"
+import { updateScheduleAction, resumeScheduleAction } from "@/actions/schedule"
+import { ScheduleStatusEnum } from "@/commons/enums/schedule"
+import { toast } from "sonner"
+import { HttpStatusEnum } from "@/commons/enums/http"
 
 interface DetailsContentProps {
   schedule: ScheduleFormatted;
 }
 
+type ActionType = "finish" | "cancel" | "resume" | null;
+
 export function DetailsContent({ schedule }: DetailsContentProps) {
   const currentStatus = statusMap[schedule.status];
+  const isCancelled = schedule.status === ScheduleStatusEnum.CANCELLED;
+  const isCompleted = schedule.status === ScheduleStatusEnum.COMPLETED;
+
+  const [actionType, setActionType] = useState<ActionType>(null);
+  const [isPending, startTransition] = useTransition();
+
+  const handleConfirmAction = () => {
+    startTransition(async () => {
+      if (actionType === "resume") {
+        const response = await resumeScheduleAction(schedule.id, schedule.startAt, schedule.endAt);
+        
+        if (response.status === HttpStatusEnum.Ok) {
+          toast.success("Atendimento reagendado com sucesso!");
+          setActionType(null);
+        } else if (response.status === HttpStatusEnum.Conflict) {
+          toast.error(response.message);
+          setActionType(null);
+        } else {
+          toast.error("Ops! Ocorreu um erro ao reagendar o atendimento.");
+          setActionType(null);
+        }
+        return;
+      }
+
+      let statusToUpdate: ScheduleStatusEnum;
+      let successMessage = "";
+
+      if (actionType === "finish") {
+        statusToUpdate = ScheduleStatusEnum.COMPLETED;
+        successMessage = "Prontinho! Mais um atendimento concluído com sucesso.";
+      } else if (actionType === "cancel") {
+        statusToUpdate = ScheduleStatusEnum.CANCELLED;
+        successMessage = "Atendimento cancelado. Agenda livre para novas Poderosas!";
+      } else {
+        return;
+      }
+
+      const response = await updateScheduleAction(schedule.id, { status: statusToUpdate });
+
+      if (response.status === HttpStatusEnum.Ok) {
+        toast.success(successMessage);
+        setActionType(null);
+      } else {
+        toast.error("Ops! Ocorreu um erro ao atualizar o atendimento.");
+        setActionType(null);
+      }
+    });
+  };
+
+  const dialogProps = {
+    finish: {
+      title: "Finalizar Atendimento",
+      description: "Deseja marcar este atendimento como concluído?",
+      confirmText: "Concluir",
+    },
+    cancel: {
+      title: "Cancelar Atendimento",
+      description: "Tem certeza que deseja cancelar o atendimento dessa Poderosa?",
+      confirmText: "Cancelar Atendimento",
+    },
+    resume: {
+      title: "Reagendar Atendimento",
+      description: "Deseja reagendar o atendimento para este mesmo horário?",
+      confirmText: "Reagendar",
+    }
+  };
 
   const handleShareSummary = () => {
     const cleanPhone = `55${schedule.customer.phone}`.replace(/\D/g, '');
-    
+
     const message = `Olá, ${schedule.customer.nameFormatted}! ✨
 
 Passando para confirmar seu atendimento:
@@ -87,12 +162,14 @@ Estou te esperando com muito carinho! ❤️`;
 
           <div className="w-px h-6 bg-purple-200 mx-2 hidden sm:block" />
 
-          <Button variant="ghost" size="sm" asChild className="h-9 text-purple-600 hover:text-purple-700 hover:bg-purple-50 font-bold px-3 transition-all active:scale-95">
-            <Link href={`/painel/agenda/atendimento/${schedule.id}/editar`} className="flex items-center gap-2">
-              <FaPenToSquare className="w-4 h-4" />
-              <span className="hidden sm:inline">Editar</span>
-            </Link>
-          </Button>
+          {!isCompleted && (
+            <Button variant="ghost" size="sm" asChild className="h-9 text-purple-600 hover:text-purple-700 hover:bg-purple-50 font-bold px-3 transition-all active:scale-95">
+              <Link href={`/painel/agenda/atendimento/${schedule.id}/editar`} className="flex items-center gap-2">
+                <FaPenToSquare className="w-4 h-4" />
+                <span className="hidden sm:inline">Editar</span>
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
 
@@ -251,25 +328,49 @@ Estou te esperando com muito carinho! ❤️`;
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <Button variant="success" className="w-full h-11 gap-2 text-sm shadow-md transition-all active:scale-95 group font-bold">
-                    <FaCalendarCheck className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                    Finalizar Atendimento
-                  </Button>
+                {!isCompleted && (
+                  <div className="flex flex-col gap-2">
+                    {!isCancelled && (
+                      <Button 
+                        variant="success" 
+                        onClick={() => setActionType("finish")}
+                        className="w-full h-11 gap-2 text-sm shadow-md transition-all active:scale-95 group font-bold"
+                      >
+                        <FaCalendarCheck className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                        Finalizar Atendimento
+                      </Button>
+                    )}
 
-                  <Button
-                    onClick={handleShareSummary}
-                    className="w-full h-11 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200/50 hover:border-emerald-300 font-bold gap-2 text-sm transition-all active:scale-95 group shadow-none"
-                  >
-                    <FaWhatsapp className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                    Lembrar Poderosa
-                  </Button>
+                    {isCancelled && (
+                      <Button 
+                        onClick={() => setActionType("resume")}
+                        className="w-full h-11 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200/50 hover:border-blue-300 gap-2 text-sm transition-all active:scale-95 group font-bold shadow-md"
+                      >
+                        <FaRotateLeft className="w-4 h-4 group-hover:-rotate-180 transition-transform duration-500" />
+                        Reagendar Atendimento
+                      </Button>
+                    )}
 
-                  <Button variant="ghost" className="w-full h-11 text-red-400 hover:text-red-600 hover:bg-red-50 gap-2 text-sm transition-all active:scale-95 font-medium shadow-none">
-                    <FaCalendarXmark className="w-4 h-4 opacity-50" />
-                    Cancelar Atendimento
-                  </Button>
-                </div>
+                    <Button
+                      onClick={handleShareSummary}
+                      className="w-full h-11 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200/50 hover:border-emerald-300 font-bold gap-2 text-sm transition-all active:scale-95 group shadow-none"
+                    >
+                      <FaWhatsapp className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                      Lembrar Poderosa
+                    </Button>
+
+                    {!isCancelled && (
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => setActionType("cancel")}
+                        className="w-full h-11 text-red-400 hover:text-red-600 hover:bg-red-50 gap-2 text-sm transition-all active:scale-95 font-medium shadow-none"
+                      >
+                        <FaCalendarXmark className="w-4 h-4 opacity-50" />
+                        Cancelar Atendimento
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
             </Card>
           </div>
@@ -277,32 +378,59 @@ Estou te esperando com muito carinho! ❤️`;
 
       </div>
       {/* MOBILE STICKY ACTION BAR */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-purple-100 z-50 flex flex-col gap-3 shadow-[0_-10px_30px_rgba(147,51,234,0.15)]">
-        <Button
-          variant="success"
-          className="w-full h-12 font-bold gap-2 text-sm shadow-md transition-all active:scale-95"
-        >
-          <FaCalendarCheck className="w-4 h-4" />
-          Finalizar Atendimento
-        </Button>
+      {!isCompleted && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-purple-100 z-50 flex flex-col gap-3 shadow-[0_-10px_30px_rgba(147,51,234,0.15)] pb-safe">
+          {!isCancelled ? (
+            <Button
+              variant="success"
+              onClick={() => setActionType("finish")}
+              className="w-full h-12 font-bold gap-2 text-sm shadow-md transition-all active:scale-95"
+            >
+              <FaCalendarCheck className="w-4 h-4" />
+              Finalizar Atendimento
+            </Button>
+          ) : (
+            <Button
+              onClick={() => setActionType("resume")}
+              className="w-full h-12 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 font-bold gap-2 text-sm shadow-md transition-all active:scale-95"
+            >
+              <FaRotateLeft className="w-4 h-4" />
+              Reagendar Atendimento
+            </Button>
+          )}
 
-        <div className="flex gap-3">
-          <Button
-            onClick={handleShareSummary}
-            className="flex-1 h-12 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 font-bold gap-2 text-sm transition-all active:scale-95"
-          >
-            <FaWhatsapp className="w-4 h-4" />
-            Confirmar
-          </Button>
-          <Button
-            variant="ghost"
-            className="flex-1 h-12 text-red-400 hover:text-red-600 hover:bg-red-50 font-bold gap-2 text-sm transition-all active:scale-95"
-          >
-            <FaCalendarXmark className="w-4 h-4 opacity-50" />
-            Cancelar
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              onClick={handleShareSummary}
+              className="flex-1 h-12 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 font-bold gap-2 text-sm transition-all active:scale-95"
+            >
+              <FaWhatsapp className="w-4 h-4" />
+              Lembrar
+            </Button>
+            {!isCancelled && (
+              <Button
+                variant="ghost"
+                onClick={() => setActionType("cancel")}
+                className="flex-1 h-12 text-red-400 hover:text-red-600 hover:bg-red-50 font-bold gap-2 text-sm transition-all active:scale-95"
+              >
+                <FaCalendarXmark className="w-4 h-4 opacity-50" />
+                Cancelar
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      <ConfirmDialog
+        open={!!actionType}
+        onOpenChange={(open) => !open && !isPending && setActionType(null)}
+        title={actionType ? dialogProps[actionType].title : ""}
+        description={actionType ? dialogProps[actionType].description : ""}
+        confirmText={actionType ? dialogProps[actionType].confirmText : "Confirmar"}
+        cancelText="Voltar"
+        onConfirm={handleConfirmAction}
+        isPending={isPending}
+      />
     </div>
   )
 }

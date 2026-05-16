@@ -1,20 +1,17 @@
 "use client"
 
-import { useState } from "react"
-
 import Link from "next/link"
+import { ChangeEvent, useState } from "react"
 import { addMonths } from "date-fns"
 import { Calendar } from "@/components/ui/calendar"
 import { Button } from "@/components/ui/button"
-import { FaCalendarPlus, FaTableCellsRowLock, FaLock } from "react-icons/fa6"
-import { Field, FieldLabel } from "@/components/ui/field"
-import { Checkbox } from "@/components/ui/checkbox"
+import { FaCalendarPlus, FaTableCellsRowLock, FaLock, FaMagnifyingGlass } from "react-icons/fa6"
+import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ScheduleStatusEnum } from "@/commons/enums/schedule"
-import { ScheduleFilters } from "./index"
-import { cn } from "@/commons/lib/tw-merge"
+import { ScheduleFilters } from "@/commons/models/schedule"
 import { FilterItem } from "@/components/inputs/filter"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { BlockTimeForm } from "@/components/forms/block-time-form"
 
 interface NavCalendarProps {
@@ -40,6 +37,14 @@ export function NavCalendar({ selectedDate, onSelectDate, filters, onFilterChang
       ? filters.highlights.filter(h => h !== highlight)
       : [...filters.highlights, highlight];
     onFilterChange({ ...filters, highlights: newHighlights });
+  };
+
+  const toggleShowBlocks = () => {
+    onFilterChange({ ...filters, showBlocks: !filters.showBlocks });
+  };
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onFilterChange({ ...filters, search: e.target.value });
   };
 
   return (
@@ -73,6 +78,25 @@ export function NavCalendar({ selectedDate, onSelectDate, filters, onFilterChang
       {/* 2. Área de Filtros (Rolável apenas se necessário) */}
       <ScrollArea className="flex-1 min-h-0 bg-purple-50/10">
         <div className="p-5 md:p-6 space-y-8">
+
+          {/* Busca */}
+          <section className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="text-[10px] font-black text-purple-400 uppercase tracking-widest">Busca</h4>
+              <span className="h-px flex-1 bg-purple-100/50 ml-3" />
+            </div>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FaMagnifyingGlass className="text-purple-300" />
+              </div>
+              <Input
+                placeholder="Buscar cliente ou procedimento..."
+                className="pl-9 bg-white border-purple-100 focus-visible:ring-purple-600/20 focus-visible:border-purple-600 text-purple-900 placeholder:text-purple-300 shadow-sm"
+                value={filters.search}
+                onChange={handleSearchChange}
+              />
+            </div>
+          </section>
 
           {/* Status do Atendimento */}
           <section className="space-y-4">
@@ -136,6 +160,16 @@ export function NavCalendar({ selectedDate, onSelectDate, filters, onFilterChang
                 checked={filters.highlights.includes('birthday')}
                 onChange={() => toggleHighlight('birthday')}
               />
+              <FilterItem
+                label="Horários Bloqueados"
+                id="hl-blocks"
+                checked={filters.showBlocks}
+                onChange={toggleShowBlocks}
+                color="data-[state=checked]:bg-zinc-500 data-[state=checked]:border-zinc-500"
+                activeClass="bg-zinc-50 border-zinc-200 text-zinc-900"
+                hoverClass="hover:border-zinc-200"
+                labelClass="text-zinc-600"
+              />
             </div>
           </section>
 
@@ -145,7 +179,7 @@ export function NavCalendar({ selectedDate, onSelectDate, filters, onFilterChang
       {/* 3. Rodapé / Ações */}
       <div className="p-6 bg-white border-t border-purple-100 flex flex-col gap-3 shrink-0">
         <Button asChild variant="default" size="lg" className="w-full justify-center gap-3 h-12 bg-purple-600 hover:bg-purple-700 text-white border-none shadow-md shadow-purple-100 rounded-md transition-all group font-bold">
-          <Link href="/painel/agenda/novo-atendimento">
+          <Link href="/painel/agenda/atendimento/novo">
             <FaCalendarPlus className="text-white/90 group-hover:scale-110 transition-transform text-lg" />
             Novo Atendimento
           </Link>
@@ -165,6 +199,9 @@ export function NavCalendar({ selectedDate, onSelectDate, filters, onFilterChang
                 </div>
                 Bloquear Horário
               </DialogTitle>
+              <DialogDescription className="text-gray-500 text-xs">
+                Escolha um motivo e o período para pausar os atendimentos.
+              </DialogDescription>
             </DialogHeader>
             <BlockTimeForm
               selectedDate={selectedDate || new Date()}
