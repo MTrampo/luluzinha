@@ -3,6 +3,7 @@ import { cva } from "class-variance-authority"
 import { ScheduleWeekDay } from "@/commons/models/schedule"
 import { formatScheduleStatus } from "@/commons/enums/schedule"
 import { statusMap } from "@/components/maps/status-map"
+import Link from "next/link"
 
 const appointmentCardVariants = cva(
   "p-3 rounded-lg border transition cursor-pointer shadow-sm hover:shadow-md duration-300 bg-white",
@@ -31,14 +32,14 @@ export function AppointmentSummaryCard({ appointment }: AppointmentSummaryCardPr
   const currentStatus = statusMap[appointment.status]
 
   return (
-    <div
+    <Link
+      href={`/painel/agenda/atendimento/${appointment.id}`}
       className={cn(
         appointmentCardVariants({ state }),
-        !isPast && currentStatus?.border
+        !isPast && currentStatus?.border,
+        "block"
       )}
-      role="button"
       tabIndex={isPast ? -1 : 0}
-      aria-pressed={!isPast}
       aria-label={`Agendamento de ${appointment.customerName} às ${appointment.startTime}`}
     >
       <div className="mb-2 flex items-center justify-between">
@@ -60,6 +61,6 @@ export function AppointmentSummaryCard({ appointment }: AppointmentSummaryCardPr
           {appointment.proceduresCount} {appointment.proceduresCount === 1 ? 'Procedimento' : 'Procedimentos'}
         </p>
       </div>
-    </div>
+    </Link>
   )
 }

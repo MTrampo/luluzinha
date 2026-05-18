@@ -1,30 +1,37 @@
+"use client"
+
 import { CardFinance } from "../card";
 import { PercentageBadge } from "../percentage";
 import { FaChartLine, FaUsers, FaCalendarCheck, FaMoneyBillTrendUp } from "react-icons/fa6";
+import { FinanceOverviewData } from "@/back/finance/service/finance.api";
 
-export function Overview() {
+type OverviewProps = {
+  data: FinanceOverviewData;
+}
+
+export function Overview({ data }: OverviewProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <CardFinance
-        title="Projetados"
-        helpText="Valor total estimado dos atendimentos agendados para hoje. Este valor pode variar caso ocorram desistências ou alterações nos atendimentos."
+        title="Projetados (Hoje)"
+        helpText="Valor total estimado dos atendimentos agendados para hoje. Este valor inclui atendimentos confirmados e finalizados."
         icon={FaCalendarCheck}
         description={(
           <p>
             Estimativa baseada nos atendimentos de hoje.
           </p>
         )}
-        amount='R$ 350,00'
-        last='03/02 ás 14:00'
+        amount={data.projectedDay}
+        last='Baseado na agenda de hoje'
         percentage={(
           <PercentageBadge
             status='LOW'
-            statusText='0%'
+            statusText='Hoje'
           />
         )}
       />
       <CardFinance
-        title="Atendidos"
+        title="Atendidas (Hoje)"
         helpText="Quantidade de poderosas que já tiveram seus atendimentos concluídos hoje."
         icon={FaUsers}
         description={(
@@ -32,17 +39,17 @@ export function Overview() {
             Poderosas com atendimentos finalizados hoje.
           </p>
         )}
-        amount='4'
-        last='03/02 ás 14:00'
+        amount={data.completedDayCount}
+        last='Baseado na agenda de hoje'
         percentage={(
           <PercentageBadge
             status='LOW'
-            statusText='0%'
+            statusText='Hoje'
           />
         )}
       />
       <CardFinance
-        title="Procedimentos"
+        title="Atendimentos (Mês)"
         helpText="Contagem total de atendimentos realizados e finalizados desde o início do mês."
         icon={FaChartLine}
         description={(
@@ -50,17 +57,17 @@ export function Overview() {
             Total de atendimentos concluídos este mês.
           </p>
         )}
-        amount='15'
-        last='Sem registro da última entrada'
+        amount={data.completedMonthCount}
+        last='Baseado no mês atual'
         percentage={(
           <PercentageBadge
             status='LOW'
-            statusText='0%'
+            statusText='Mês'
           />
         )}
       />
       <CardFinance
-        title="Ganhos"
+        title="Ganhos (Mês)"
         helpText="Soma dos valores de todos os atendimentos que você já finalizou neste mês."
         icon={FaMoneyBillTrendUp}
         description={(
@@ -68,12 +75,12 @@ export function Overview() {
             Valor dos atendimentos finalizados no mês.
           </p>
         )}
-        amount='R$ 3.070,43'
-        last='Sem registro da última entrada'
+        amount={data.completedMonthValue}
+        last='Baseado no mês atual'
         percentage={(
           <PercentageBadge
             status='LOW'
-            statusText='0%'
+            statusText='Mês'
           />
         )}
       />

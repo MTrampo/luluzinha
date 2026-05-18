@@ -1,5 +1,7 @@
+"use client"
+
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ReactNode } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { FaCircleQuestion } from "react-icons/fa6"
 import { IconType } from "react-icons"
@@ -15,6 +17,12 @@ type CardFinanceProps = {
 }
 
 export function CardFinance({ title, amount, percentage, description, last, icon: Icon, helpText }: CardFinanceProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   return (
     <Card className="group overflow-hidden transition-all duration-300 hover:shadow-xl border-purple-100/50 bg-white/60 backdrop-blur-md shadow-sm">
       <CardHeader className="space-y-4">
@@ -26,7 +34,7 @@ export function CardFinance({ title, amount, percentage, description, last, icon
             <CardDescription className="font-bold text-xs uppercase tracking-widest text-gray-400 group-hover:text-purple-600 transition-colors">
               {title}
             </CardDescription>
-            {helpText && (
+            {helpText && mounted && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button type="button" className="text-gray-300 hover:text-purple-500 transition-colors cursor-help">

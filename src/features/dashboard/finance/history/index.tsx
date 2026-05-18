@@ -1,7 +1,9 @@
 import { StandardAvatar } from "@/components/avatar"
 import { cn } from "@/commons/lib/tw-merge"
+import Link from "next/link"
 
 interface TransactionProps {
+  id: string
   customerName: string
   initials: string
   type: string
@@ -10,9 +12,12 @@ interface TransactionProps {
   isEntry?: boolean
 }
 
-export function Transaction({ customerName, initials, type, amount, date, isEntry = true }: TransactionProps) {
+export function Transaction({ id, customerName, initials, type, amount, date, isEntry = true }: TransactionProps) {
   return (
-    <div className="flex items-center justify-between cursor-pointer transition-all p-4 hover:bg-purple-50/50 group border-b border-purple-100/30 last:border-0">
+    <Link 
+      href={`/painel/agenda/atendimento/${id}`}
+      className="flex items-center justify-between cursor-pointer transition-all p-4 hover:bg-purple-50/50 group border-b border-purple-100/30 last:border-0"
+    >
       <div className="flex items-center gap-4">
         <StandardAvatar size="lg" initials={initials} />
         <div className="flex flex-col">
@@ -35,6 +40,6 @@ export function Transaction({ customerName, initials, type, amount, date, isEntr
           {date}
         </small>
       </div>
-    </div>
+    </Link>
   )
 }
