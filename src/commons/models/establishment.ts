@@ -1,7 +1,11 @@
-import { Tables } from "../types/database.types";
+import { z } from "zod";
+import { Database, Tables } from "../types/database.types";
 import { formatCaseName, formatDate, formatPhone } from "../utils/format";
+import { establishmentInfoFormSchema } from "../validations/establishment";
 
 export type EstablishmentSupabase = Tables<'establishments'>
+
+export type EstablishmentUpdateInput = Partial<Omit<Database['public']['Tables']['establishments']['Update'], 'id' | 'owner_id' | 'subscription_id' | 'created_at' | 'updated_at'>>
 
 export interface OpeningHour {
   open: string;
@@ -18,6 +22,8 @@ export interface OpeningHours {
   sat: OpeningHour;
   sun: OpeningHour;
 }
+
+export type EstablishmentInfoFormValues = z.infer<typeof establishmentInfoFormSchema>
 
 export interface EstablishmentFormatted {
   id: string;

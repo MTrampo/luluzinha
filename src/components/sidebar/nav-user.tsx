@@ -1,6 +1,6 @@
 'use client'
 
-import { FaCirclePlus, FaCircleUser, FaCreditCard, FaIdCard, FaPersonWalkingArrowRight, FaLock } from "react-icons/fa6";
+import { FaCirclePlus, FaCircleUser, FaCreditCard, FaIdCard, FaPersonWalkingArrowRight, FaLock, FaPaintbrush } from "react-icons/fa6";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "../ui/sidebar";
@@ -74,22 +74,26 @@ export function NavUser() {
                 <FaCirclePlus />
                 Criar Frota
               </DropdownMenuItem>
-            </DropdownMenuGroup> */}
-            <DropdownMenuSeparator />
+            </DropdownMenuGroup> 
+            <DropdownMenuSeparator />*/}
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link href="/painel/bloqueios">
-                  <FaLock />
-                  Meus Bloqueios
+                <Link href="/painel/bancada">
+                  <FaPaintbrush />
+                  Minha Bancada
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <FaIdCard />
-                Luluzinha
+              <DropdownMenuItem asChild>
+                <Link href="/painel/conta">
+                  <FaIdCard />
+                  Minha Conta
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <FaCreditCard />
-                Pagamento
+              <DropdownMenuItem asChild>
+                <Link href="/painel/pagamentos">
+                  <FaCreditCard />
+                  Pagamento
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

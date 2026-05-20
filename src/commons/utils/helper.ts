@@ -1,5 +1,7 @@
 import { TZDate } from "@date-fns/tz"
 import { format } from "date-fns"
+import { OpeningHours } from "../models/establishment";
+import { ESTABLISHMENT_WEEKDAY_ORDER } from "../constants/establishment";
 
 const TIMEZONE = "America/Sao_Paulo"
 
@@ -62,4 +64,30 @@ export const checkIsNewCustomer = (createdAt: string | null): boolean => {
   const diffTime = Math.abs(today.getTime() - created.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return diffDays <= 7;
+}
+
+export const getEstablishmentLiveStatus = (hours: OpeningHours): { isOpen: boolean; label: string } => {
+  const now = new Date();
+  const currentDayKey = ESTABLISHMENT_WEEKDAY_ORDER[now.getDay()];
+  const dayConfig = hours[currentDayKey];
+
+  if (!dayConfig || dayConfig.closed) {
+    return { isOpen: false, label: "Fechado" };
+  }
+
+  const [openH, openM] = dayConfig.open.split(":").map(Number);
+  const [closeH, closeM] = dayConfig.close.split(":").map(Number);
+
+  const currentH = now.getHours();
+  const currentM = now.getMinutes();
+
+  const openTime = openH * 60 + openM;
+  const closeTime = closeH * 60 + closeM;
+  const currentTime = currentH * 60 + currentM;
+
+  if (currentTime >= openTime && currentTime < closeTime) {
+    return { isOpen: true, label: "Aberto agora" };
+  }
+
+  return { isOpen: false, label: "Fechado" };
 }

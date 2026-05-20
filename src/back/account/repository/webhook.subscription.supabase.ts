@@ -117,7 +117,7 @@ export const webhookUpsertInvoiceSupabase = async (payload: InvoiceInsertPayload
 
   const { data, error } = await supabase
     .from('invoices')
-    .upsert(payload, { onConflict: 'mp_payment_id' })
+    .upsert(payload, { onConflict: 'mp_invoice_id' })
     .select('id')
     .single()
 

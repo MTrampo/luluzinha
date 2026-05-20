@@ -26,7 +26,7 @@ export const createScheduleBlockAction = async (values: BlockScheduleFormValues)
 
   const response = await createScheduleBlockApi(values, establishmentId);
   if (response.status === HttpStatusEnum.Ok || response.status === HttpStatusEnum.Created) {
-    revalidatePath('/painel/bloqueios');
+    revalidatePath('/painel/bancada');
     revalidatePath('/painel/agenda');
   }
   return response;
@@ -35,7 +35,7 @@ export const createScheduleBlockAction = async (values: BlockScheduleFormValues)
 export const deleteScheduleBlockAction = async (id: string) => {
   const response = await deleteScheduleBlockApi(id);
   if (response.status === HttpStatusEnum.Ok) {
-    revalidatePath('/painel/bloqueios');
+    revalidatePath('/painel/bancada');
     revalidatePath('/painel/agenda');
   }
   return response;

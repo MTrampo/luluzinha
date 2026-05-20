@@ -1,4 +1,6 @@
 import { authSupabase, serverSupabase } from "@/commons/lib/supabase/server";
+import { EstablishmentUpdateInput, EstablishmentSupabase } from "@/commons/models/establishment";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export const selectIdAndSubscriptionIdEstablishmentByUserIdSupabase = async (userId: string) => {
   const supabase = await serverSupabase()
@@ -44,4 +46,23 @@ export const getEstablishmentsByOwnerIdAuthSupabase = async (userId: string, tok
     .eq('owner_id', userId)
 
   return {  data, error }
+}
+
+export const updateEstablishmentSupabase = async (
+  establishmentId: string,
+  data: EstablishmentUpdateInput
+): Promise<{ data: EstablishmentSupabase | null; error: PostgrestError | null }> => {
+  const supabase = await serverSupabase()
+
+  const { data: updated, error } = await supabase
+    .from('establishments')
+    .update({
+      ...data,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', establishmentId)
+    .select()
+    .single()
+
+  return { data: updated, error }
 }

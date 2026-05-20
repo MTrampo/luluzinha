@@ -17,8 +17,12 @@ import {
 import { IoFlowerSharp } from "react-icons/io5";
 import { useEstablishmentStore } from "@/store/use-establishment"
 import { setEstablishmentCookie } from "@/commons/lib/auth/establishment"
+import { getEstablishmentLiveStatus } from "@/commons/utils/helper"
+import { EstablishmentIconMap } from "@/components/maps/status-map"
+import { useRouter } from "next/navigation";
 
 export function NavTeamSwitcher() {
+  const route = useRouter()
   const { establishments, activeEstablishment, setActiveEstablishment } = useEstablishmentStore()
 
   const selectNewEstablishment = async (establishmentId: string) => {
@@ -30,49 +34,78 @@ export function NavTeamSwitcher() {
     }
   }
 
+  const liveStatus = activeEstablishment?.openingHours
+    ? getEstablishmentLiveStatus(activeEstablishment.openingHours)
+    : null
+
+  const statusText = liveStatus ? `${liveStatus.isOpen ? "Aberto" : "Fechado"}` : ""
+
+  const SelectedIconComponent = activeEstablishment?.avatarUrl
+    ? (EstablishmentIconMap[activeEstablishment.avatarUrl] || IoFlowerSharp)
+    : IoFlowerSharp
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+        {/* <DropdownMenu>
+           <DropdownMenuTrigger asChild> */}
+        <SidebarMenuButton
+          size="lg"
+          onClick={() => route.push('/painel/bancada')}
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+        >
+          <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+            {activeEstablishment ? (
+              <SelectedIconComponent className="h-4 w-4" />
+            ) : (
+              <div className="h-4 w-4 border-2 border-current border-t-transparent animate-spin rounded-full" />
+            )}
+          </div>
+          <div className="grid flex-1 text-left text-sm leading-tight">
+            {activeEstablishment ? (
+              <>
+                <span className="truncate font-medium">{activeEstablishment.nameFormatted}</span>
+                <span className="truncate text-xs">{statusText}</span>
+              </>
+            ) : (
+              <div className="space-y-1.5 py-0.5 animate-pulse">
+                <div className="h-3 w-24 bg-sidebar-foreground/10 rounded" />
+                <div className="h-2 w-12 bg-sidebar-foreground/10 rounded" />
+              </div>
+            )}
+          </div>
+        </SidebarMenuButton>
+        {/* </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+        align="start"
+        side="right"
+        sideOffset={4}
+      >
+        <DropdownMenuLabel className="text-muted-foreground text-xs">
+          Meus Estabelecimentos
+        </DropdownMenuLabel>
+        {establishments.map((establishment) => {
+          const EstIcon = establishment.avatarUrl
+            ? (EstablishmentIconMap[establishment.avatarUrl] || IoFlowerSharp)
+            : IoFlowerSharp
+          return (
+            <DropdownMenuCheckboxItem
+              key={establishment.id}
+              className="gap-2 p-2 cursor-pointer"
+              checked={establishment.id === activeEstablishment?.id}
+              onCheckedChange={() => selectNewEstablishment(establishment.id)}
             >
-              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <IoFlowerSharp />
+              <div className="flex p-1 items-center justify-center rounded-md border">
+                <EstIcon />
               </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{activeEstablishment?.nameFormatted || 'Carregando...'}</span>
-                <span className="truncate text-xs">Rainha</span>
-              </div>
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            align="start"
-            side="right"
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="text-muted-foreground text-xs">
-              Meus Estabelecimentos
-            </DropdownMenuLabel>
-            {establishments.map((establishment) => (
-              <DropdownMenuCheckboxItem
-                key={establishment.id}
-                className="gap-2 p-2 cursor-pointer"
-                checked={establishment.id === activeEstablishment?.id}
-                onCheckedChange={() => selectNewEstablishment(establishment.id)}
-              >
-                <div className="flex p-1 items-center justify-center rounded-md border">
-                  <IoFlowerSharp />
-                </div>
-                {establishment.nameFormatted}
-              </DropdownMenuCheckboxItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+              {establishment.nameFormatted}
+            </DropdownMenuCheckboxItem>
+          )
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu> */}
+      </SidebarMenuItem >
+    </SidebarMenu >
   )
 }

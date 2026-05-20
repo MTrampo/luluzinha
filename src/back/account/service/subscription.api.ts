@@ -3,11 +3,16 @@ import { getSubscriptionIdByUserIdSupabase, updateSubscriptionByIdSupabase, upse
 import { ApiResponse } from "@/commons/lib/http/responses"
 import { getEstablishmentsByOwnerIdApi } from "./establishment.api"
 import { getPlanConfigBySlugApi } from "@/back/configuration/service/plan.api"
-import { SubscriptionPayloadCookie, SubscriptionPreApprovalPayload, SubscriptionUpdatePayload, UpdateSubscription } from "@/commons/models/subscription"
+import { SubscriptionPayloadCookie, SubscriptionPreApprovalPayload, SubscriptionUpdatePayload, UpdateSubscription, subscriptionFormatter } from "@/commons/models/subscription"
 import { getPreApprovalPlanPaymentApi } from "@/back/payment/service/payment.api"
 import { MercadoPagoStatusEnum } from "@/commons/enums/subscription"
 import { clearCookieSubscription, getCookieSubscription, setCookieSubscription } from "@/commons/lib/auth/subscription"
 import { nowBrazilIso } from "@/commons/utils/helper"
+import { clientPreAproval } from "@/commons/lib/mercadopago/server"
+import { getInvoicesByEstablishmentIdApi } from "@/back/payment/service/invoice.api"
+import { invoiceFormatter } from "@/commons/models/payment"
+
+
 
 
 export const createCheckoutSessionApi = async (mpPayerEmail: string) => {
@@ -225,5 +230,237 @@ export const associateSubscriptionPayerEmailApi = async (userId: string, mpPayer
   return ApiResponse.Ok({
     message: "E-mail associado à assinatura com sucesso",
     data: data
+  })
+}
+
+export const getUserSubscriptionDetailsApi = async () => {
+  const userResult = await getUserLoggedApi()
+  const userId = userResult.data?.user?.id
+  if (!userId) {
+    return ApiResponse.Unauthorized({
+      message: "Usuário não autenticado."
+    })
+  }
+
+  const subscription = await getSubscriptionIdByUserIdSupabase(userId)
+  if (!subscription) {
+    return ApiResponse.NotFound({
+      message: "Nenhuma assinatura encontrada para o usuário."
+    })
+  }
+
+  return ApiResponse.Ok({
+    message: "Assinatura recuperada com sucesso.",
+    data: subscriptionFormatter(subscription)
+  })
+}
+
+export const cancelSubscriptionApi = async () => {
+  const userResult = await getUserLoggedApi()
+  const userId = userResult.data?.user?.id
+  if (!userId) {
+    return ApiResponse.Unauthorized({
+      message: "Usuário não autenticado."
+    })
+  }
+
+  // 1. Buscar a assinatura no banco de dados local
+  const subscription = await getSubscriptionIdByUserIdSupabase(userId)
+  if (!subscription) {
+    return ApiResponse.NotFound({
+      message: "Nenhuma assinatura ativa encontrada para esta bancada."
+    })
+  }
+
+  const mpSubscriptionId = subscription.mp_subscription_id
+  if (!mpSubscriptionId) {
+    return ApiResponse.BadRequest({
+      message: "Assinatura não possui registro correspondente no Mercado Pago."
+    })
+  }
+
+  // 2. Chamar o Mercado Pago para cancelar a assinatura
+  try {
+    console.info(`[SERVICE:cancelSubscription] Cancelando assinatura ${mpSubscriptionId} no Mercado Pago...`)
+    const response = await clientPreAproval.update({
+      id: mpSubscriptionId,
+      body: {
+        status: 'cancelled'
+      }
+    })
+    console.info(`[SERVICE:cancelSubscription] Retorno Mercado Pago:`, response)
+  } catch (error) {
+    console.error(`[SERVICE:cancelSubscription] Erro ao cancelar no Mercado Pago:`, error)
+    return ApiResponse.InternalError({
+      message: "Falha ao solicitar o cancelamento junto ao Mercado Pago. Verifique sua conexão.",
+      error: error instanceof Error ? error.message : String(error)
+    })
+  }
+
+  // 3. Atualizar no Supabase local
+  const payload: SubscriptionUpdatePayload = {
+    mp_status: MercadoPagoStatusEnum.Cancelled,
+    updated_at: nowBrazilIso(),
+  }
+
+  const { data, error } = await updateSubscriptionByIdSupabase(subscription.id, payload)
+  if (error) {
+    console.error(`[SERVICE:cancelSubscription] Erro ao atualizar no Supabase local:`, error)
+    return ApiResponse.InternalError({
+      message: "Assinatura cancelada no Mercado Pago, mas ocorreu uma falha ao atualizar o status local.",
+      error: error.message
+    })
+  }
+
+  // 4. Limpar/atualizar o cookie de assinatura local
+  await clearCookieSubscription()
+  const cookiePayload: SubscriptionPayloadCookie = {
+    subscriptionId: subscription.id,
+    status: MercadoPagoStatusEnum.Cancelled,
+    currentPeriodEnd: subscription.current_period_end
+  }
+  await setCookieSubscription(JSON.stringify(cookiePayload))
+
+  // Obter a assinatura atualizada do banco de dados
+  const updatedSubscription = await getSubscriptionIdByUserIdSupabase(userId)
+
+  return ApiResponse.Ok({
+    message: "Assinatura cancelada com sucesso na sua bancada.",
+    data: updatedSubscription ? subscriptionFormatter(updatedSubscription) : null
+  })
+}
+
+export const syncSubscriptionStatusApi = async () => {
+  const userResult = await getUserLoggedApi()
+  const userId = userResult.data?.user?.id
+  if (!userId) {
+    return ApiResponse.Unauthorized({
+      message: "Usuário não autenticado."
+    })
+  }
+
+  // 1. Buscar a assinatura local
+  const subscription = await getSubscriptionIdByUserIdSupabase(userId)
+  if (!subscription) {
+    return ApiResponse.NotFound({
+      message: "Nenhuma assinatura ativa para sincronização."
+    })
+  }
+
+  const mpSubscriptionId = subscription.mp_subscription_id
+  if (!mpSubscriptionId) {
+    return ApiResponse.BadRequest({
+      message: "A assinatura local não está integrada ao Mercado Pago."
+    })
+  }
+
+  // 2. Buscar status atualizado no Mercado Pago
+  let mpStatus = subscription.mp_status
+  let currentPeriodEnd = subscription.current_period_end
+
+  try {
+    console.info(`[SERVICE:syncSubscription] Buscando assinatura ${mpSubscriptionId} no Mercado Pago...`)
+    const mpData = await clientPreAproval.get({ id: mpSubscriptionId })
+    console.info(`[SERVICE:syncSubscription] Dados do Mercado Pago:`, { status: mpData.status, next_payment_date: mpData.next_payment_date })
+    
+    if (mpData.status) {
+      mpStatus = mpData.status
+    }
+    const { toIsoOrNull } = require("@/commons/utils/helper")
+    if (mpData.next_payment_date) {
+      currentPeriodEnd = toIsoOrNull(mpData.next_payment_date)
+    }
+  } catch (error) {
+    console.error(`[SERVICE:syncSubscription] Erro ao buscar dados do Mercado Pago:`, error)
+    return ApiResponse.InternalError({
+      message: "Falha ao obter status atualizado do Mercado Pago.",
+      error: error instanceof Error ? error.message : String(error)
+    })
+  }
+
+  // 3. Se houver divergências, atualizar banco e cookie
+  if (mpStatus !== subscription.mp_status || currentPeriodEnd !== subscription.current_period_end) {
+    const payload: SubscriptionUpdatePayload = {
+      mp_status: mpStatus,
+      current_period_end: currentPeriodEnd,
+      updated_at: nowBrazilIso(),
+    }
+
+    const { data, error } = await updateSubscriptionByIdSupabase(subscription.id, payload)
+    if (error) {
+      console.error(`[SERVICE:syncSubscription] Falha ao atualizar banco de dados local:`, error)
+    } else {
+      console.info(`[SERVICE:syncSubscription] Banco de dados local sincronizado`)
+    }
+  }
+
+  // Atualizar cookie
+  await clearCookieSubscription()
+  const cookiePayload: SubscriptionPayloadCookie = {
+    subscriptionId: subscription.id,
+    status: mpStatus,
+    currentPeriodEnd: currentPeriodEnd
+  }
+  await setCookieSubscription(JSON.stringify(cookiePayload))
+
+  // Obter a assinatura atualizada
+  const updatedSubscription = await getSubscriptionIdByUserIdSupabase(userId)
+
+  return ApiResponse.Ok({
+    message: "Sua assinatura foi sincronizada com sucesso!",
+    data: updatedSubscription ? subscriptionFormatter(updatedSubscription) : null
+  })
+}
+
+export const getEstablishmentInvoicesApi = async () => {
+  const userResult = await getUserLoggedApi()
+  const userId = userResult.data?.user?.id
+  if (!userId) {
+    return ApiResponse.Unauthorized({
+      message: "Usuário não autenticado."
+    })
+  }
+
+  // 1. Buscar se o usuário possui algum estabelecimento como proprietário (owner)
+  const establishmentResult = await getEstablishmentsByOwnerIdApi(userId)
+  if (establishmentResult.error) {
+    return ApiResponse.InternalError({
+      message: establishmentResult.message,
+      error: establishmentResult.error
+    })
+  }
+
+  const establishments = establishmentResult.data
+  if (!establishments || !Array.isArray(establishments) || establishments.length === 0) {
+    // Não é proprietário de nenhum estabelecimento (pode ser convidado ou sem estabelecimento ainda)
+    return ApiResponse.Ok({
+      message: "Usuário não é proprietário de nenhum estabelecimento.",
+      data: {
+        isOwner: false,
+        invoices: []
+      }
+    })
+  }
+
+  const establishment = establishments[0]
+
+  // 2. Buscar faturas do estabelecimento
+  const invoicesResult = await getInvoicesByEstablishmentIdApi(establishment.id)
+  if (invoicesResult.error) {
+    return ApiResponse.InternalError({
+      message: invoicesResult.message,
+      error: invoicesResult.error
+    })
+  }
+
+  const invoices = invoicesResult.data || []
+  const formattedInvoices = invoices.map(invoiceFormatter)
+
+  return ApiResponse.Ok({
+    message: "Faturas recuperadas com sucesso.",
+    data: {
+      isOwner: true,
+      invoices: formattedInvoices
+    }
   })
 }
