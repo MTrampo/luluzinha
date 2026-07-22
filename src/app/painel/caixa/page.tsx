@@ -26,7 +26,7 @@ export default async function CashRegister() {
         {/* Elemento de Design Premium (Fundo) */}
         <div className="absolute top-0 right-0 -u-z-10 w-1/2 h-1/2 bg-linear-to-br from-purple-100/40 to-transparent blur-3xl rounded-full" />
 
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 w-full min-w-0">
           <Overview data={data.overview} />
 
           <div className="flex flex-col gap-4">

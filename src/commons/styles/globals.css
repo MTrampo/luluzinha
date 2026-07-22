@@ -109,7 +109,16 @@ select {
 
 @layer components {
   .main-content {
-    @apply flex flex-col max-[374]:p-2 p-6 gap-y-10
+    @apply flex flex-col max-[374]:p-2 max-[374]:py-4 p-6 gap-y-6 md:gap-y-10
+  }
+}
+
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 

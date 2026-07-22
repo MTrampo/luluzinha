@@ -1,37 +1,45 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ScheduleCard } from "./card/schedule-card";
+import { ScheduleCardMobile } from "./card/mobile/schedule-card";
 import { ScheduleBlockCard } from "./card/schedule-block-card";
+import { ScheduleBlockCardMobile } from "./card/mobile/schedule-block-card";
 import { NavCalendar } from "./nav-calendar";
 import { ScheduleFilters, ScheduleDash, BlockFormatted } from "@/commons/models/schedule";
 import { FaCalendarDays } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { useIsCompactMobile } from "@/hooks/use-mobile";
 import { ScheduleFeedbackEmpty } from "./feedback";
 import { getFriendlyDateTitle } from "@/commons/utils/date";
 import { SCHEDULE_TIMEZONE } from "@/commons/constants/schedule";
 
-type TimelineItem = 
+type TimelineItem =
   | { type: 'schedule'; id: string; time: number; data: ScheduleDash }
   | { type: 'block'; id: string; time: number; data: BlockFormatted };
 
 interface ScheduleProps {
   schedules: ScheduleDash[];
   blocks: BlockFormatted[];
-  isMobileServer?: boolean;
 }
 
-export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
+export function Schedule({ schedules, blocks }: ScheduleProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const dateParam = searchParams.get("date");
+  const dateParam = searchParams.get("data");
 
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     dateParam ? new Date(dateParam + SCHEDULE_TIMEZONE) : new Date()
   );
+  const [prevDateParam, setPrevDateParam] = useState(dateParam);
+
+  if (dateParam !== prevDateParam) {
+    setPrevDateParam(dateParam);
+    setSelectedDate(dateParam ? new Date(dateParam + SCHEDULE_TIMEZONE) : new Date());
+  }
+
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [filters, setFilters] = useState<ScheduleFilters>({
     statuses: [],
@@ -40,25 +48,17 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
     search: ""
   });
 
-  const isMobileClient = useIsMobile();
-  const isMobile = isMobileClient ?? isMobileServer;
-
-  useEffect(() => {
-    if (dateParam) {
-      const newDate = new Date(dateParam + SCHEDULE_TIMEZONE);
-      setSelectedDate(newDate);
-    } else {
-      setSelectedDate(new Date());
-    }
-  }, [dateParam]);
+  const isCompact = useIsCompactMobile();
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
     if (date) {
       const isoDate = date.toISOString().split('T')[0];
-      router.push(`/painel/agenda?date=${isoDate}`);
-      setIsSheetOpen(false);
+      router.push(`/painel/agenda?data=${isoDate}`);
+    } else {
+      router.push("/painel/agenda");
     }
+    setIsSheetOpen(false);
   };
 
   const filteredSchedules = useMemo(() => {
@@ -94,7 +94,7 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
       const search = filters.search.toLowerCase();
       return blocks.filter(b => b.reason.toLowerCase().includes(search));
     }
-    
+
     return blocks;
   }, [blocks, filters.search]);
 
@@ -125,17 +125,45 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
     ];
 
     return items.sort((a, b) => a.time - b.time);
-  }, [filteredSchedules, blocks, selectedDate]);
+  }, [filteredSchedules, filteredBlocks, selectedDate]);
+
+  const friendlyTitle = useMemo(() => {
+    const titleText = getFriendlyDateTitle(selectedDate);
+    if (!isCompact) return titleText;
+
+    const lowerTitle = titleText.toLowerCase();
+    if (
+      lowerTitle.endsWith("ontem") ||
+      lowerTitle.endsWith("hoje") ||
+      lowerTitle.endsWith("amanhã")
+    ) {
+      return titleText;
+    }
+
+    const prefix = "Atendimentos de";
+    if (titleText.startsWith(prefix)) {
+      const datePart = titleText.substring(prefix.length).trim();
+      return (
+        <>
+          {prefix}
+          <br />
+          {datePart}
+        </>
+      );
+    }
+
+    return titleText;
+  }, [selectedDate, isCompact]);
 
   return (
     <div className="flex gap-6 relative">
       <div className="flex flex-col flex-1 gap-6">
-        <div className="flex items-center justify-between shrink-0">
+        <div className="flex items-center justify-between shrink-0 gap-4 max-[425px]:gap-6">
           <div>
-            <h2 className="text-purple-900 leading-tight tracking-tight">
-              {getFriendlyDateTitle(selectedDate)}
+            <h2 className="text-purple-900 leading-tight tracking-tight text-lg md:text-2xl font-bold">
+              {friendlyTitle}
             </h2>
-            <p className="text-xs md:text-sm text-gray-500 font-medium">
+            <p className="text-xs md:text-sm text-gray-500 font-medium hidden sm:block">
               Acompanhe o ritmo da sua bancada e brilhe com suas{" "}
               <span className="text-purple-600 font-semibold">Poderosas</span>.
             </p>
@@ -147,19 +175,31 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="lg:hidden text-purple-600 hover:text-purple-700 hover:bg-purple-100/50 transition-all shrink-0 rounded-md"
+                  className="xl:hidden text-purple-600 hover:text-purple-700 hover:bg-purple-100/50 transition-all shrink-0 rounded-md"
                   title="Abrir Agenda"
                 >
                   <FaCalendarDays size={20} />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="p-0 w-[320px] sm:w-[400px] border-l-purple-100">
-                <NavCalendar
-                  selectedDate={selectedDate}
-                  onSelectDate={handleDateSelect}
-                  filters={filters}
-                  onFilterChange={setFilters}
-                />
+              <SheetContent side="right" className="p-0 w-[320px] sm:w-100 border-l-purple-100 flex flex-col bg-white gap-0">
+                <div className="p-6 border-b border-purple-100/50 pr-12 shrink-0">
+                  <SheetTitle className="text-purple-900 font-bold text-lg">
+                    Agenda de Atendimentos
+                  </SheetTitle>
+                  <SheetDescription className="text-gray-500 text-xs mt-1 leading-normal">
+                    Selecione uma data e filtre os procedimentos para organizar sua bancada.
+                  </SheetDescription>
+                </div>
+                <div className="flex-1 min-h-0">
+                  {isSheetOpen && (
+                    <NavCalendar
+                      selectedDate={selectedDate}
+                      onSelectDate={handleDateSelect}
+                      filters={filters}
+                      onFilterChange={setFilters}
+                    />
+                  )}
+                </div>
               </SheetContent>
             </Sheet>
           </div>
@@ -170,9 +210,17 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
             <div className="flex flex-col gap-4">
               {timelineItems.map((item) => (
                 item.type === 'schedule' ? (
-                  <ScheduleCard key={item.id} schedule={item.data} isMobileServer={isMobileServer} />
+                  isCompact ? (
+                    <ScheduleCardMobile key={item.id} schedule={item.data} />
+                  ) : (
+                    <ScheduleCard key={item.id} schedule={item.data} />
+                  )
                 ) : (
-                  <ScheduleBlockCard key={item.id} block={item.data} />
+                  isCompact ? (
+                    <ScheduleBlockCardMobile key={item.id} block={item.data} />
+                  ) : (
+                    <ScheduleBlockCard key={item.id} block={item.data} />
+                  )
                 )
               ))}
             </div>
@@ -182,8 +230,8 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
         </div>
       </div>
 
-      <div className="hidden lg:block relative w-xs shrink-0 self-start">
-        <div className="sticky top-20 h-[calc(100vh-140px)] flex flex-col">
+      <div className="hidden xl:block">
+        <div className="sticky top-20 [@media(max-height:820px)]:top-14 h-[calc(100vh-140px)] [@media(max-height:820px)]:h-[calc(100vh-90px)] 2xl:h-[calc(100vh-120px)] lg:w-72 xl:w-xs shrink-0 self-start flex flex-col">
           <div className="w-full h-full bg-white rounded-md shadow-[0_20px_50px_rgba(147,51,234,0.06)] border border-purple-100 overflow-hidden flex flex-col min-h-0 flex-1">
             <NavCalendar
               selectedDate={selectedDate}
@@ -194,6 +242,7 @@ export function Schedule({ schedules, blocks, isMobileServer }: ScheduleProps) {
           </div>
         </div>
       </div>
+
     </div>
   );
 }

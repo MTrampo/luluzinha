@@ -117,3 +117,16 @@ export function calculateScheduleDates(selectedDate: Date, selectedTime: string,
     endAt
   };
 }
+
+/**
+ * Retorna uma lista de itens visíveis com base em um limite máximo, além da contagem de itens restantes.
+ */
+export function getVisibleProcedures<T>(procedures: T[], maxVisible: number) {
+  const visibleProcedures = procedures.slice(0, maxVisible);
+  const remainingCount = Math.max(0, procedures.length - maxVisible);
+  return {
+    visibleProcedures,
+    remainingCount
+  };
+}
+

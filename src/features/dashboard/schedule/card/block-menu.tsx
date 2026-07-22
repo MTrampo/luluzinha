@@ -9,14 +9,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { BlockScheduleSupabase } from "@/commons/models/schedule"
+import { BlockFormatted } from "@/commons/models/schedule"
 import { deleteScheduleBlockAction } from "@/actions/schedule-blocks"
 import { toast } from "sonner"
 import { HttpStatusEnum } from "@/commons/enums/http"
 import { Loader2 } from "lucide-react"
 
 interface BlockMenuProps {
-  block: BlockScheduleSupabase;
+  block: BlockFormatted;
 }
 
 export function BlockMenu({ block }: BlockMenuProps) {

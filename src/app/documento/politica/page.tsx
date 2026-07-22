@@ -5,13 +5,13 @@ export default function PrivacyPolicy() {
   const appName = "Luluzinha";
 
   return (
-    <>
+    <div className="min-h-screen bg-purple-50/10 text-slate-700">
       <Header/>
-      <div>
-        <section className="mx-auto px-6 py-12 sm:py-24 max-w-5xl md:max-w-7xl space-y-12">
-          <div>
-            <h1>Política de Privacidade</h1>
-            <p>
+      <div className="mx-auto px-6 py-12 sm:py-24 max-w-5xl md:max-w-7xl">
+        <section className="space-y-12">
+          <div className="space-y-4">
+            <h1 className="text-4xl font-black text-purple-950 font-lexend">Política de Privacidade</h1>
+            <p className="text-lg text-slate-600 leading-relaxed">
               Esta Política de Privacidade descreve como a {appName} coleta, utiliza e protege as suas informações e os dados inseridos no sistema. Ao utilizar nosso serviço, você concorda com as práticas descritas aqui.
             </p>
           </div>
@@ -91,6 +91,6 @@ export default function PrivacyPolicy() {
           </p>
         </section>
       </div>
-    </>
+    </div>
   );
 }

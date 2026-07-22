@@ -61,7 +61,7 @@ export function SignInForm({ signInUser, sendEmailUser }: SignInFormProps) {
     <div className="flex flex-col gap-6">
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={formUser.handleSubmit(handleSubmit)}>
+          <form className="p-6 md:p-8" method="POST" onSubmit={formUser.handleSubmit(handleSubmit)}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h3>{isForgotPassword ? 'Recuperar senha' : 'Entre na sua conta'}</h3>

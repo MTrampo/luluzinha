@@ -18,7 +18,7 @@ export function ErrorState({ type, title, description, action, className }: Erro
 
   return (
     <div className={`col-span-full flex flex-col items-center justify-center py-16 px-4 text-center ${className || ''}`}>
-      <div className="relative w-64 h-64 md:w-72 md:h-72 mb-6">
+      <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 mb-6">
         <Image src={imgSrc} alt={title} fill className="object-contain" priority />
       </div>
       <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">{title}</h3>

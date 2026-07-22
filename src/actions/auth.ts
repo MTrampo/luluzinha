@@ -22,9 +22,6 @@ export const verifyOtpCodeAction = async (email: string, code: string) => {
 
 export const signOutAction = async () => {
   const response = await signOutApi()
-  if (response.status === HttpStatusEnum.Ok) {
-    revalidatePath('/', 'layout')
-  }
   return response
 }
 

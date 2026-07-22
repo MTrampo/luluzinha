@@ -27,11 +27,11 @@ export function CustomSheet({ trigger, title, description, children, open, onOpe
           {trigger}
         </SheetTrigger>
       )}
-      <SheetContent>
+      <SheetContent side="right" className="p-0 w-[320px] sm:w-100 flex flex-col bg-white gap-0">
         <SheetHeader>
-          <SheetTitle>{title}</SheetTitle>
+          <SheetTitle className="text-purple-900 font-bold text-lg">{title}</SheetTitle>
           {description && (
-            <SheetDescription>
+            <SheetDescription className="text-gray-500 text-xs mt-1 leading-normal">
               {description}
             </SheetDescription>
           )}

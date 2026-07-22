@@ -5,13 +5,13 @@ export default function TermsOfUse() {
   const appName = "Luluzinha";
 
   return (
-    <>
+    <div className="min-h-screen bg-purple-50/10 text-slate-700">
       <Header/>
-      <div>
-        <section className="mx-auto px-6 py-12 sm:py-24 max-w-5xl md:max-w-7xl space-y-12">
-          <div>
-            <h1>Termos e Condições de Uso</h1>
-            <p>
+      <div className="mx-auto px-6 py-12 sm:py-24 max-w-5xl md:max-w-7xl">
+        <section className="space-y-12">
+          <div className="space-y-4">
+            <h1 className="text-4xl font-black text-purple-950 font-lexend">Termos e Condições de Uso</h1>
+            <p className="text-lg text-slate-600 leading-relaxed">
               A <strong>{appName}</strong> é um ecossistema de tecnologia voltado à <strong>gestão profissional para Prestadores de Serviço</strong>. 
               Nosso objetivo é fornecer ferramentas que automatizem processos e organizem o o cotidiano do seu negócio, permitindo que você foque no que realmente importa: o seu atendimento.
             </p>
@@ -153,6 +153,6 @@ export default function TermsOfUse() {
           </p>
         </section>
       </div>
-    </>
+    </div>
   );
 }

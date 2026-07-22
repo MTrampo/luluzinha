@@ -57,7 +57,7 @@ export function CardWeekDay({ initialSchedules }: { initialSchedules: ScheduleWe
 
   return (
     <>
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+      <div className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth">
         {weekDays.map((day) => {
           const isPast = isBefore(day, today) && !isToday(day)
           const isSelected = selectedDay.toDateString() === day.toDateString()
@@ -69,7 +69,7 @@ export function CardWeekDay({ initialSchedules }: { initialSchedules: ScheduleWe
           return (
             <div
               key={day.toDateString()}
-              className={cn(variants({ state, bordered: true }))}
+              className={cn(variants({ state, bordered: true }), "snap-start snap-always")}
               onClick={() => !isPast && setSelectedDay(day)}
               role="button"
               aria-pressed={isSelected}

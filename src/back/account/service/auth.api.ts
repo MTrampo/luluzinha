@@ -105,10 +105,7 @@ export const signOutApi = async () => {
   const error = await killAuthSupabase()
 
   if (error) {
-    return ApiResponse.InternalError({
-      message: "Erro ao deslogar usuário.",
-      error: error.message,
-    });
+    console.warn(`[signOutApi] Erro ao deslogar no Supabase (prosseguindo com limpeza local):`, error.message)
   }
 
   await clearCookieSubscription()

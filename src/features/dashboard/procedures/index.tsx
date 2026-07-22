@@ -25,7 +25,7 @@ export default async function Procedures({ procedures }: ProceduresProps) {
             trigger={
               <Button size='sm'>
                 <FaHeartCirclePlus />
-                Novo Procedimento
+                <span className="hidden md:block">Novo Procedimento</span>
               </Button>
             }
           >
@@ -36,7 +36,7 @@ export default async function Procedures({ procedures }: ProceduresProps) {
         {procedures.length === 0 ? (
           <ProcedureFeedbackSearchNotFound />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             {procedures.map((procedure) => (
               <ProceduresCard key={procedure.id} procedure={procedure} />
             ))}

@@ -17,7 +17,7 @@ export default async function Customers({ customers }: CustomersProps) {
     <>
       <Header title="Poderosas" />
       <div className="main-content">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center md:mb-6">
           <SearchInput placeholder="Pesquisar por nome ou celular..." />
           <CustomSheet
             title="Nova Poderosa"
@@ -25,7 +25,7 @@ export default async function Customers({ customers }: CustomersProps) {
             trigger={
               <Button size='sm'>
                 <FaUserPlus />
-                Nova Poderosa
+                <span className="hidden md:block">Nova Poderosa</span>
               </Button>
             }
           >
@@ -36,7 +36,7 @@ export default async function Customers({ customers }: CustomersProps) {
         {customers.length === 0 ? (
           <CustomerFeedbackSearchNotFound />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             {customers.map((customer) => (
               <CustomerCard key={customer.id} customer={customer} />
             ))}

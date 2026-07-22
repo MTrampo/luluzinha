@@ -23,7 +23,7 @@ export function FilterItem({
   return (
     <div
       className={cn(
-        "flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer group",
+        "flex items-center justify-between p-3 [@media(max-height:820px)]:py-1.5 [@media(max-height:820px)]:px-2.5 rounded-lg border transition-all cursor-pointer group",
         checked ? activeClass : cn("bg-white border-transparent", hoverClass)
       )}
       onClick={onChange}
@@ -36,7 +36,7 @@ export function FilterItem({
         checked={checked}
         onCheckedChange={onChange}
         className={cn(
-          "h-5 w-5 border-purple-200 rounded-md transition-all",
+          "h-5 w-5 [@media(max-height:820px)]:h-4 [@media(max-height:820px)]:w-4 border-purple-200 transition-all",
           checked ? color : "bg-white"
         )}
       />

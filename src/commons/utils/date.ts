@@ -10,7 +10,9 @@ export const getFriendlyDateTitle = (date: Date | undefined, prefix = "Atendimen
 
   const formattedDate = format(date, "EEE, dd 'de' MMMM", { locale: ptBR });
   const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-  return `${prefix} de ${capitalizedDate}`;
+  const formattedMonth = capitalizedDate.replace(/ de ([a-z])/g, (_, char) => ` de ${char.toUpperCase()}`);
+
+  return `${prefix} de ${formattedMonth}`;
 };
 
 export const isSameCalendarDay = (date1: Date | string | number, date2: Date | string | number) => {

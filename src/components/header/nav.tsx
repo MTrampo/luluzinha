@@ -11,20 +11,26 @@ import {
 export function Navigation() {
   return (
     <NavigationMenu viewport={false}>
-      <NavigationMenuList>
+      <NavigationMenuList className="gap-1 sm:gap-2">
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/">Plataforma</Link>
+            <Link href="/#funcionalidades" className="text-sm font-medium text-purple-800 hover:text-purple-600 transition-colors">
+              Funcionalidades
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/">Planos</Link>
+            <Link href="/#preco" className="text-sm font-medium text-purple-800 hover:text-purple-600 transition-colors">
+              Preço
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/">Perguntas</Link>
+            <Link href="/#duvidas" className="text-sm font-medium text-purple-800 hover:text-purple-600 transition-colors">
+              Dúvidas
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>

@@ -6,25 +6,29 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { FaCircleQuestion } from "react-icons/fa6"
 import { IconType } from "react-icons"
 
+import { cn } from "@/commons/lib/tw-merge"
+
 type CardFinanceProps = {
   title: string
   amount: string
-  percentage: ReactNode
+  percentage?: ReactNode
   description: ReactNode
   last: string
   icon?: IconType
   helpText?: string
+  className?: string
 }
 
-export function CardFinance({ title, amount, percentage, description, last, icon: Icon, helpText }: CardFinanceProps) {
+export function CardFinance({ title, amount, percentage, description, last, icon: Icon, helpText, className }: CardFinanceProps) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
   }, [])
 
   return (
-    <Card className="group overflow-hidden transition-all duration-300 hover:shadow-xl border-purple-100/50 bg-white/60 backdrop-blur-md shadow-sm">
+    <Card className={cn("group overflow-hidden transition-shadow duration-300 hover:shadow-xl border-purple-100/50 bg-white xl:bg-white/60 xl:backdrop-blur-md shadow-sm transform-gpu", className)}>
       <CardHeader className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -41,15 +45,17 @@ export function CardFinance({ title, amount, percentage, description, last, icon
                     <FaCircleQuestion className="w-3.5 h-3.5" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-[200px] text-[10px] bg-gray-900 text-white border-none shadow-2xl p-3 leading-relaxed">
+                <TooltipContent side="top" className="max-w-50 text-[10px] bg-gray-900 text-white border-none shadow-2xl p-3 leading-relaxed">
                   {helpText}
                 </TooltipContent>
               </Tooltip>
             )}
           </div>
-          <CardAction>
-            {percentage}
-          </CardAction>
+          {percentage && (
+            <CardAction>
+              {percentage}
+            </CardAction>
+          )}
         </div>
       </CardHeader>
       <CardContent>

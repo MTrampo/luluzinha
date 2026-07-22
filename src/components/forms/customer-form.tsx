@@ -39,7 +39,7 @@ export function CustomerForm({ customer, onSuccess }: CustomerFormProps) {
   const onSubmit = (data: CustomerFormInputs) => {
     startTransition(async () => {
       try {
-        const response = customer 
+        const response = customer
           ? await updateCustomerAction(customer.id, data)
           : await addCustomerAction(data);
 
@@ -57,7 +57,7 @@ export function CustomerForm({ customer, onSuccess }: CustomerFormProps) {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       <div className="grid grid-cols-1 gap-4">
         <Controller
           control={form.control}
@@ -92,7 +92,7 @@ export function CustomerForm({ customer, onSuccess }: CustomerFormProps) {
                   onChange={(e) => {
                     let val = e.target.value.replace(/\D/g, "");
                     if (val.length > 11) val = val.slice(0, 11);
-                    
+
                     let formatted = val;
                     if (val.length > 0) {
                       formatted = "(" + val.slice(0, 2);
@@ -162,9 +162,9 @@ export function CustomerForm({ customer, onSuccess }: CustomerFormProps) {
         />
       </div>
 
-      <div className="flex justify-end gap-3 pt-4 border-t">
-        <Button 
-          type="submit" 
+      <div className="flex justify-end gap-3 pt-4">
+        <Button
+          type="submit"
           className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-6 rounded-xl"
           disabled={isPending}
         >

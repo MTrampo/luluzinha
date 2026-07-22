@@ -3,12 +3,15 @@
 import { InputSearch } from "@/components/ui/search";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
+import { cn } from "@/commons/lib/tw-merge";
 
 type SearchInputProps = {
   placeholder?: string;
+  className?: string;
+  wrapperClassName?: string;
 }
 
-export function SearchInput({ placeholder }: SearchInputProps) {
+export function SearchInput({ placeholder, className, wrapperClassName }: SearchInputProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentQuery = searchParams.get('q') || '';
@@ -25,6 +28,8 @@ export function SearchInput({ placeholder }: SearchInputProps) {
 
   return (
     <InputSearch
+      className={className}
+      wrapperClassName={cn("w-50 md:w-full max-w-xs", wrapperClassName)}
       defaultValue={currentQuery}
       onSearch={handleSearch}
       placeholder={placeholder}

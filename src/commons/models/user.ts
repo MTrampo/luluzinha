@@ -1,5 +1,6 @@
 import z from "zod"
 import { sendEmailFormSchema, otpVerificationSchema, userSignInFormSchema, userSignUpFormSchema, forgotPasswordFormSchema } from "../validations/user"
+import { User } from "@supabase/supabase-js"
 
 export interface UserRequestBody {
   name: string;
@@ -30,6 +31,8 @@ export interface ProfileFormatted {
   updatedAtFormatted: string
   createdAtFormatted: string
 }
+
+export type UserProfile = User | null | undefined
 
 export type SignInRequestBody = Omit<UserRequestBody, "name">
 

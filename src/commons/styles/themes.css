@@ -39,7 +39,7 @@
 }
 
 /* Identity Theme (Luluzinha) */
-body.theme-luluzinha {
+body.theme-luluzinha, .theme-luluzinha {
   /* Fundo muito suave usando as paletas do Tailwind */
   --background: var(--color-purple-50) !important;
   --foreground: var(--color-neutral-900) !important;
