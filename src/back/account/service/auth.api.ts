@@ -1,5 +1,5 @@
 import { ResetPasswordRequestBody, SignInRequestBody, UserRequestBody } from "@/commons/models/user";
-import { confirmCodePasswordReset, createAuthSupabase, createProfileSupabase, getUserLogged, killAuthSupabase, sendPasswordResetEmail, signInWithEmail, updatePassword, verifyCode } from "../repository/auth.supabase";
+import { confirmCodePasswordReset, createAuthSupabase, createProfileSupabase, getUserLogged, killAuthSupabase, sendPasswordResetEmail, signInWithEmail, updatePassword, verifyCode, getProfileByUserIdSupabase } from "../repository/auth.supabase";
 import { resolveAuthError } from "@/commons/errors/auth";
 import { ApiResponse } from "@/commons/lib/http/responses";
 import { getEstablishmentsByOwnerIdAuthSupabase } from "../repository/establishment.supabase";
@@ -39,6 +39,9 @@ export const signInUserApi = async (body: SignInRequestBody) => {
   // Buscar dados da assinatura (Usando o cliente com RLS do usuário via Token)
   const subscription = await getSubscriptionIdByUserIdAuthSupabase(userId, token);
 
+  // Buscar perfil da manicure
+  const { data: profile } = await getProfileByUserIdSupabase(userId);
+
   // Definir o caminho de redirecionamento recomendado
   let redirectPath = '/assinatura';
   let subscriptionPayload: SubscriptionPayloadCookie | null = null;
@@ -65,6 +68,7 @@ export const signInUserApi = async (body: SignInRequestBody) => {
       ...data,
       establishments: establishmentsFormatter(establishments),
       subscription: subscriptionPayload,
+      profile: profile || null,
       redirectPath
     }
   });
@@ -92,8 +96,6 @@ export const signUpUserApi = async (body: UserRequestBody) => {
       error: "Usuário autenticado, mas ID do usuário não encontrado."
     });
   }
-
-  //await createProfileApi(userId, body);
 
   return ApiResponse.Ok({
     message: `E-mail de confirmação enviado para ${body.email}`,
@@ -138,17 +140,17 @@ export const sendPasswordResetEmailApi = async (email: string) => {
   });
 }
 
-export const createProfileApi = async (userId: string, body: UserRequestBody) => {
-  const { data: profileData, error: profileError } = await createProfileSupabase(userId, body)
+export const createProfileApi = async (userId: string, name: string, avatarUrl?: string | null) => {
+  const { data: profileData, error: profileError } = await createProfileSupabase(userId, name, avatarUrl)
   if (profileError) {
     return ApiResponse.InternalError({
-      message: "Usuário autenticado, mas falha ao criar perfil no banco.",
+      message: "Falha ao criar o perfil da manicure.",
       error: profileError.message,
     });
   }
 
   return ApiResponse.Ok({
-    message: "Usuário criado com sucesso.",
+    message: "Perfil criado com sucesso.",
     data: profileData
   })
 }

@@ -1,27 +1,55 @@
 import { ApiResponse } from "@/commons/lib/http/responses"
-import { clientPreApprovalPlan, clientPreAproval, clientInvoice } from "@/commons/lib/mercadopago/server"
+import { clientPreAproval, clientInvoice } from "@/commons/lib/mercadopago/server"
 
-export const getPreApprovalPlanPaymentApi = async (preApprovalPlanId: string) => {
+export const createPreApprovalSubscriptionApi = async (payerEmail: string, subscriptionId: string, planPrice: number) => {
   try {
-    const preApprovalPlan = await clientPreApprovalPlan.get({
-      preApprovalPlanId
+    console.info(`🌐 [PAYMENT:createPreApproval] Criando assinatura individual no MP | email: ${payerEmail} | subId: ${subscriptionId} | preço: ${planPrice}`)
+    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+    if (process.env.ENVIRONMENT === "development" && process.env.DEV_TUNNEL_URL) {
+      console.info("🔧 [PAYMENT:createPreApproval] Modo dev detectado. Usando URL do Dev Tunnel para retorno do Mercado Pago.")
+      baseUrl = process.env.DEV_TUNNEL_URL
+    }
+    const backUrl = `${baseUrl}/assinatura`
+
+    const response = await clientPreAproval.create({
+      body: {
+        back_url: backUrl,
+        reason: "Fundadoras",
+        auto_recurring: {
+          frequency: 1,
+          frequency_type: "months",
+          transaction_amount: planPrice,
+          currency_id: "BRL",
+          free_trial: {
+            frequency: 1,
+            frequency_type: "months"
+          }
+        },
+        payer_email: payerEmail,
+        external_reference: subscriptionId,
+        status: "pending"
+      } as unknown as Parameters<typeof clientPreAproval.create>[0]["body"],
     })
 
-    if (!preApprovalPlan || !preApprovalPlan.init_point) {
+    if (!response || !response.init_point) {
+      console.error("❌ [PAYMENT:createPreApproval] Resposta inválida do MP", response)
       return ApiResponse.InternalError({
-        message: "Resposta inválida do Mercado Pago"
+        message: "Resposta inválida do Mercado Pago ao criar assinatura"
       })
     }
 
     return ApiResponse.Ok({
-      message: "Link de pagamento gerado com sucesso",
-      data: preApprovalPlan.init_point
+      message: "Checkout de assinatura criado com sucesso",
+      data: {
+        initPoint: response.init_point,
+        preapprovalId: response.id
+      }
     })
   } catch (error) {
-    console.error("Erro ao criar pré pagamento no Mercado Pago:",  error)
+    console.error("❌ [PAYMENT:createPreApproval] Erro ao criar preapproval no MP:", error)
     return ApiResponse.InternalError({
-      message: "Erro ao processar pré pagamento",
-      error: error instanceof Error ? error.message : "Erro desconhecido ao tentar criar préaprovação no Mercado Pago",
+      message: "Erro ao processar assinatura no Mercado Pago",
+      error: error instanceof Error ? error.message : String(error)
     })
   }
 }
@@ -33,8 +61,8 @@ export const getPreapprovalApi = async (id: string) => {
 
     if (!preapproval) {
       console.error(`❌ [PAYMENT:getPreapproval] Resposta nula do MP`)
-      return ApiResponse.InternalError({ 
-        message: "Resposta inválida do Mercado Pago ao consultar preapproval" 
+      return ApiResponse.InternalError({
+        message: "Resposta inválida do Mercado Pago ao consultar preapproval"
       })
     }
 
@@ -51,9 +79,9 @@ export const getPreapprovalApi = async (id: string) => {
     })
   } catch (error) {
     console.error('❌ [PAYMENT:getPreapproval] Erro ao buscar no MP:', error)
-    return ApiResponse.InternalError({ 
-      message: 'Erro ao buscar preapproval', 
-      error: error instanceof Error ? error.message : String(error) 
+    return ApiResponse.InternalError({
+      message: 'Erro ao buscar preapproval',
+      error: error instanceof Error ? error.message : String(error)
     })
   }
 }

@@ -15,18 +15,23 @@ export default async function Header() {
     <header className="sticky top-0 z-50 bg-purple-50/80 text-purple-950 shadow-sm backdrop-blur-md border-b border-purple-100/60">
       <nav className="mx-auto p-4 max-w-5xl md:max-w-7xl">
         <div className="flex justify-between items-center">
-          <Link href="/" className="transition-transform hover:scale-105">
+          <Link href="/" className="transition-transform hover:scale-105 flex items-center gap-2">
             <Image
               src="/logo.svg"
               alt="Luluzinha Logo"
               width={40}
               height={40}
               priority
-              className="h-10 w-10 object-contain"
+              className="h-auto w-10 object-contain"
             />
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-purple-100 text-purple-700 tracking-wider uppercase font-lexend">
+              Beta
+            </span>
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">
-            <Navigation />
+            <div className="hidden md:block">
+              <Navigation />
+            </div>
             
             <div className="flex items-center gap-1.5 sm:gap-2">
               {user ? (

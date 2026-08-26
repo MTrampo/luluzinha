@@ -18,17 +18,17 @@ export default function HomeAnimations() {
       .fromTo(".animate-hero-desc", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7 }, "-=0.5")
       .fromTo(".animate-hero-buttons", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5 }, "-=0.5")
       .fromTo(".animate-hero-check", { opacity: 0, y: 10 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.4 }, "-=0.3")
-      .fromTo(".animate-hero-dell", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.8 }, "-=0.6")
-      .fromTo(".animate-hero-phone", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.8 }, "-=0.6");
+      .fromTo(".desktop-animate-hero-dell, .mobile-animate-hero-dell", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.8 }, "-=0.6")
+      .fromTo(".desktop-animate-hero-phone, .mobile-animate-hero-phone", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.8 }, "-=0.6");
 
     // 2. Responsive Scroll-Triggered Animations via matchMedia
     let mm = gsap.matchMedia();
 
     // Desktop Layout (min-width: 1024px)
     mm.add("(min-width: 1024px)", () => {
-      const heroContainer = document.querySelector(".hero-phone-wrapper") as HTMLElement;
+      const heroContainer = document.querySelector(".desktop-hero-phone-wrapper") as HTMLElement;
       const targetContainer = document.querySelector(".features-phone-container") as HTMLElement;
-      const heroPhone = document.querySelector(".animate-hero-phone") as HTMLElement;
+      const heroPhone = document.querySelector(".desktop-animate-hero-phone") as HTMLElement;
 
       if (heroContainer && targetContainer && heroPhone) {
         // Calculate document-relative coordinates using static containers
@@ -64,14 +64,14 @@ export default function HomeAnimations() {
         });
 
         // 1. Phone curve translation & rotation
-        tlScroll.to(".animate-hero-phone", {
+        tlScroll.to(".desktop-animate-hero-phone", {
           x: dx,
           rotation: -340,
           scale: 0.95,          // scale to match phone size inside mockup-s26-hand
           ease: "power1.inOut",
         }, 0);
 
-        tlScroll.to(".animate-hero-phone", {
+        tlScroll.to(".desktop-animate-hero-phone", {
           y: dy,
           ease: "power1.inOut",
         }, 0);
@@ -82,7 +82,7 @@ export default function HomeAnimations() {
         tlScroll.fromTo(".animate-feature-card", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power1.inOut", stagger: 0.12, duration: 0.18 }, 0.45);
 
         // 3. Swap at the end of the scroll trigger (fade out S26 and Moving Hand, fade in combined S26 Hand)
-        tlScroll.to(".animate-hero-phone", { opacity: 0, duration: 0.05 }, 0.95);
+        tlScroll.to(".desktop-animate-hero-phone", { opacity: 0, duration: 0.05 }, 0.95);
         tlScroll.to(".animate-moving-hand", { opacity: 0, duration: 0.05 }, 0.95);
         tlScroll.to(".animate-final-hand", { opacity: 1, duration: 0.05 }, 0.95);
         tlScroll.to(".animate-hand-light", { opacity: 0.5, duration: 0.1 }, 0.95);

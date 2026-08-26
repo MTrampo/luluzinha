@@ -234,7 +234,7 @@ export default function Account({ user, subscription }: AccountProps) {
                         </li>
                         <li className="flex items-center gap-2">
                           <FaCheck className="text-purple-600 shrink-0" size={10} />
-                          <span><strong>Histórico da Bancada:</strong> últimos 30 dias de registros</span>
+                          <span><strong>Histórico de Recebíveis:</strong> últimos 30 dias de registros</span>
                         </li>
                       </ul>
                     </div>

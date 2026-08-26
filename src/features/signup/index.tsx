@@ -11,43 +11,51 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function SignUpFlow() {
-  const route = useRouter()
-  const [email, setEmail] = useState('')
-  const [step, setStep] = useState<SignUpStepType>('register')
+  const route = useRouter();
+  const [email, setEmail] = useState('');
+  const [step, setStep] = useState<SignUpStepType>('register');
 
+  // Passo 1: Cadastro das credenciais (E-mail e Senha)
   const signUpUser = async (data: UserSignUpFormInputs) => {
     const toastId = loadingToast('Criando seu espaço...');
     try {
-      const response = await signUpUserAction(data)
+      const response = await signUpUserAction(data);
       updateToast(toastId, response.status, response.message);
 
       if (response.status === HttpStatusEnum.Ok) {
-        setEmail(data.email)
-        setStep('verify')
+        setEmail(data.email);
+        setStep('verify');
       }
     } catch {
       updateToast(toastId, HttpStatusEnum.InternalServerError);
     }
-  }
+  };
 
+  // Passo 1b: Confirmação do OTP de verificação
   const verifyCode = async (data: OtpFormInputs) => {
-    const toastId = loadingToast('Criando seu espaço...');
+    const toastId = loadingToast('Verificando código de acesso...');
     try {
-      const response = await verifyOtpCodeAction(email, data.code)
+      const response = await verifyOtpCodeAction(email, data.code);
       updateToast(toastId, response.status, response.message);
-      route.push('/assinatura')
+
+      if (response.status === HttpStatusEnum.Ok) {
+        // Redireciona diretamente para a tela de assinatura
+        route.push('/assinatura');
+      }
     } catch {
       updateToast(toastId, HttpStatusEnum.InternalServerError);
     }
-  }
+  };
 
   return (
-    <>
-      {step === 'register' ? (
+    <div className="w-full max-w-4xl mx-auto p-4 md:p-8">
+      {step === 'register' && (
         <SignupForm signUpUser={signUpUser} />
-      ) : (
+      )}
+
+      {step === 'verify' && (
         <ConfirmEmailForm verifyCode={verifyCode} />
       )}
-    </>
-  )
+    </div>
+  );
 }

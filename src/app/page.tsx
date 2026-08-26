@@ -99,13 +99,15 @@ export default async function Home() {
             <div className="relative max-w-md mx-auto bg-purple-50/50 rounded-3xl border border-purple-200 p-8 sm:p-10 shadow-lg hover:shadow-xl shadow-purple-100/30 overflow-hidden transition-all duration-300 animate-pricing-card opacity-0">
               {/* Selo de Destaque */}
               <div className="absolute top-0 right-0 bg-purple-600 text-white text-xs font-black px-4 py-1.5 rounded-bl-2xl uppercase tracking-wider font-lexend">
-                Acesso Total
+                Oferta Limitada
               </div>
 
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h3 className="text-2xl font-bold text-purple-950 font-lexend">Plano Luluzinha</h3>
-                  <p className="text-purple-900/70 text-sm">Tudo o que você precisa para dominar sua agenda e ver seu negócio decolar.</p>
+                  <h3 className="text-2xl font-bold text-purple-950 font-lexend">Fundadoras</h3>
+                  <p className="text-purple-900/70 text-sm leading-relaxed">
+                    Uma oferta especial de lançamento, pensada com transparência para quem está começando agora ou precisa controlar a própria agenda com total autonomia.
+                  </p>
                 </div>
 
                 <div className="flex items-baseline text-purple-950">
@@ -117,23 +119,31 @@ export default async function Home() {
                 <div className="border-t border-purple-200/50 pt-6 space-y-4">
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-purple-600 shrink-0" />
-                    <span className="text-purple-900/80 text-sm font-medium">Agenda de Atendimentos ilimitada</span>
+                    <span className="text-purple-900/80 text-sm font-medium">Compartilhamento de horários disponíveis personalizados</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-purple-600 shrink-0" />
-                    <span className="text-purple-900/80 text-sm font-medium">Cadastro completo de Poderosas</span>
+                    <span className="text-purple-900/80 text-sm font-medium">Agenda de atendimentos pessoal e ilimitada (gerenciada por você)</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-purple-600 shrink-0" />
-                    <span className="text-purple-900/80 text-sm font-medium">Seu Caixa (Histórico da Bancada)</span>
+                    <span className="text-purple-900/80 text-sm font-medium">Cadastro de Poderosas (clientes) ilimitado</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-purple-600 shrink-0" />
-                    <span className="text-purple-900/80 text-sm font-medium">Menu de Procedimentos personalizado</span>
+                    <span className="text-purple-900/80 text-sm font-medium">Seu Caixa (Histórico de Recebíveis)</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-purple-600 shrink-0" />
-                    <span className="text-purple-900/80 text-sm font-medium">Acesso facilitado no celular ou PC</span>
+                    <span className="text-purple-900/80 text-sm font-medium">Até 6 procedimentos personalizados</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-purple-600 shrink-0" />
+                    <span className="text-purple-900/80 text-sm font-medium">Retenção de histórico de no máximo 1 mês (atendimentos e caixa)</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-purple-600 shrink-0" />
+                    <span className="text-purple-900/80 text-sm font-medium">Acesso facilitado no celular, tablet e computador</span>
                   </div>
                 </div>
 
@@ -172,6 +182,15 @@ export default async function Home() {
             </div>
 
             <Accordion type="single" collapsible className="w-full space-y-4">
+
+              <AccordionItem value="faq-beta" className="border border-purple-100 bg-white rounded-xl px-5 py-2 shadow-sm">
+                <AccordionTrigger className="text-base font-bold text-purple-950 hover:text-purple-600 hover:no-underline font-lexend text-left">
+                  O que significa o sistema estar na fase Beta?
+                </AccordionTrigger>
+                <AccordionContent className="text-purple-900/70 leading-relaxed pt-2 text-sm">
+                  Significa que a Luluzinha é um sistema novinho e está em desenvolvimento ativo (nossa bancada de testes)! Todas as funções principais como a Agenda de Atendimentos, Cadastro de Poderosas e Histórico de Caixa funcionam 100%, mas ainda estamos polindo alguns detalhes e adicionando novidades. Por fazer parte dessa fase inicial, você conta com um suporte super próximo via WhatsApp e garante o valor especial de lançamento!
+                </AccordionContent>
+              </AccordionItem>
 
               <AccordionItem value="faq-1" className="border border-purple-100 bg-white rounded-xl px-5 py-2 shadow-sm">
                 <AccordionTrigger className="text-base font-bold text-purple-950 hover:text-purple-600 hover:no-underline font-lexend text-left">
@@ -224,7 +243,7 @@ export default async function Home() {
 
         {/* Seção CTA Final */}
         <section className="py-20 sm:py-28 bg-purple-600 text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-indigo-700 opacity-95 -z-10"></div>
+          <div className="absolute inset-0 bg-linear-to-r from-purple-700 to-indigo-700 opacity-95 -z-10"></div>
 
           <div className="mx-auto max-w-4xl px-6 text-center space-y-8 relative z-10">
             <div className="inline-flex items-center justify-center p-3 rounded-full bg-white/10 backdrop-blur-sm">
@@ -240,7 +259,7 @@ export default async function Home() {
             </p>
 
             <div className="pt-4">
-              <Button size="lg" className="group bg-white text-purple-700 hover:bg-purple-50 font-extrabold text-base px-8 py-6 rounded-full shadow-lg transition-all duration-200 transform hover:-translate-y-0.5" asChild>
+              <Button size="lg" className="group bg-white text-purple-700 hover:bg-purple-50 font-extrabold text-base px-8 py-6 rounded-full shadow-lg transition-all duration-200 transform" asChild>
                 <Link href={user ? "/painel" : "/cadastrar"}>
                   {user ? "Entrar na minha bancada digital" : "Criar minha bancada digital"}
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 delay-75 group-hover:translate-x-1.5" />

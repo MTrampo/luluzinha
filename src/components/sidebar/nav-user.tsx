@@ -4,6 +4,7 @@ import { FaCirclePlus, FaCircleUser, FaCreditCard, FaIdCard, FaPersonWalkingArro
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "../ui/sidebar";
+import { AvatarMap } from "@/components/maps/avatar-map";
 import { ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -26,6 +27,9 @@ export function NavUser() {
     router.push('/')
   }
 
+  const avatarKey = profile?.avatarUrl || "avatar-1";
+  const avatarSrc = AvatarMap[avatarKey]?.src || "/logo.svg";
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -36,7 +40,7 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src='/logo.svg' alt={`Foto de perfil da ${luluzinha}`} />
+                <AvatarImage src={avatarSrc} alt={`Foto de perfil da ${luluzinha}`} />
                 <AvatarFallback className="rounded-lg">
                   <FaCircleUser />
                 </AvatarFallback>
@@ -57,7 +61,7 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src='/logo.svg' alt={`Foto de perfil da ${luluzinha}`} />
+                  <AvatarImage src={avatarSrc} alt={`Foto de perfil da ${luluzinha}`} />
                   <AvatarFallback className="rounded-lg">
                     <FaCircleUser />
                   </AvatarFallback>

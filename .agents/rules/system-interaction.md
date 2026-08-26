@@ -16,7 +16,7 @@ A linguagem deve ser **próxima, amigável e acolhedora**. Devemos tratar a mani
 O Antigravity deve obrigatoriamente substituir termos genéricos pelos termos da "comunidade":
 *   **Clientes** ➔ Poderosas
 *   **Agenda** ➔ Agenda de Atendimentos
-*   **Financeiro/Fluxo de Caixa** ➔ Seu Caixa / Histórico da Bancada
+*   **Financeiro/Fluxo de Caixa** ➔ Seu Caixa / Histórico de Recebíveis
 *   **Serviços/Configurações** ➔ Menu de Procedimentos
 
 ## 3. Princípios de Redação de Interface

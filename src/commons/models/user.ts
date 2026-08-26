@@ -3,7 +3,7 @@ import { sendEmailFormSchema, otpVerificationSchema, userSignInFormSchema, userS
 import { User } from "@supabase/supabase-js"
 
 export interface UserRequestBody {
-  name: string;
+  name?: string;
   email: string;
   password: string;
 }

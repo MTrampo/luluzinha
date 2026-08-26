@@ -66,3 +66,40 @@ export const updateEstablishmentSupabase = async (
 
   return { data: updated, error }
 }
+
+export const checkSlugAvailabilitySupabase = async (slug: string) => {
+  const supabase = await serverSupabase()
+
+  const { data, error } = await supabase
+    .from('establishments')
+    .select('id')
+    .eq('slug', slug)
+    .maybeSingle()
+
+  return { exists: !!data, error }
+}
+
+export const insertEstablishmentSupabase = async (
+  userId: string,
+  establishmentData: {
+    name: string
+    slug: string
+    avatar_url: string | null
+    phone: string | null
+    address: string | null
+    opening_hours: any
+  }
+) => {
+  const supabase = await serverSupabase()
+
+  const { data, error } = await supabase
+    .from('establishments')
+    .insert({
+      owner_id: userId,
+      ...establishmentData
+    })
+    .select()
+    .single()
+
+  return { data, error }
+}

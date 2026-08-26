@@ -26,15 +26,15 @@ export function SignInFlow() {
     try {
       const response = await signInUserAction(data)
       if (response.status === HttpStatusEnum.Ok && response.data?.user) {
-        const { user, establishments, subscription, redirectPath } = response.data;
+        const { user, establishments, subscription, profile, redirectPath } = response.data;
         const userId = user.id
 
         // 1. Salva o perfil
         setProfile({
           id: userId,
           email: user.email || '',
-          name: user.user_metadata.display_name,
-          avatarUrl: null,
+          name: profile?.name || user.user_metadata.display_name,
+          avatarUrl: profile?.avatar_url || null,
           createdAt: user.created_at.toString(),
           updatedAt: user.updated_at?.toString() || user.created_at.toString(),
         })

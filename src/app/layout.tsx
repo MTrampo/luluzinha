@@ -3,7 +3,7 @@ import { inter, lexend } from "@/commons/styles/fonts";
 import "@/commons/styles/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { SubscriptionGuard } from "@/components/subscription/guard";
-
+import { CookieConsent } from "@/components/feedbacks/cookie-consent";
 
 export const metadata: Metadata = {
   title: "Luluzinha | Sua Bancada Digital",
@@ -24,6 +24,7 @@ export default function RootLayout({
         <SubscriptionGuard />
         {children}
         <Toaster richColors position="top-right" />
+        <CookieConsent />
       </body>
     </html>
   );

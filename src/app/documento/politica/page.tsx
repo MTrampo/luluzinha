@@ -1,12 +1,12 @@
 import Header from "@/components/header";
 
 export default function PrivacyPolicy() {
-  const lastUpdate = "05 de Fevereiro de 2026";
+  const lastUpdate = "23 de Julho de 2026";
   const appName = "Luluzinha";
 
   return (
     <div className="min-h-screen bg-purple-50/10 text-slate-700">
-      <Header/>
+      <Header />
       <div className="mx-auto px-6 py-12 sm:py-24 max-w-5xl md:max-w-7xl">
         <section className="space-y-12">
           <div className="space-y-4">
@@ -51,10 +51,10 @@ export default function PrivacyPolicy() {
               <li>
                 <strong>Pagamentos e Dados Financeiros:</strong> A coleta, o processamento e o armazenamento de qualquer dado de pagamento (como números de cartão de crédito, CPF do titular ou dados de faturamento) são realizados exclusivamente e diretamente pelo Mercado Pago.
               </li>
-                <ul className="list-disc pl-5 space-y-3">
-                  <li>A {appName} não tem acesso, não visualiza e não armazena seus dados financeiros sensíveis.</li>
-                  <li>Ao realizar o pagamento da assinatura, Você está utilizando a interface e os sistemas de segurança do Mercado Pago, que é o único responsável pela proteção desses dados específicos.</li>
-                </ul>
+              <ul className="list-disc pl-5 space-y-3">
+                <li>A {appName} não tem acesso, não visualiza e não armazena seus dados financeiros sensíveis.</li>
+                <li>Ao realizar o pagamento da assinatura, Você está utilizando a interface e os sistemas de segurança do Mercado Pago, que é o único responsável pela proteção desses dados específicos.</li>
+              </ul>
               <li><strong>Infraestrutura de Nuvem:</strong> Os dados de cadastro (nome, e-mail e dados das suas clientes) são armazenados em nuvem com criptografia de ponta, garantindo que apenas o sistema e você tenham acesso às informações de gestão.</li>
             </ul>
           </div>
@@ -78,9 +78,28 @@ export default function PrivacyPolicy() {
             </ul>
           </div>
 
-          {/* 6. Alteração Nesta Política */}
+          {/* 6. Uso de Cookies */}
+          <div id="cookies" className="space-y-4 scroll-mt-20">
+            <h2>6. Uso de Cookies</h2>
+            <p>
+              Cookies são pequenos arquivos de texto armazenados no seu navegador que servem para fazer o sistema funcionar de maneira mais leve, segura e personalizada. Se você quiser entender detalhadamente o que são cookies do ponto de vista técnico, você pode acessar este <a href="https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Guides/Cookies" target="_blank" rel="noopener noreferrer" className="text-purple-600 dark:text-purple-400 hover:underline font-semibold">guia explicativo sobre cookies</a>.
+            </p>
+            <p>
+              Na {appName}, utilizamos cookies essenciais e tecnologias semelhantes para as seguintes finalidades:
+            </p>
+            <ul className="list-disc pl-5 space-y-3">
+              <li><strong>Autenticação e Sessão:</strong> Para manter você conectada à sua conta de forma segura enquanto navega pela plataforma.</li>
+              <li><strong>Preferências da Bancada:</strong> Para salvar suas configurações visuais, como o estado do menu lateral (aberto ou fechado) e o estabelecimento ativo.</li>
+              <li><strong>Segurança e Prevenção a Fraude (Mercado Pago):</strong> Cookies de terceiros integrados ao processamento de pagamentos para garantir transações financeiras seguras.</li>
+            </ul>
+            <p>
+              Você tem total liberdade para desativar ou gerenciar os cookies diretamente nas configurações do seu navegador. Contudo, desativar os cookies essenciais pode impedir o funcionamento correto de recursos indispensáveis para o uso da plataforma (como o login).
+            </p>
+          </div>
+
+          {/* 7. Alteração Nesta Política */}
           <div className="space-y-4">
-            <h2>6. Alteração Nesta Política</h2>
+            <h2>7. Alteração Nesta Política</h2>
             <p>
               Podemos atualizar esta Política de Privacidade ocasionalmente. Caso ocorram mudanças significativas na forma como tratamos seus dados, você será notificado através do e-mail cadastrado ou por um aviso em nosso sistema.
             </p>

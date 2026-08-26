@@ -2,6 +2,25 @@ import { internalSupabase } from "@/commons/lib/supabase/internal"
 import { InvoiceInsertPayload } from "@/commons/models/payment"
 import { SubscriptionInconsistencyPayload, SubscriptionUpdatePayload } from "@/commons/models/subscription"
 
+export const webhookGetSubscriptionByIdSupabase = async (id: string) => {
+  const supabase = internalSupabase()
+
+  console.info(`🗄️ [WEBHOOK_REPO:getById] Buscando subscription por ID: ${id}`)
+  const { data, error } = await supabase
+    .from('subscriptions')
+    .select()
+    .eq('id', id)
+    .single()
+
+  if (error) {
+    console.warn(`⚠️ [WEBHOOK_REPO:getById] Erro/Nenhum resultado:`, { code: error.code, message: error.message })
+  } else {
+    console.info(`🗄️ [WEBHOOK_REPO:getById] Encontrado:`, { id: data?.id, mp_status: data?.mp_status })
+  }
+
+  return data
+}
+
 export const webhookGetSubscriptionByPayerEmailSupabase = async (payerEmail: string) => {
   const supabase = internalSupabase()
 
@@ -40,16 +59,16 @@ export const webhookGetSubscriptionByPayerIdSupabase = async (payerId: number) =
   return data
 }
 
-export const webhookSyncSubscriptionSupabase = async (payload: SubscriptionUpdatePayload, email: string) => {
+export const webhookSyncSubscriptionSupabase = async (payload: SubscriptionUpdatePayload, id: string) => {
   const supabase = internalSupabase()
 
-  console.info(`🗄️ [WEBHOOK_REPO:syncSubscription] Executando UPDATE em subscriptions WHERE mp_payer_email = '${email}'`)
+  console.info(`🗄️ [WEBHOOK_REPO:syncSubscription] Executando UPDATE em subscriptions WHERE id = '${id}'`)
   console.info(`🗄️ [WEBHOOK_REPO:syncSubscription] Payload:`, payload)
 
   const { data, error } = await supabase
     .from('subscriptions')
     .update(payload)
-    .eq('mp_payer_email', email)
+    .eq('id', id)
     .select('id')
     .single()
 

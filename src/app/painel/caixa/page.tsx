@@ -30,7 +30,7 @@ export default async function CashRegister() {
           <Overview data={data.overview} />
 
           <div className="flex flex-col gap-4">
-            <h4 className="text-purple-900">Histórico da Bancada</h4>
+            <h4 className="text-purple-900">Histórico de Recebíveis</h4>
 
             {data.history.length === 0 ? (
               <div className="p-8 text-center bg-white/80 backdrop-blur-md border border-purple-100 rounded-md text-gray-400 text-sm">

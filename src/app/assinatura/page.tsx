@@ -1,7 +1,7 @@
 import Header from "@/components/header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { FaCalendarDay, FaCalendarWeek, FaCashRegister, FaClockRotateLeft, FaHandcuffs, FaHandshakeSimple, FaMobileButton, FaPaintbrush } from "react-icons/fa6";
+import { FaCalendarDay, FaCalendarWeek, FaCashRegister, FaClockRotateLeft, FaHandcuffs, FaHandshakeSimple, FaMobileButton, FaPaintbrush, FaShareNodes } from "react-icons/fa6";
 import { IoWomanSharp } from "react-icons/io5";
 import { ButtonSubscription } from "@/components/buttons/subscription";
 
@@ -10,8 +10,8 @@ export default function Subscription() {
     <>
       <Header />
       <main className="mx-auto px-6 py-12 sm:py-24 max-w-5xl md:max-w-7xl">
-        <h1>Seja uma Luluzinha</h1>
-        <p>Tudo o que você precisa para dominar sua agenda e valorizar seu trabalho, por apenas <span className="font-medium">R$ 9,90/mês</span>.</p>
+        <h1>Seja uma Fundadora</h1>
+        <p>Tudo o que você precisa para dominar sua agenda e valorizar seu trabalho com o Plano Fundadoras, por apenas <span className="font-medium">R$ 9,90/mês</span> (oferta limitada).</p>
         <div className="flex flex-col gap-6">
           <div className="grid grid-cols-3 my-6 gap-4">
             <Card className="gap-1">
@@ -21,7 +21,7 @@ export default function Subscription() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Marque seus serviços com visão da semana e do mês de forma rápida.
+                  Agenda pessoal e ilimitada (gerenciada por você) com visão rápida do dia e da semana.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -32,51 +32,51 @@ export default function Subscription() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Cadastro completo das suas clientes para ter o contato de todas sempre à mão.
+                  Cadastro ilimitado de clientes para ter o contato de todas sempre à mão na bancada digital.
                 </CardDescription>
               </CardContent>
             </Card>
             <Card className="gap-1">
               <CardHeader className="flex items-center gap-1">
                 <FaCashRegister className="text-purple-900" />
-                <CardTitle>Fluxo de Caixa</CardTitle>
+                <CardTitle>Seu Caixa</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Saiba exatamente quanto entrou na sua bancada nos últimos 30 dias.
+                  Saiba exatamente quanto entrou na sua bancada com o Histórico de Recebíveis.
                 </CardDescription>
               </CardContent>
             </Card>
             <Card className="gap-1">
               <CardHeader className="flex items-center gap-1">
                 <FaPaintbrush className="text-purple-900" />
-                <CardTitle>Menu de Procedimentos</CardTitle>
+                <CardTitle>Procedimentos</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Cadastre seus 6 principais serviços com preço e tempo de duração.
+                  Cadastre até 6 procedimentos personalizados no seu menu com preço e duração.
                 </CardDescription>
               </CardContent>
             </Card>
             <Card className="gap-1">
               <CardHeader className="flex items-center gap-1">
                 <FaClockRotateLeft className="text-purple-900" />
-                <CardTitle>Histórico</CardTitle>
+                <CardTitle>Histórico de 1 Mês</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Acompanhe o histórico de agendamentos, pagamentos e serviços realizados por até 30 dias.
+                  Acompanhe a retenção do histórico de atendimentos e caixa por no máximo 1 mês.
                 </CardDescription>
               </CardContent>
             </Card>
             <Card className="gap-1">
               <CardHeader className="flex items-center gap-1">
-                <FaMobileButton className="text-purple-900" />
-                <CardTitle>Baixe o App</CardTitle>
+                <FaShareNodes className="text-purple-900" />
+                <CardTitle>Compartilhar Horários</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Adicione o atalho na tela inicial do seu dispositivo para acessar sua agenda em qualquer lugar.
+                  Compartilhe seus horários disponíveis de forma personalizada e acesse de qualquer celular, tablet ou PC.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -112,11 +112,11 @@ export default function Subscription() {
               <Card className="gap-1">
                 <CardHeader className="flex items-center gap-1">
                   <FaCalendarDay className="text-purple-900" />
-                  <CardTitle>Vencimento</CardTitle>
+                  <CardTitle>Data de Cobrança</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <CardDescription>
-                    Todo dia 05, com 3 dias de carência para pagamento.
+                    A cobrança mensal será realizada sempre no mesmo dia em que você iniciou sua assinatura.
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -124,7 +124,7 @@ export default function Subscription() {
           </div>
         </div>
         <ButtonSubscription variant="theme" size="lg" className="w-full">
-          TORNAR-ME UMA LULUZINHA
+          TORNAR-ME UMA FUNDADORA
         </ButtonSubscription>
         <p className="text-muted-foreground text-sm leading-normal font-normal text-center">
           Ao assinar, você concorda com nossos <Link className="text-purple-950" href="/documento/termo">Termos de Serviço</Link>{" "}

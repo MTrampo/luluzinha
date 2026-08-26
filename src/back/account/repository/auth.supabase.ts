@@ -18,7 +18,7 @@ export const createAuthSupabase = async (user: UserRequestBody) => {
     password: user.password,
     options: {
       data: {
-        display_name: user.name,
+        display_name: user.name || user.email.split('@')[0],
       }
     }
   })
@@ -33,12 +33,13 @@ export const killAuthSupabase = async () => {
   return error
 }
 
-export const createProfileSupabase = async (userId: string, user: UserRequestBody) => {
+export const createProfileSupabase = async (userId: string, name: string, avatarUrl?: string | null) => {
   const supabase = await serverSupabase()
 
   const { data, error } = await supabase.from("profiles").insert({
     id: userId,
-    name: user.name,
+    name: name,
+    avatar_url: avatarUrl || null,
   })
 
   return { data, error }
@@ -103,6 +104,17 @@ export const updatePassword = async (newPassword: string) => {
 export const getUserLogged = async () => {
   const supabase = await serverSupabase()
   const { data, error } = await supabase.auth.getUser()
+
+  return { data, error }
+}
+
+export const getProfileByUserIdSupabase = async (userId: string) => {
+  const supabase = await serverSupabase()
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single()
 
   return { data, error }
 }

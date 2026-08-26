@@ -64,7 +64,12 @@ export function NavTeamSwitcher() {
           <div className="grid flex-1 text-left text-sm leading-tight">
             {activeEstablishment ? (
               <>
-                <span className="truncate font-medium">{activeEstablishment.nameFormatted}</span>
+                <span className="truncate font-medium flex items-center gap-1.5">
+                  {activeEstablishment.nameFormatted}
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 tracking-wider uppercase font-lexend">
+                    Beta
+                  </span>
+                </span>
                 <span className="truncate text-xs">{statusText}</span>
               </>
             ) : (

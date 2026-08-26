@@ -106,3 +106,18 @@ export const toIsoDateInput = (date?: Date | null): string => {
 export const isIsoDateString = (value?: string | null): boolean => {
 	return !!value && /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
+
+export const slugify = (text: string): string => {
+	return text
+		.toString()
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.toLowerCase()
+		.trim()
+		.replace(/\s+/g, '-')
+		.replace(/[^\w-]+/g, '')
+		.replace(/--+/g, '-')
+		.replace(/^-+/, '')
+		.replace(/-+$/, '')
+}
+

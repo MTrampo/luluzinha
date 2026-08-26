@@ -35,7 +35,7 @@ export function ConfirmEmailForm({ verifyCode }: OtpFormProps) {
   const handleCodeChange = useCallback((value: string) => {
     formOtp.setValue("code", value)
     
-    if (value.length === 8) {
+    if (value.length === 6) {
       formOtp.handleSubmit(verifyCode)()
     }
   }, [formOtp, verifyCode])
@@ -57,7 +57,7 @@ export function ConfirmEmailForm({ verifyCode }: OtpFormProps) {
               <Field data-invalid={fieldState.invalid}>
                 <InputOTP
                   containerClassName="justify-center"
-                  maxLength={8}
+                  maxLength={6}
                   id="otp-verification"
                   required
                   pattern={REGEXP_ONLY_DIGITS}
@@ -68,14 +68,12 @@ export function ConfirmEmailForm({ verifyCode }: OtpFormProps) {
                     <InputOTPSlot index={0} />
                     <InputOTPSlot index={1} />
                     <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
                   </InputOTPGroup>
                   <InputOTPSeparator className="mx-2" />
                   <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
+                    <InputOTPSlot index={3} />
                     <InputOTPSlot index={4} />
                     <InputOTPSlot index={5} />
-                    <InputOTPSlot index={6} />
-                    <InputOTPSlot index={7} />
                   </InputOTPGroup>
                 </InputOTP>
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

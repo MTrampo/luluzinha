@@ -9,11 +9,11 @@ import { ConfirmDialog } from "@/components/dialogs/confirm-dialog"
 import { cancelSubscriptionAction } from "@/actions/subscription"
 import { SubscriptionFormatted } from "@/commons/models/subscription"
 import { InvoiceFormatted } from "@/commons/models/payment"
-import { 
-  FaCrown, 
-  FaCalendarAlt, 
-  FaCheck, 
-  FaInfoCircle, 
+import {
+  FaCrown,
+  FaCalendarAlt,
+  FaCheck,
+  FaInfoCircle,
   FaReceipt,
   FaLock,
   FaFileInvoiceDollar
@@ -47,7 +47,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
                 Ops! Essa área é reservada para a dona do estabelecimento. Apenas a proprietária pode gerenciar a assinatura e visualizar o histórico de faturas.
               </p>
             </div>
-            <Button 
+            <Button
               onClick={() => router.push("/painel/bancada")}
               className="bg-purple-600 hover:bg-purple-700 text-white rounded-md w-full transition-colors"
             >
@@ -85,7 +85,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
       <Header title="Minha Assinatura" />
       <div className="main-content">
         <div className="w-full space-y-6">
-          
+
           {/* Card da Assinatura Atual */}
           <div className="border border-purple-100 hover:border-purple-200 shadow-sm bg-white/90 backdrop-blur-sm p-6 rounded-lg transition-all duration-300">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-purple-50">
@@ -104,7 +104,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
 
             {subscription ? (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-6">
-                
+
                 {/* Detalhes do Plano */}
                 <div className="space-y-4">
                   <div className="bg-purple-50/50 p-4 rounded-md space-y-1">
@@ -154,7 +154,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
                       </li>
                       <li className="flex items-center gap-2">
                         <FaCheck className="text-purple-600 shrink-0" size={10} />
-                        <span><strong>Histórico da Bancada:</strong> últimos 30 dias de registros</span>
+                        <span><strong>Histórico de Recebíveis:</strong> últimos 30 dias de registros</span>
                       </li>
                     </ul>
                   </div>
@@ -225,7 +225,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
           <div className="border border-purple-100 hover:border-purple-200 shadow-sm bg-white/90 backdrop-blur-sm p-6 rounded-lg transition-all duration-300">
             <h3 className="text-lg font-bold text-purple-950 pb-3 border-b border-purple-50 flex items-center gap-2">
               <FaReceipt className="text-purple-600" size={16} />
-              Histórico da Bancada (Cobranças)
+              Histórico de Recebíveis (Cobranças)
             </h3>
 
             {initialInvoices.length > 0 ? (

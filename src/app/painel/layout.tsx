@@ -3,6 +3,8 @@ import { AppSidebar } from "@/components/sidebar"
 import { SubscriptionHydrator } from "@/components/subscription/hydrator"
 import { EstablishmentHydrator } from "@/components/establishment/hydrator"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { BetaBanner } from "@/components/feedbacks/beta-banner"
+import { OnboardingGuard } from "@/components/establishment/onboarding-guard"
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,12 +18,15 @@ export default async function Layout({ children }: { children: React.ReactNode }
             } as React.CSSProperties
           }
         >
-          <AppSidebar />
-          <SidebarInset>
-            <EstablishmentHydrator />
-            <SubscriptionHydrator />
-            {children}
-          </SidebarInset>
+          <EstablishmentHydrator />
+          <SubscriptionHydrator />
+          <OnboardingGuard>
+            <AppSidebar />
+            <SidebarInset>
+              <BetaBanner />
+              {children}
+            </SidebarInset>
+          </OnboardingGuard>
         </SidebarProvider>
       </TooltipProvider>
     </div>

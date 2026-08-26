@@ -26,10 +26,40 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
             {/* Conteúdo de Texto */}
-            <div className="lg:col-span-7 flex flex-col justify-center text-center lg:text-left space-y-12 animate-hero-text-content opacity-0">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-purple-950 tracking-tight leading-[1.1] font-lexend animate-hero-title opacity-0">
-                Sua bancada digital completa para você <span className="text-purple-600 font-extrabold">brilhar ainda mais</span>
-              </h1>
+            <div className="lg:col-span-7 flex flex-col justify-center text-left space-y-12 animate-hero-text-content opacity-0">
+              <div className="space-y-6">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-purple-950 tracking-tight leading-[1.1] font-lexend animate-hero-title opacity-0">
+                  Sua bancada digital completa para você <span className="text-purple-600 font-extrabold">brilhar ainda mais</span>
+                </h1>
+
+                {/* Mockup Laptop & Celular para Mobile/Tablet (Abaixo do título) */}
+                <div className="lg:hidden flex justify-center items-end relative w-full min-h-45 sm:min-h-70 mt-16 mb-2 select-none">
+                  {/* Efeito blur de fundo reduzido para mobile */}
+                  <div className="absolute inset-0 bg-purple-200/50 rounded-full blur-2xl opacity-60 -z-10 animate-hero-light"></div>
+
+                  {/* Celular de fundo (alinhado ao chão) */}
+                  <div className="absolute bottom-0 right-[12%] sm:right-[22%] w-full max-w-22.5 sm:max-w-32.5 z-20">
+                    <div className="relative w-full mobile-animate-hero-phone opacity-0">
+                      <Image
+                        src={mockupS26}
+                        alt="Smartphone"
+                        priority
+                        className="w-full h-auto drop-shadow-xl"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Laptop na frente (alinhado ao chão) */}
+                  <div className="relative w-full max-w-50 sm:max-w-75 mobile-animate-hero-dell opacity-0 z-10">
+                    <Image
+                      src={mockupDell}
+                      alt="Laptop"
+                      priority
+                      className="w-full h-auto drop-shadow-xl"
+                    />
+                  </div>
+                </div>
+              </div>
 
               <p className="text-lg md:text-xl text-purple-900/80 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0 animate-hero-desc opacity-0">
                 Preparamos cada detalhe com muito carinho para que seu dia a dia como manicure seja mais leve, organizado e profissional. Gerencie sua agenda de atendimentos, encante suas Poderosas e acompanhe o sucesso da sua bancada.
@@ -37,7 +67,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4 animate-hero-buttons opacity-0">
                 {user ? (
-                  <Button size="lg" className="group bg-purple-600 hover:bg-purple-700 text-white font-bold text-base px-8 py-6 rounded-full shadow-lg hover:shadow-xl hover:shadow-purple-100 transition-all duration-200 transform hover:-translate-y-0.5" asChild>
+                  <Button size="lg" className="group bg-purple-600 hover:bg-purple-700 text-white font-bold text-base px-8 py-6 rounded-full shadow-lg hover:shadow-xl hover:shadow-purple-100 transition-all duration-200 transform" asChild>
                     <Link href="/painel">
                       Acessar minha bancada
                       <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 delay-75 group-hover:translate-x-1.5" />
@@ -45,7 +75,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
                   </Button>
                 ) : (
                   <>
-                    <Button size="lg" className="group bg-purple-600 hover:bg-purple-700 text-white font-bold text-base px-8 py-6 rounded-full shadow-lg hover:shadow-xl hover:shadow-purple-100 transition-all duration-200 transform hover:-translate-y-0.5" asChild>
+                    <Button size="lg" className="group bg-purple-600 hover:bg-purple-700 text-white font-bold text-base px-8 py-6 rounded-full shadow-lg hover:shadow-xl hover:shadow-purple-100 transition-all duration-200 transform" asChild>
                       <Link href="/cadastrar">
                         Começar gratuitamente
                         <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 delay-75 group-hover:translate-x-1.5" />
@@ -60,7 +90,13 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
                 )}
               </div>
 
-              <div className="flex items-center justify-center lg:justify-start gap-6 pt-4 text-sm text-purple-900/60 font-medium">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3 pt-4 text-sm text-purple-900/60 font-medium">
+                <div className="flex items-center gap-1.5 animate-hero-check opacity-0">
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-purple-100 text-purple-700 tracking-wider uppercase font-lexend">
+                    Beta
+                  </span>
+                  <span>Bancada de Testes</span>
+                </div>
                 <div className="flex items-center gap-1.5 animate-hero-check opacity-0">
                   <CheckCircle2 className="h-4 w-4 text-purple-500" />
                   <span>Sem fidelidade</span>
@@ -72,14 +108,14 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
               </div>
             </div>
 
-            {/* Imagem do Laptop (Dell) e Celular / Mockup */}
-            <div className="lg:col-span-5 flex justify-center items-end relative hero-phone-container min-h-[400px] lg:min-h-[480px]">
+            {/* Imagem do Laptop (Dell) e Celular / Mockup - Apenas para Desktop */}
+            <div className="hidden lg:flex lg:col-span-5 justify-center items-end relative desktop-hero-phone-container min-h-120">
               {/* Efeito de luz de fundo para destacar o mockup */}
               <div className="absolute -inset-4 bg-purple-200 rounded-full blur-3xl opacity-75 -z-10 animate-hero-light"></div>
 
               {/* Wrapper estático para marcar o ponto de partida do celular (S26) - Fica atrás do notebook, alinhado ao final */}
-              <div className="absolute bottom-0 right-0 sm:right-7 w-full max-w-60 sm:max-w-72 hero-phone-wrapper z-10">
-                <div className="relative w-full animate-hero-phone opacity-0">
+              <div className="absolute bottom-0 right-2 sm:right-10 lg:right-7 w-full max-w-72 desktop-hero-phone-wrapper z-10">
+                <div className="relative w-full desktop-animate-hero-phone opacity-0">
                   <Image
                     src={mockupS26}
                     alt="Mockup do aplicativo Luluzinha em um smartphone"
@@ -90,7 +126,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
               </div>
 
               {/* Mockup Laptop Dell (Fica na frente do celular, maior e alinhado ao final) */}
-              <div className="relative w-full max-w-140 sm:max-w-160 lg:max-w-4xl animate-hero-dell opacity-0 z-20 mt-auto">
+              <div className="relative w-full max-w-4xl desktop-animate-hero-dell opacity-0 z-20 mt-auto">
                 <Image
                   src={mockupDell}
                   alt="Painel do aplicativo Luluzinha no laptop"
@@ -110,16 +146,16 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
 
             {/* Coluna Esquerda - Imagens e Mockups (lg:col-span-5) */}
-            <div className="lg:col-span-5 flex justify-center items-end relative features-phone-container min-h-[400px] lg:min-h-[480px] p-6 pb-0">
+            <div className="lg:col-span-5 order-last lg:order-first mt-16 lg:mt-0 flex justify-center items-end relative features-phone-container min-h-70 sm:min-h-90 lg:min-h-120 p-6 pb-0">
               {/* Moldura de fundo decorativa com gradiente suave inspirado na paleta de cores da marca e topo branco para efeito de saída */}
-              <div className="absolute inset-0 bg-gradient-to-b from-white via-[#F5EBFF] to-[#E3D0FF] rounded-3xl border-x border-b border-purple-100/30 z-0"></div>
+              <div className="absolute inset-0 bg-linear-to-b from-white via-[#F5EBFF] to-[#E3D0FF] rounded-3xl border-x border-b border-purple-100/30 z-0"></div>
 
               {/* Efeito de luz de fundo para destacar o mockup */}
-              <div className="absolute -inset-4 bg-purple-200 rounded-full blur-3xl opacity-50 -z-10 animate-hand-light opacity-0"></div>
+              <div className="absolute -inset-4 bg-purple-200 rounded-full blur-3xl opacity-50 -z-10 animate-hand-light" />
 
               {/* Mockup Mão esperando */}
               <div
-                className="relative w-full max-w-85 sm:max-w-115 animate-moving-hand opacity-0 z-10 select-none"
+                className="relative w-full max-w-60 sm:max-w-[320px] lg:max-w-none animate-moving-hand opacity-0 z-10 select-none"
                 style={{
                   maskImage: 'linear-gradient(to top, transparent 5%, black 25%)',
                   WebkitMaskImage: 'linear-gradient(to top, transparent 5%, black 25%)'
@@ -134,18 +170,12 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
               </div>
 
               {/* Mockup Final com Celular */}
-              <div
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-85 sm:max-w-115 animate-final-hand opacity-0 pointer-events-none z-10 select-none"
-                style={{
-                  maskImage: 'linear-gradient(to top, transparent 5%, black 25%)',
-                  WebkitMaskImage: 'linear-gradient(to top, transparent 5%, black 25%)'
-                }}
-              >
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-60 sm:max-w-[320px] lg:max-w-none animate-final-hand opacity-0 pointer-events-none z-10 select-none">
                 <Image
                   src={mockupS26Hand}
                   alt="Mão segurando o painel do aplicativo Luluzinha"
                   priority
-                  className="w-full h-auto drop-shadow-2xl"
+                  className="w-full h-auto md:drop-shadow-2xl"
                 />
               </div>
             </div>
@@ -211,7 +241,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
                   </CardHeader>
                   <CardContent className="pb-6">
                     <CardDescription className="text-purple-900/70 text-sm leading-relaxed">
-                      Acompanhe o faturamento e o rendimento da sua bancada com o Histórico da Bancada de 30 dias. Chega de somas confusas no papel.
+                      Acompanhe o faturamento e o rendimento da sua bancada com o Histórico de Recebíveis de 30 dias. Chega de somas confusas no papel.
                     </CardDescription>
                   </CardContent>
                 </Card>

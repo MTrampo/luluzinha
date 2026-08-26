@@ -31,7 +31,6 @@ export function SignupForm({ signUpUser }: SignupFormProps) {
   const formUser = useForm<UserSignUpFormInputs>({
     resolver: zodResolver(userSignUpFormSchema),
     defaultValues: {
-      name: '',
       email: '',
       password: '',
     }
@@ -49,27 +48,6 @@ export function SignupForm({ signUpUser }: SignupFormProps) {
                   Entre com seu melhor e-mail para criar sua conta
                 </small>
               </div>
-              <Controller
-                control={formUser.control}
-                name="name"
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="name">Nome</FieldLabel>
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Luciana Silva"
-                      required
-                      {...field}
-                    />
-                    {fieldState.invalid ? <FieldError errors={[fieldState.error]} /> : (
-                      <FieldDescription>
-                        Como gostaria de ser chamado?
-                      </FieldDescription>
-                    )}
-                  </Field>
-                )}
-              />
               <Controller
                 control={formUser.control}
                 name="email"

@@ -4,7 +4,7 @@ import { ApiResponse } from "@/commons/lib/http/responses"
 import { getEstablishmentsByOwnerIdApi } from "./establishment.api"
 import { getPlanConfigBySlugApi } from "@/back/configuration/service/plan.api"
 import { SubscriptionPayloadCookie, SubscriptionPreApprovalPayload, SubscriptionUpdatePayload, UpdateSubscription, subscriptionFormatter } from "@/commons/models/subscription"
-import { getPreApprovalPlanPaymentApi } from "@/back/payment/service/payment.api"
+import { createPreApprovalSubscriptionApi } from "@/back/payment/service/payment.api"
 import { MercadoPagoStatusEnum } from "@/commons/enums/subscription"
 import { clearCookieSubscription, getCookieSubscription, setCookieSubscription } from "@/commons/lib/auth/subscription"
 import { nowBrazilIso } from "@/commons/utils/helper"
@@ -12,8 +12,7 @@ import { clientPreAproval } from "@/commons/lib/mercadopago/server"
 import { getInvoicesByEstablishmentIdApi } from "@/back/payment/service/invoice.api"
 import { invoiceFormatter } from "@/commons/models/payment"
 
-
-
+const planSlug = process.env.MP_PLAN_SLUG
 
 export const createCheckoutSessionApi = async (mpPayerEmail: string) => {
   const userResult = await getUserLoggedApi()
@@ -48,10 +47,16 @@ export const createCheckoutSessionApi = async (mpPayerEmail: string) => {
   console.log("Estabelecimento encontrado:", establishment)
 
   // Buscar configuração do plano 'starter'
-  const planConfigResult = await getPlanConfigBySlugApi('financier-luluzinha')
+  if (!planSlug) {
+    return ApiResponse.InternalError({
+      message: "Configuração de plano não encontrada."
+    })
+  }
+
+  const planConfigResult = await getPlanConfigBySlugApi(planSlug)
   if (planConfigResult.error || !planConfigResult.data) {
     return ApiResponse.NotFound({
-      message: "O plano 'Luluzinha' não foi localizado."
+      message: `O plano '${planSlug}' não foi localizado.`
     })
   }
 
@@ -80,7 +85,17 @@ export const createCheckoutSessionApi = async (mpPayerEmail: string) => {
   const subscriptionId = updatedSubscriptionResult.data.id
   console.log("Subscription criada/atualizada com sucesso:", subscriptionId)
 
-  const initPoint = await getPreApprovalPlanPaymentApi(planConfig.mp_plan_id)
+  // Em ambiente de desenvolvimento Sandbox com vendedor de testes, usamos o e-mail do comprador de testes
+  const targetPayerEmail = (process.env.ENVIRONMENT === "development" && process.env.MP_EMAIL_COMPRADOR_TEST)
+    ? process.env.MP_EMAIL_COMPRADOR_TEST
+    : mpPayerEmail
+
+  // Criar assinatura individual pendente no Mercado Pago enviando o external_reference (subscriptionId)
+  const initPoint = await createPreApprovalSubscriptionApi(
+    targetPayerEmail,
+    subscriptionId,
+    planConfig.price
+  )
 
   if (initPoint.error || !initPoint.data) {
     return ApiResponse.InternalError({
@@ -89,11 +104,17 @@ export const createCheckoutSessionApi = async (mpPayerEmail: string) => {
     })
   }
 
-  const initPointUrl = `${initPoint.data}&external_reference=${subscriptionId}&prefill_email=${encodeURIComponent(userEmail)}`
-  
+  // Persistir o ID da assinatura do Mercado Pago localmente para sincronizações ativas futuras
+  if (initPoint.data.preapprovalId) {
+    await updateSubscriptionByIdSupabase(subscriptionId, {
+      mp_subscription_id: initPoint.data.preapprovalId,
+      updated_at: nowBrazilIso()
+    })
+  }
+
   return ApiResponse.Ok({
     message: "Checkout session criada com sucesso",
-    data: initPointUrl
+    data: initPoint.data.initPoint
   })
 }
 
@@ -178,11 +199,37 @@ export const refreshSubscriptionApi = async () => {
     })
   }
 
-  const subscription = await getSubscriptionIdByUserIdSupabase(userId)
+  let subscription = await getSubscriptionIdByUserIdSupabase(userId)
   if (!subscription) {
     return ApiResponse.NotFound({
       message: "Nenhuma assinatura encontrada para o usuário."
     })
+  }
+
+  // Sincronização ativa de contingência: se a assinatura local não estiver autorizada, mas tiver mp_subscription_id
+  if (subscription.mp_status !== MercadoPagoStatusEnum.Authorized && subscription.mp_subscription_id) {
+    try {
+      console.info(`[SERVICE:refreshSubscription] Consultando status no MP para: ${subscription.mp_subscription_id}`)
+      const mpData = await clientPreAproval.get({ id: subscription.mp_subscription_id })
+      console.info(`[SERVICE:refreshSubscription] Status obtido no MP:`, { status: mpData?.status })
+
+      if (mpData && mpData.status) {
+        const { toIsoOrNull } = await import("@/commons/utils/helper")
+        const updatePayload: SubscriptionUpdatePayload = {
+          mp_status: mpData.status,
+          current_period_start: toIsoOrNull(mpData.date_created),
+          current_period_end: toIsoOrNull(mpData.next_payment_date),
+          updated_at: nowBrazilIso()
+        }
+        await updateSubscriptionByIdSupabase(subscription.id, updatePayload)
+        const updated = await getSubscriptionIdByUserIdSupabase(userId)
+        if (updated) {
+          subscription = updated
+        }
+      }
+    } catch (err) {
+      console.warn(`[SERVICE:refreshSubscription] Aviso na consulta direta ao MP:`, err)
+    }
   }
 
   const payload: SubscriptionPayloadCookie = {
@@ -362,7 +409,7 @@ export const syncSubscriptionStatusApi = async () => {
     console.info(`[SERVICE:syncSubscription] Buscando assinatura ${mpSubscriptionId} no Mercado Pago...`)
     const mpData = await clientPreAproval.get({ id: mpSubscriptionId })
     console.info(`[SERVICE:syncSubscription] Dados do Mercado Pago:`, { status: mpData.status, next_payment_date: mpData.next_payment_date })
-    
+
     if (mpData.status) {
       mpStatus = mpData.status
     }

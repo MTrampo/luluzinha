@@ -6,6 +6,7 @@ import { PreApprovalResponse } from "mercadopago/dist/clients/preApproval/common
 import { InvoiceResponse } from "mercadopago/dist/clients/invoice/commonTypes"
 import { nowBrazilIso, toIsoOrNull } from "@/commons/utils/helper"
 import {
+  webhookGetSubscriptionByIdSupabase,
   webhookGetSubscriptionByPayerEmailSupabase,
   webhookGetSubscriptionByPayerIdSupabase,
   webhookSyncSubscriptionSupabase,
@@ -41,22 +42,19 @@ const webhookAddInconsistencyApi = async (preapproval: PreApprovalResponse, reas
 
 const webhookUpdateSubscriptionPreapprovalApi = async (preapproval: PreApprovalResponse) => {
   let subscription = null
-  const syncEmail = "vinnicius4@hotmail.com"
+  const subscriptionId = preapproval.external_reference
 
-  console.info(`🔄 [WEBHOOK_SERVICE:updatePreapproval] Buscando subscription por email: ${syncEmail}`)
-  if (syncEmail) { //(preapproval.payer_email) {
-    subscription = await webhookGetSubscriptionByPayerEmailSupabase(syncEmail) //(preapproval.payer_email)
-    console.info(`🔄 [WEBHOOK_SERVICE:updatePreapproval] Resultado busca por email:`, subscription ? { id: subscription.id, mp_status: subscription.mp_status } : null)
+  if (!subscriptionId) {
+    console.error("❌ [WEBHOOK_SERVICE:updatePreapproval] external_reference ausente no preapproval")
+    return null
   }
 
-  if (!subscription && typeof preapproval.payer_id === "number") {
-    console.info(`🔄 [WEBHOOK_SERVICE:updatePreapproval] Buscando subscription por payer_id: ${preapproval.payer_id}`)
-    subscription = await webhookGetSubscriptionByPayerIdSupabase(preapproval.payer_id)
-    console.info(`🔄 [WEBHOOK_SERVICE:updatePreapproval] Resultado busca por payer_id:`, subscription ? { id: subscription.id, mp_status: subscription.mp_status } : null)
-  }
+  console.info(`🔄 [WEBHOOK_SERVICE:updatePreapproval] Buscando subscription por external_reference: ${subscriptionId}`)
+  subscription = await webhookGetSubscriptionByIdSupabase(subscriptionId)
+  console.info(`🔄 [WEBHOOK_SERVICE:updatePreapproval] Resultado busca por external_reference:`, subscription ? { id: subscription.id, mp_status: subscription.mp_status } : null)
 
   if (!subscription) {
-    const reason = `E-mail ${syncEmail} não vinculado a conta da manicure.`
+    const reason = `Assinatura com ID ${subscriptionId} não localizada no banco de dados.`
     console.warn(`⚠️ [WEBHOOK_SERVICE:updatePreapproval] Subscription não encontrada. Registrando inconsistência: ${reason}`)
     await webhookAddInconsistencyApi(preapproval, reason)
     return null
@@ -65,7 +63,7 @@ const webhookUpdateSubscriptionPreapprovalApi = async (preapproval: PreApprovalR
   const payload: SubscriptionUpdatePayload = {
     mp_status: preapproval.status,
     mp_payer_id: preapproval.payer_id,
-    mp_payer_email: syncEmail,
+    mp_payer_email: preapproval.payer_email || null,
     mp_subscription_id: preapproval.id,
     current_period_start: toIsoOrNull(preapproval.date_created),
     current_period_end: toIsoOrNull(preapproval.next_payment_date),
@@ -73,7 +71,7 @@ const webhookUpdateSubscriptionPreapprovalApi = async (preapproval: PreApprovalR
   }
 
   console.info(`🔄 [WEBHOOK_SERVICE:updatePreapproval] Payload de atualização:`, payload)
-  const updateResult = await webhookSyncSubscriptionSupabase(payload, syncEmail)
+  const updateResult = await webhookSyncSubscriptionSupabase(payload, subscription.id)
   console.info(`🔄 [WEBHOOK_SERVICE:updatePreapproval] Resultado syncSubscription:`, updateResult)
   return updateResult
 }
