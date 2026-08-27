@@ -26,7 +26,7 @@ export const updateEstablishmentDetailsApi = async (
   const { data: updated, error } = await updateEstablishmentSupabase(establishmentId, data);
   if (error) {
     return ApiResponse.InternalError({
-      message: "Erro ao atualizar os dados da sua bancada.",
+      message: "Erro ao atualizar os dados do seu espaço.",
       error: error.message
     });
   }
@@ -38,7 +38,7 @@ export const updateEstablishmentDetailsApi = async (
   }
 
   return ApiResponse.Ok({
-    message: "Bancada atualizada com sucesso!",
+    message: "Espaço atualizado com sucesso!",
     data: updated
   });
 }
@@ -85,13 +85,13 @@ export const createEstablishmentApi = async (
       })
     }
     return ApiResponse.InternalError({
-      message: "Erro ao criar sua bancada digital.",
+      message: "Erro ao criar seu espaço digital.",
       error: error.message
     })
   }
 
   return ApiResponse.Ok({
-    message: "Sua bancada digital foi criada com sucesso!",
+    message: "Seu espaço digital foi criado com sucesso!",
     data
   })
 }

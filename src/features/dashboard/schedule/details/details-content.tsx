@@ -321,7 +321,7 @@ Estou te esperando com muito carinho! ❤️`;
                     <div className="absolute top-0 right-0 p-4 opacity-10 -rotate-12 group-hover:rotate-0 transition-transform duration-500">
                       <FaReceipt className="w-16 h-16 text-white" />
                     </div>
-                    <span className="text-[0.6rem] font-bold text-purple-200 uppercase tracking-widest mb-1 relative z-10">Total da Bancada</span>
+                    <span className="text-[0.6rem] font-bold text-purple-200 uppercase tracking-widest mb-1 relative z-10">Total do Atendimento</span>
                     <span className="text-3xl font-black text-white tracking-tighter relative z-10">
                       {schedule.totalPriceFormatted}
                     </span>

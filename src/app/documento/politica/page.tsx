@@ -89,7 +89,7 @@ export default function PrivacyPolicy() {
             </p>
             <ul className="list-disc pl-5 space-y-3">
               <li><strong>Autenticação e Sessão:</strong> Para manter você conectada à sua conta de forma segura enquanto navega pela plataforma.</li>
-              <li><strong>Preferências da Bancada:</strong> Para salvar suas configurações visuais, como o estado do menu lateral (aberto ou fechado) e o estabelecimento ativo.</li>
+              <li><strong>Preferências do Espaço:</strong> Para salvar suas configurações visuais, como o estado do menu lateral (aberto ou fechado) e o estabelecimento ativo.</li>
               <li><strong>Segurança e Prevenção a Fraude (Mercado Pago):</strong> Cookies de terceiros integrados ao processamento de pagamentos para garantir transações financeiras seguras.</li>
             </ul>
             <p>

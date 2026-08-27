@@ -23,7 +23,7 @@ export function BetaBanner() {
 
   const whatsappNumber = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP || "5511999999999"
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    "Olá! Estou usando a Luluzinha (Bancada Beta) e encontrei um detalhe ou gostaria de dar uma sugestão..."
+    "Olá! Estou usando a Luluzinha (Espaço Beta) e encontrei um detalhe ou gostaria de dar uma sugestão..."
   )}`
 
   return (
@@ -34,7 +34,7 @@ export function BetaBanner() {
             <IoSparklesSharp className="h-3.5 w-3.5 text-purple-200" />
           </div>
           <span>
-            🌸 <strong className="font-lexend font-bold text-purple-100">Bancada de Testes (Beta):</strong> Estamos lapidando cada cantinho do app com muito carinho! Se algo não funcionar ou se quiser nos dar uma dica, fale conosco.
+            🌸 <strong className="font-lexend font-bold text-purple-100">Espaço de Testes (Beta):</strong> Estamos lapidando cada cantinho do app com muito carinho! Se algo não funcionar ou se quiser nos dar uma dica, fale conosco.
           </span>
         </div>
         <div className="shrink-0">

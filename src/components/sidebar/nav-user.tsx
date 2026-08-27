@@ -39,9 +39,9 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={avatarSrc} alt={`Foto de perfil da ${luluzinha}`} />
-                <AvatarFallback className="rounded-lg">
+              <Avatar className="size-9 bg-transparent shrink-0">
+                <AvatarImage src={avatarSrc} alt={`Foto de perfil da ${luluzinha}`} className="object-contain" />
+                <AvatarFallback className="bg-transparent text-purple-600">
                   <FaCircleUser />
                 </AvatarFallback>
               </Avatar>
@@ -60,9 +60,9 @@ export function NavUser() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={avatarSrc} alt={`Foto de perfil da ${luluzinha}`} />
-                  <AvatarFallback className="rounded-lg">
+                <Avatar className="size-9 bg-transparent shrink-0">
+                  <AvatarImage src={avatarSrc} alt={`Foto de perfil da ${luluzinha}`} className="object-contain" />
+                  <AvatarFallback className="bg-transparent text-purple-600">
                     <FaCircleUser />
                   </AvatarFallback>
                 </Avatar>
@@ -84,7 +84,7 @@ export function NavUser() {
               <DropdownMenuItem asChild>
                 <Link href="/painel/bancada">
                   <FaPaintbrush />
-                  Minha Bancada
+                  Meu Espaço
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>

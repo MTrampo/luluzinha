@@ -9,12 +9,13 @@ Este documento estabelece os princípios de comunicação para o MVP Luluzinha. 
 ## 1. O Tom de Voz
 A linguagem deve ser **próxima, amigável e acolhedora**. Devemos tratar a manicure como a empreendedora e dona de negócio que ela é, mas com o carinho e a proximidade que o nicho da beleza exige.
 
-*   **Não use:** Termos corporativos, frios ou excessivamente técnicos.
-*   **Use:** Palavras que remetam ao cuidado, à bancada, ao profissionalismo e ao sucesso dela.
+*   **Não use:** Termos corporativos, frios ou excessivamente técnicos (e evite termos limitantes como "bancada" quando se referir ao seu negócio).
+*   **Use:** Palavras que remetam ao cuidado, ao seu espaço de atendimento, ao profissionalismo e ao sucesso dela.
 
 ## 2. Glossário Luluzinha (Linguagem Identitária)
 O Antigravity deve obrigatoriamente substituir termos genéricos pelos termos da "comunidade":
 *   **Clientes** ➔ Poderosas
+*   **Estabelecimento/Salão/Bancada** ➔ Seu Espaço / Meu Espaço
 *   **Agenda** ➔ Agenda de Atendimentos
 *   **Financeiro/Fluxo de Caixa** ➔ Seu Caixa / Histórico de Recebíveis
 *   **Serviços/Configurações** ➔ Menu de Procedimentos
@@ -31,10 +32,10 @@ Nunca use mensagens de erro negativas. Transforme o erro em suporte.
 
 ### C. Onboarding e Boas-vindas
 A recepção deve mostrar a dedicação investida no app.
-*   *Texto base:* "Bem-vinda à sua nova bancada digital. Preparamos cada detalhe com muito carinho para que seu dia a dia seja mais leve e profissional."
+*   *Texto base:* "Bem-vinda ao seu novo espaço digital. Preparamos cada detalhe com muito carinho para que seu dia a dia seja mais leve e profissional."
 
 ## 4. Instruções de Design de Texto
-1.  **Dona do Negócio:** Sempre empodere a usuária. Reforce que o app é a ferramenta dela para crescer.
+1.  **Dona do Negócio:** Sempre empodere a usuária. Reforce que o app é a ferramenta dela para crescer e cuidar do seu espaço.
 2.  **Acesse de qualquer lugar:** Reforce a facilidade do sistema estar sempre com ela, na palma da mão, direto da tela inicial.
 3.  **Histórico Amigo:** O registro de 30 dias não é apenas um log, é a memória da dedicação dela no último mês.
 

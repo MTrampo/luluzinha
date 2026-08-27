@@ -29,7 +29,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
             <div className="lg:col-span-7 flex flex-col justify-center text-left space-y-12 animate-hero-text-content opacity-0">
               <div className="space-y-6">
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-purple-950 tracking-tight leading-[1.1] font-lexend animate-hero-title opacity-0">
-                  Sua bancada digital completa para você <span className="text-purple-600 font-extrabold">brilhar ainda mais</span>
+                  Seu espaço digital completo para você <span className="text-purple-600 font-extrabold">brilhar ainda mais</span>
                 </h1>
 
                 {/* Mockup Laptop & Celular para Mobile/Tablet (Abaixo do título) */}
@@ -62,14 +62,14 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
               </div>
 
               <p className="text-lg md:text-xl text-purple-900/80 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0 animate-hero-desc opacity-0">
-                Preparamos cada detalhe com muito carinho para que seu dia a dia como manicure seja mais leve, organizado e profissional. Gerencie sua agenda de atendimentos, encante suas Poderosas e acompanhe o sucesso da sua bancada.
+                Preparamos cada detalhe com muito carinho para que seu dia a dia como manicure seja mais leve, organizado e profissional. Gerencie sua agenda de atendimentos, encante suas Poderosas e acompanhe o sucesso do seu espaço.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4 animate-hero-buttons opacity-0">
                 {user ? (
                   <Button size="lg" className="group bg-purple-600 hover:bg-purple-700 text-white font-bold text-base px-8 py-6 rounded-full shadow-lg hover:shadow-xl hover:shadow-purple-100 transition-all duration-200 transform" asChild>
                     <Link href="/painel">
-                      Acessar minha bancada
+                      Acessar meu espaço
                       <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 delay-75 group-hover:translate-x-1.5" />
                     </Link>
                   </Button>
@@ -83,7 +83,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
                     </Button>
                     <Button size="lg" variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50/50 hover:text-purple-900 font-semibold text-base px-8 py-6 rounded-full transition-all duration-200" asChild>
                       <Link href="/entrar">
-                        Entrar na minha bancada
+                        Entrar no meu espaço
                       </Link>
                     </Button>
                   </>
@@ -95,7 +95,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
                   <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-purple-100 text-purple-700 tracking-wider uppercase font-lexend">
                     Beta
                   </span>
-                  <span>Bancada de Testes</span>
+                  <span>Espaço de Testes</span>
                 </div>
                 <div className="flex items-center gap-1.5 animate-hero-check opacity-0">
                   <CheckCircle2 className="h-4 w-4 text-purple-500" />
@@ -185,10 +185,10 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
               {/* Textos de Cabeçalho das Funcionalidades */}
               <div className="text-center lg:text-left space-y-4 max-w-3xl lg:max-w-none">
                 <h2 className="text-3xl sm:text-4xl font-black text-purple-950 tracking-tight font-lexend animate-features-title opacity-0">
-                  Tudo o que sua bancada precisa para crescer
+                  Tudo o que seu espaço precisa para crescer
                 </h2>
                 <p className="text-lg text-purple-900/70 animate-features-desc opacity-0">
-                  Criamos um space completo e fácil de usar, eliminando a papelada para você focar no que faz de melhor: deixar as unhas maravilhosas.
+                  Criamos um espaço completo e fácil de usar, eliminando a papelada para você focar no que faz de melhor: deixar as unhas maravilhosas.
                 </p>
               </div>
 
@@ -241,7 +241,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
                   </CardHeader>
                   <CardContent className="pb-6">
                     <CardDescription className="text-purple-900/70 text-sm leading-relaxed">
-                      Acompanhe o faturamento e o rendimento da sua bancada com o Histórico de Recebíveis de 30 dias. Chega de somas confusas no papel.
+                      Acompanhe o faturamento e o rendimento do seu espaço com o Histórico de Recebíveis de 30 dias. Chega de somas confusas no papel.
                     </CardDescription>
                   </CardContent>
                 </Card>

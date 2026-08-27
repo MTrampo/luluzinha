@@ -42,7 +42,7 @@ export default function EstablishmentDashboard({ establishment }: EstablishmentD
           )}
         </div>
         <p className="text-sm text-gray-500">
-          Personalize as informações da sua bancada digital, organize seus horários de funcionamento e gerencie seus bloqueios.
+          Personalize as informações do seu espaço digital, organize seus horários de funcionamento e gerencie seus bloqueios.
         </p>
       </div>
 

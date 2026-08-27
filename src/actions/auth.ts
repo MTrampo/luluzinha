@@ -29,9 +29,9 @@ export const verifyOtpCodeAction = async (email: string, code: string) => {
     await createProfileApi(userId, "Manicure Luluzinha", "avatar-1")
 
     // 2. Criar estabelecimento provisório
-    const tempSlug = `bancada-temp-${userId.substring(0, 8)}`
+    const tempSlug = `espaco-temp-${userId.substring(0, 8)}`
     await createEstablishmentApi(userId, {
-      name: "Minha Bancada",
+      name: "Meu Espaço",
       slug: tempSlug,
       avatar_url: "FaPaintbrush",
       phone: null,

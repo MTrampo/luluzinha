@@ -84,7 +84,7 @@ export function HoursTab({ establishmentId, hours, setHours }: HoursTabProps) {
     <div className="border border-purple-50 hover:border-purple-200 shadow-sm hover:shadow-md bg-white/80 backdrop-blur-sm p-6 rounded-xl transition-all duration-300 space-y-6">
       <div className="flex flex-col md:flex-row justify-between md:items-center border-b border-purple-50 pb-3 gap-2">
         <div>
-          <h3 className="text-lg font-bold text-purple-900">Horários da Bancada</h3>
+          <h3 className="text-lg font-bold text-purple-900">Horários do Espaço</h3>
           <p className="text-xs text-gray-500 mt-1">
             Dias e horários em que sua agenda de atendimentos está aberta para marcações.
           </p>

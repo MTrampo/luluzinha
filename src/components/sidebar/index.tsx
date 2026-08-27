@@ -40,7 +40,7 @@ const navigation: NavRoot = {
       ],
     },
     {
-      label: "Bancada",
+      label: "Meu Espaço",
       items: [
         {
           title: "Caixa",

@@ -164,7 +164,7 @@ export function Schedule({ schedules, blocks }: ScheduleProps) {
               {friendlyTitle}
             </h2>
             <p className="text-xs md:text-sm text-gray-500 font-medium hidden sm:block">
-              Acompanhe o ritmo da sua bancada e brilhe com suas{" "}
+              Acompanhe o ritmo do seu espaço e brilhe com suas{" "}
               <span className="text-purple-600 font-semibold">Poderosas</span>.
             </p>
           </div>
@@ -187,7 +187,7 @@ export function Schedule({ schedules, blocks }: ScheduleProps) {
                     Agenda de Atendimentos
                   </SheetTitle>
                   <SheetDescription className="text-gray-500 text-xs mt-1 leading-normal">
-                    Selecione uma data e filtre os procedimentos para organizar sua bancada.
+                    Selecione uma data e filtre os procedimentos para organizar seu espaço.
                   </SheetDescription>
                 </div>
                 <div className="flex-1 min-h-0">

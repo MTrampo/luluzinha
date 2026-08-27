@@ -60,7 +60,7 @@ export default async function Header() {
                   
                   <Button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold shadow-md shadow-purple-100 transition-all text-xs sm:text-sm px-4 py-2 h-auto rounded-full" asChild>
                     <Link href="/cadastrar">
-                      Criar minha bancada
+                      Criar meu espaço
                     </Link>
                   </Button>
                 </>

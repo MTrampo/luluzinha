@@ -22,3 +22,8 @@ export const forgotPasswordFormSchema = z.object({
 export const otpVerificationSchema = z.object({
   code: z.string('Código obrigatório').regex(/^\d{6}$/, 'O código deve conter 6 dígitos'),
 })
+
+export const profileFormSchema = z.object({
+  name: z.string().trim().min(2, "Seu nome ou apelido profissional deve ter pelo menos 2 caracteres."),
+  avatarUrl: z.string().min(1, "Selecione um avatar para representá-la.")
+})

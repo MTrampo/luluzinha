@@ -222,7 +222,7 @@ export default function Account({ user, subscription }: AccountProps) {
 
                     {/* Plano Limits List */}
                     <div className="pt-1">
-                      <p className="text-xs font-bold text-purple-950 mb-2">Vantagens Ativas na sua Bancada:</p>
+                      <p className="text-xs font-bold text-purple-950 mb-2">Vantagens Ativas no seu Espaço:</p>
                       <ul className="text-xs text-gray-600 space-y-1.5 pl-1">
                         <li className="flex items-center gap-2">
                           <FaCheck className="text-purple-600 shrink-0" size={10} />
@@ -244,9 +244,9 @@ export default function Account({ user, subscription }: AccountProps) {
                     <div className="flex items-start gap-3 bg-amber-50 p-3 rounded-md border border-amber-100">
                       <FaInfoCircle className="text-amber-600 mt-0.5 shrink-0" />
                       <div className="space-y-1">
-                        <h4 className="text-xs font-bold text-amber-900">Bancada sem Assinatura</h4>
+                        <h4 className="text-xs font-bold text-amber-900">Espaço sem Assinatura</h4>
                         <p className="text-[11px] text-amber-700 leading-relaxed">
-                          Bem-vinda à sua nova bancada digital. Preparamos cada detalhe com muito carinho para que seu dia a dia seja mais leve e profissional. Assine o plano para liberar todos os recursos.
+                          Bem-vinda ao seu novo espaço digital. Preparamos cada detalhe com muito carinho para que seu dia a dia seja mais leve e profissional. Assine o plano para liberar todos os recursos.
                         </p>
                       </div>
                     </div>

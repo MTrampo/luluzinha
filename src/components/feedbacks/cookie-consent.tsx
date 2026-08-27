@@ -33,7 +33,7 @@ export function CookieConsent() {
           </div>
           <div className="space-y-1.5 text-left">
             <h4 className="text-sm font-bold text-purple-950 dark:text-purple-100 font-lexend">
-              Nossa bancada usa cookies! 🌸
+              Nosso espaço usa cookies! 🌸
             </h4>
             <p className="text-xs text-purple-900/70 dark:text-purple-300/80 leading-relaxed">
               Para garantir que sua experiência com a Luluzinha seja a mais leve, segura e personalizada possível, usamos cookies em nosso sistema. Ao continuar navegando, você concorda com o uso deles para deixar a sua rotina mais protegida.

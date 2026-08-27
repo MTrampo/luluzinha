@@ -6,8 +6,8 @@ import { SubscriptionGuard } from "@/components/subscription/guard";
 import { CookieConsent } from "@/components/feedbacks/cookie-consent";
 
 export const metadata: Metadata = {
-  title: "Luluzinha | Sua Bancada Digital",
-  description: "Preparamos cada detalhe com muito carinho para que seu dia a dia como manicure seja mais leve, organizado e profissional. Comece sua bancada digital gratuitamente.",
+  title: "Luluzinha | Seu Espaço Digital",
+  description: "Preparamos cada detalhe com muito carinho para que seu dia a dia como manicure seja mais leve, organizado e profissional. Comece seu espaço digital gratuitamente.",
 };
 
 export default function RootLayout({

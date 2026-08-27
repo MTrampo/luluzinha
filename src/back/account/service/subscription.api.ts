@@ -315,7 +315,7 @@ export const cancelSubscriptionApi = async () => {
   const subscription = await getSubscriptionIdByUserIdSupabase(userId)
   if (!subscription) {
     return ApiResponse.NotFound({
-      message: "Nenhuma assinatura ativa encontrada para esta bancada."
+      message: "Nenhuma assinatura ativa encontrada para este espaço."
     })
   }
 
@@ -372,7 +372,7 @@ export const cancelSubscriptionApi = async () => {
   const updatedSubscription = await getSubscriptionIdByUserIdSupabase(userId)
 
   return ApiResponse.Ok({
-    message: "Assinatura cancelada com sucesso na sua bancada.",
+    message: "Assinatura cancelada com sucesso no seu espaço.",
     data: updatedSubscription ? subscriptionFormatter(updatedSubscription) : null
   })
 }

@@ -36,7 +36,7 @@ export const killAuthSupabase = async () => {
 export const createProfileSupabase = async (userId: string, name: string, avatarUrl?: string | null) => {
   const supabase = await serverSupabase()
 
-  const { data, error } = await supabase.from("profiles").insert({
+  const { data, error } = await supabase.from("profiles").upsert({
     id: userId,
     name: name,
     avatar_url: avatarUrl || null,

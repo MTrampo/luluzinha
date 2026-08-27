@@ -13,7 +13,7 @@ export default async function BancadaPage() {
 
   return (
     <>
-      <Header title="Minha Bancada" />
+      <Header title="Meu Espaço" />
       <div className="main-content">
         <EstablishmentDashboard establishment={activeEstablishment} />
       </div>

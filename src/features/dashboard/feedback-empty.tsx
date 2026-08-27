@@ -25,7 +25,7 @@ export function AppointmentFeedbackEmpty({ availableDays = [] }: AppointmentFeed
       </div>
 
       <h4 className="font-black text-purple-900">
-        Sua bancada está pronta para brilhar!
+        Seu espaço está pronto para brilhar!
       </h4>
 
       <p className="text-sm text-gray-500 max-w-lg mx-auto mb-6 leading-relaxed">

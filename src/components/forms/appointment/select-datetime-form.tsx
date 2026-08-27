@@ -120,7 +120,7 @@ export function SelectDateTimeForm({
             <Image src={svgSelectDay} alt="Selecione um dia" className="w-56 h-56 drop-shadow-sm opacity-90" priority />
             <h3 className="text-gray-900">Qual o melhor dia?</h3>
             <p className="text-gray-500 text-sm">
-              Selecione uma data no calendário ao lado para ver os horários que a sua bancada está livre.
+              Selecione uma data no calendário ao lado para ver os horários que o seu espaço está livre.
             </p>
           </div>
         ) : isPending ? (

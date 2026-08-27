@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Database, Tables } from "../types/database.types";
 import { formatCaseName, formatDate, formatPhone } from "../utils/format";
-import { establishmentInfoFormSchema } from "../validations/establishment";
+import { establishmentInfoFormSchema, onboardingEstablishmentFormSchema } from "../validations/establishment";
 
 export type EstablishmentSupabase = Tables<'establishments'>
 
@@ -24,6 +24,7 @@ export interface OpeningHours {
 }
 
 export type EstablishmentInfoFormValues = z.infer<typeof establishmentInfoFormSchema>
+export type OnboardingEstablishmentFormInputs = z.infer<typeof onboardingEstablishmentFormSchema>
 
 export interface EstablishmentFormatted {
   id: string;

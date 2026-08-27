@@ -31,12 +31,12 @@ export default async function Home() {
                   Feito com muito carinho para a sua rotina
                 </h2>
                 <p className="text-purple-900/85 text-lg leading-relaxed">
-                  Sabemos que o dia a dia na bancada é corrido. Luluzinha foi criada para simplificar seu trabalho, permitindo que você gerencie seu negócio em poucos segundos entre um atendimento e outro.
+                  Sabemos que o dia a dia no seu espaço de atendimento é corrido. Luluzinha foi criada para simplificar seu trabalho, permitindo que você gerencie seu negócio em poucos segundos entre um atendimento e outro.
                 </p>
                 <div className="pt-2">
                   <Button className="group bg-purple-600 hover:bg-purple-700 text-white rounded-full font-semibold px-6 py-5 shadow-md shadow-purple-100 transition-all duration-200" asChild>
                     <Link href={user ? "/painel" : "/cadastrar"} className="inline-flex items-center">
-                      {user ? "Acessar minha bancada" : "Quero transformar minha bancada"}
+                      {user ? "Acessar meu espaço" : "Quero transformar meu espaço"}
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 delay-75 group-hover:translate-x-1.5" />
                     </Link>
                   </Button>
@@ -62,7 +62,7 @@ export default async function Home() {
                   <div className="space-y-1">
                     <h3 className="text-lg font-bold text-purple-950 font-lexend">Acesse de qualquer lugar</h3>
                     <p className="text-purple-900/70 text-sm leading-relaxed">
-                      Você pode abrir sua bancada digital no celular, tablet ou computador. Crie um atalho rápido na sua tela inicial e use o sistema como se fosse um aplicativo instalado!
+                      Você pode abrir seu espaço digital no celular, tablet ou computador. Crie um atalho rápido na sua tela inicial e use o sistema como se fosse um aplicativo instalado!
                     </p>
                   </div>
                 </div>
@@ -73,7 +73,7 @@ export default async function Home() {
                   <div className="space-y-1">
                     <h3 className="text-lg font-bold text-purple-950 font-lexend">Um histórico amigo para crescer</h3>
                     <p className="text-purple-900/70 text-sm leading-relaxed">
-                      Tenha clareza do quanto a sua bancada faturou nos últimos 30 dias e valorize a sua dedicação. O controle financeiro ideal para planejar suas próximas metas e conquistas.
+                      Tenha clareza do quanto o seu espaço faturou nos últimos 30 dias e valorize a sua dedicação. O controle financeiro ideal para planejar suas próximas metas e conquistas.
                     </p>
                   </div>
                 </div>
@@ -92,7 +92,7 @@ export default async function Home() {
                 Valor justo para apoiar o seu negócio
               </h2>
               <p className="text-purple-900/70 text-lg max-w-2xl mx-auto">
-                Acreditamos no seu sucesso e queremos ser parceiros da sua bancada. Por isso, oferecemos um preço extremamente acessível.
+                Acreditamos no seu sucesso e queremos ser parceiros do seu espaço. Por isso, oferecemos um preço extremamente acessível.
               </p>
             </div>
 
@@ -150,7 +150,7 @@ export default async function Home() {
                 <div className="pt-4">
                   <Button className="group w-full bg-purple-600 hover:bg-purple-700 text-white rounded-full font-bold py-6 text-base shadow-md shadow-purple-100 transition-all duration-200" asChild>
                     <Link href={user ? "/painel" : "/cadastrar"} className="inline-flex items-center justify-center">
-                      {user ? "Ir para a minha bancada" : "Criar minha conta e testar"}
+                      {user ? "Ir para o meu espaço" : "Criar minha conta e testar"}
                       <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 delay-75 group-hover:translate-x-1.5" />
                     </Link>
                   </Button>
@@ -188,7 +188,7 @@ export default async function Home() {
                   O que significa o sistema estar na fase Beta?
                 </AccordionTrigger>
                 <AccordionContent className="text-purple-900/70 leading-relaxed pt-2 text-sm">
-                  Significa que a Luluzinha é um sistema novinho e está em desenvolvimento ativo (nossa bancada de testes)! Todas as funções principais como a Agenda de Atendimentos, Cadastro de Poderosas e Histórico de Caixa funcionam 100%, mas ainda estamos polindo alguns detalhes e adicionando novidades. Por fazer parte dessa fase inicial, você conta com um suporte super próximo via WhatsApp e garante o valor especial de lançamento!
+                  Significa que a Luluzinha é um sistema novinho e está em desenvolvimento ativo (nosso espaço de testes)! Todas as funções principais como a Agenda de Atendimentos, Cadastro de Poderosas e Histórico de Caixa funcionam 100%, mas ainda estamos polindo alguns detalhes e adicionando novidades. Por fazer parte dessa fase inicial, você conta com um suporte super próximo via WhatsApp e garante o valor especial de lançamento!
                 </AccordionContent>
               </AccordionItem>
 
@@ -197,7 +197,7 @@ export default async function Home() {
                   Como funciona o teste gratuito da Luluzinha?
                 </AccordionTrigger>
                 <AccordionContent className="text-purple-900/70 leading-relaxed pt-2 text-sm">
-                  Ao se cadastrar na plataforma, você pode experimentar todas as funcionalidades da sua bancada digital gratuitamente. Sem compromissos, para você ver na prática como sua rotina vai ficar muito mais organizada.
+                  Ao se cadastrar na plataforma, você pode experimentar todas as funcionalidades do seu espaço digital gratuitamente. Sem compromissos, para você ver na prática como sua rotina vai ficar muito mais organizada.
                 </AccordionContent>
               </AccordionItem>
 
@@ -251,7 +251,7 @@ export default async function Home() {
             </div>
 
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight font-lexend leading-tight">
-              Vamos crescer juntas e organizar a sua bancada?
+              Vamos crescer juntas e organizar o seu espaço?
             </h2>
 
             <p className="text-lg text-purple-100 font-medium max-w-2xl mx-auto leading-relaxed">
@@ -261,7 +261,7 @@ export default async function Home() {
             <div className="pt-4">
               <Button size="lg" className="group bg-white text-purple-700 hover:bg-purple-50 font-extrabold text-base px-8 py-6 rounded-full shadow-lg transition-all duration-200 transform" asChild>
                 <Link href={user ? "/painel" : "/cadastrar"}>
-                  {user ? "Entrar na minha bancada digital" : "Criar minha bancada digital"}
+                  {user ? "Entrar no meu espaço digital" : "Criar meu espaço digital"}
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 delay-75 group-hover:translate-x-1.5" />
                 </Link>
               </Button>

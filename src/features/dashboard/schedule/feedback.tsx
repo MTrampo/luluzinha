@@ -6,7 +6,7 @@ export const ScheduleFeedbackEmpty = () => {
       <ErrorState
         type="empty"
         title="Nenhum atendimento por aqui ainda"
-        description="Sua bancada está livre! Que tal aproveitar para planejar o próximo brilho?"
+        description="Seu espaço está livre! Que tal aproveitar para planejar o próximo brilho?"
       />
     </div>
   );

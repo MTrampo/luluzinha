@@ -51,7 +51,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
               onClick={() => router.push("/painel/bancada")}
               className="bg-purple-600 hover:bg-purple-700 text-white rounded-md w-full transition-colors"
             >
-              Voltar para a Bancada
+              Voltar para o Meu Espaço
             </Button>
           </div>
         </div>
@@ -65,7 +65,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
     try {
       const response = await cancelSubscriptionAction()
       if (response.status === 200) {
-        toast.success("Assinatura cancelada com sucesso na sua bancada.")
+        toast.success("Assinatura cancelada com sucesso no seu espaço.")
         setIsCancelOpen(false)
         router.refresh()
       } else {
@@ -97,7 +97,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
                   </span>
                 </div>
                 <p className="text-xs text-gray-500">
-                  Gerencie sua conta e histórico de pagamentos da bancada
+                  Gerencie sua conta e histórico de pagamentos do espaço
                 </p>
               </div>
             </div>
@@ -142,7 +142,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
                 {/* Vantagens */}
                 <div className="border border-purple-50 p-4 rounded-md flex flex-col justify-between">
                   <div className="space-y-3">
-                    <p className="text-xs font-bold text-purple-950">Vantagens da sua Bancada Digital:</p>
+                    <p className="text-xs font-bold text-purple-950">Vantagens do seu Espaço Digital:</p>
                     <ul className="text-xs text-gray-600 space-y-2">
                       <li className="flex items-center gap-2">
                         <FaCheck className="text-purple-600 shrink-0" size={10} />
@@ -187,7 +187,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
                   ) : (
                     <>
                       <div className="bg-amber-50 border border-amber-100 p-4 rounded-md text-xs text-amber-800 leading-relaxed">
-                        Sua assinatura não está ativa no momento. Para reativar seu plano e liberar todas as vantagens para sua bancada digital, assine novamente.
+                        Sua assinatura não está ativa no momento. Para reativar seu plano e liberar todas as vantagens para seu espaço digital, assine novamente.
                       </div>
                       <Button
                         onClick={() => window.location.href = "/assinatura"}
@@ -205,7 +205,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
                 <div className="flex items-start gap-3 bg-amber-50 p-4 rounded-md border border-amber-100 max-w-xl mx-auto text-left">
                   <FaInfoCircle className="text-amber-600 mt-0.5 shrink-0" size={18} />
                   <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-amber-900">Bancada sem Assinatura Ativa</h4>
+                    <h4 className="text-sm font-bold text-amber-900">Espaço sem Assinatura Ativa</h4>
                     <p className="text-xs text-amber-700 leading-relaxed">
                       Preparamos cada detalhe com muito carinho para que seu dia a dia seja leve e profissional. Assine o plano para liberar todos os recursos da Luluzinha!
                     </p>
@@ -262,7 +262,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
                   <FaFileInvoiceDollar size={20} />
                 </div>
                 <p className="text-xs text-gray-500 leading-relaxed font-medium">
-                  Ainda não temos registros de cobrança na sua bancada. Conforme suas mensalidades forem processadas, o histórico de faturas aparecerá aqui com todo o carinho!
+                  Ainda não temos registros de cobrança no seu espaço. Conforme suas mensalidades forem processadas, o histórico de faturas aparecerá aqui com todo o carinho!
                 </p>
               </div>
             )}
@@ -278,7 +278,7 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
           onOpenChange={setIsCancelOpen}
           title="Ah, que pena que você quer nos deixar... 🥺"
           confirmText="Sim, quero cancelar"
-          cancelText="Continuar brilhando na bancada"
+          cancelText="Continuar brilhando no meu espaço"
           isPending={isPending}
           onConfirm={handleCancelSubscription}
           description={

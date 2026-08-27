@@ -147,7 +147,7 @@ export async function GET(req: Request) {
           <div tw="flex flex-col items-center">
             <div tw="flex items-center opacity-40">
               <span style={{ color: '#4c1d95', fontSize: '24px', fontWeight: 'bold', letterSpacing: '2px' }}>
-                LULUZINHA • SUA BANCADA DIGITAL
+                LULUZINHA • SEU ESPAÇO DIGITAL
               </span>
             </div>
           </div>

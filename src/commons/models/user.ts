@@ -1,5 +1,5 @@
 import z from "zod"
-import { sendEmailFormSchema, otpVerificationSchema, userSignInFormSchema, userSignUpFormSchema, forgotPasswordFormSchema } from "../validations/user"
+import { sendEmailFormSchema, otpVerificationSchema, userSignInFormSchema, userSignUpFormSchema, forgotPasswordFormSchema, profileFormSchema } from "../validations/user"
 import { User } from "@supabase/supabase-js"
 
 export interface UserRequestBody {
@@ -41,3 +41,4 @@ export type UserSignInFormInputs = z.infer<typeof userSignInFormSchema>
 export type SendEmailFormInputs = z.infer<typeof sendEmailFormSchema>
 export type OtpFormInputs = z.infer<typeof otpVerificationSchema>
 export type ForgotPasswordFormInputs = z.infer<typeof forgotPasswordFormSchema>
+export type ProfileFormInputs = z.infer<typeof profileFormSchema>

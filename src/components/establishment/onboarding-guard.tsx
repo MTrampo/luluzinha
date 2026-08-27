@@ -22,7 +22,7 @@ export function OnboardingGuard({ children }: { children: React.ReactNode }) {
   }
 
   // Se o estabelecimento ativo for temporário, força a exibição do onboarding
-  const isTemporary = activeEstablishment?.slug?.startsWith("bancada-temp-")
+  const isTemporary = activeEstablishment?.slug?.startsWith("bancada-temp-") || activeEstablishment?.slug?.startsWith("espaco-temp-")
 
   if (isTemporary) {
     return (

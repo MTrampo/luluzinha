@@ -32,7 +32,7 @@ export default function Subscription() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Cadastro ilimitado de clientes para ter o contato de todas sempre à mão na bancada digital.
+                  Cadastro ilimitado de clientes para ter o contato de todas sempre à mão no seu espaço digital.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -43,7 +43,7 @@ export default function Subscription() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Saiba exatamente quanto entrou na sua bancada com o Histórico de Recebíveis.
+                  Saiba exatamente quanto entrou no seu espaço com o Histórico de Recebíveis.
                 </CardDescription>
               </CardContent>
             </Card>

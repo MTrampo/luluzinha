@@ -65,7 +65,7 @@ export function InfoTab({ establishment }: InfoTabProps) {
         })
 
         if (response.status === 200) {
-          toast.success("Dados da sua bancada atualizados com sucesso!")
+          toast.success("Dados do seu espaço atualizados com sucesso!")
           setIsEditingInfo(false)
         } else {
           toast.error(response.message || "Erro ao salvar as informações.")
@@ -101,7 +101,7 @@ export function InfoTab({ establishment }: InfoTabProps) {
             </div>
             <div className="space-y-1">
               <span className="text-[10px] uppercase font-black text-purple-400 tracking-wider block">
-                Nome da Esmaltaria / Salão
+                Nome do Espaço
               </span>
               <h4 className="text-base font-bold text-purple-950">
                 {establishment.name || "Sem nome cadastrado"}
@@ -156,7 +156,7 @@ export function InfoTab({ establishment }: InfoTabProps) {
             name="name"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="name">Nome da Bancada / Salão</FieldLabel>
+                <FieldLabel htmlFor="name">Nome do Espaço</FieldLabel>
                 <Input
                   id="name"
                   placeholder="Ex: Espaço da Lulu"
@@ -234,7 +234,7 @@ export function InfoTab({ establishment }: InfoTabProps) {
         <div>
           <h3 className="text-lg font-bold text-purple-900">Escolha o Ícone</h3>
           <p className="text-xs text-gray-500 mt-1">
-            Selecione um ícone para representar sua vitrine na bancada digital.
+            Selecione um ícone para representar sua vitrine no seu espaço digital.
           </p>
         </div>
 
