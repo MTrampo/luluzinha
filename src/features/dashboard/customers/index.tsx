@@ -17,20 +17,34 @@ export default async function Customers({ customers }: CustomersProps) {
     <>
       <Header title="Poderosas" />
       <div className="main-content">
-        <div className="flex justify-between items-center md:mb-6">
-          <SearchInput placeholder="Pesquisar por nome ou celular..." />
-          <CustomSheet
-            title="Nova Poderosa"
-            description="Preencha os dados abaixo para cadastrar uma nova cliente."
-            trigger={
-              <Button size='sm'>
-                <FaUserPlus />
-                <span className="hidden md:block">Nova Poderosa</span>
-              </Button>
-            }
-          >
-            <CustomerForm />
-          </CustomSheet>
+        <div className="flex flex-col gap-4 w-full">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-purple-900 leading-tight tracking-tight text-lg sm:text-xl font-bold">
+                Suas Poderosas
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-500 font-medium hidden min-[480px]:block">
+                Acompanhe e cuide das clientes do seu espaço.
+              </p>
+            </div>
+
+            <CustomSheet
+              title="Nova Poderosa"
+              description="Preencha os dados abaixo para cadastrar uma nova cliente."
+              trigger={
+                <Button variant="theme" size="sm" className="font-bold gap-2 shadow-xs shrink-0 rounded-lg h-9 px-3.5">
+                  <FaUserPlus className="text-xs" />
+                  <span className="text-xs sm:text-sm">Nova Poderosa</span>
+                </Button>
+              }
+            >
+              <CustomerForm />
+            </CustomSheet>
+          </div>
+
+          <div className="w-full">
+            <SearchInput placeholder="Buscar Poderosa por nome ou celular..." />
+          </div>
         </div>
 
         {customers.length === 0 ? (

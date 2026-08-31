@@ -181,8 +181,8 @@ export function Schedule({ schedules, blocks }: ScheduleProps) {
                   <FaCalendarDays size={20} />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="p-0 w-[320px] sm:w-100 border-l-purple-100 flex flex-col bg-white gap-0">
-                <div className="p-6 border-b border-purple-100/50 pr-12 shrink-0">
+              <SheetContent side="right" className="p-0 w-full max-w-[100vw] sm:w-95 border-l-purple-100 flex flex-col bg-white gap-0">
+                <div className="p-5 sm:p-6 border-b border-purple-100/50 pr-12 shrink-0">
                   <SheetTitle className="text-purple-900 font-bold text-lg">
                     Agenda de Atendimentos
                   </SheetTitle>

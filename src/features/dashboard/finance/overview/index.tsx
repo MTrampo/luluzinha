@@ -10,13 +10,13 @@ type OverviewProps = {
 }
 
 export function Overview({ data }: OverviewProps) {
-  const cardClassName = "snap-center snap-always shrink-0 w-[calc(100vw-48px)] max-[374px]:w-[calc(100vw-16px)] md:w-[320px] xl:w-auto xl:shrink"
+  const cardItemClass = "w-[72vw] min-w-[230px] max-w-[275px] shrink-0 snap-start sm:w-full sm:min-w-0 sm:max-w-none sm:shrink";
 
   return (
-    <div className="flex xl:grid xl:grid-cols-4 gap-6 overflow-x-auto xl:overflow-x-visible scrollbar-hide snap-x snap-mandatory scroll-smooth py-4 px-6 max-[374px]:px-2 md:px-0 -mx-6 max-[374px]:-mx-2 md:mx-0 xl:mx-0 xl:px-0 w-full">
+    <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 gap-3.5 pt-2 pb-2 touch-pan-x sm:grid sm:grid-cols-2 xl:grid-cols-4 sm:gap-4 sm:overflow-visible sm:py-0 w-auto sm:w-full scroll-px-4">
       <CardFinance
+        className={cardItemClass}
         title="Projetados (Hoje)"
-        className={cardClassName}
         helpText="Valor total estimado dos atendimentos agendados para hoje. Este valor inclui atendimentos confirmados e finalizados."
         icon={FaCalendarCheck}
         description={(
@@ -28,8 +28,8 @@ export function Overview({ data }: OverviewProps) {
         last='Baseado na agenda de hoje'
       />
       <CardFinance
+        className={cardItemClass}
         title="Atendidas (Hoje)"
-        className={cardClassName}
         helpText="Quantidade de poderosas que já tiveram seus atendimentos concluídos hoje."
         icon={FaUsers}
         description={(
@@ -41,8 +41,8 @@ export function Overview({ data }: OverviewProps) {
         last='Baseado na agenda de hoje'
       />
       <CardFinance
+        className={cardItemClass}
         title="Atendimentos (Mês)"
-        className={cardClassName}
         helpText="Contagem total de atendimentos realizados e finalizados desde o início do mês."
         icon={FaChartLine}
         description={(
@@ -54,8 +54,8 @@ export function Overview({ data }: OverviewProps) {
         last='Baseado no mês atual'
       />
       <CardFinance
+        className={cardItemClass}
         title="Ganhos (Mês)"
-        className={cardClassName}
         helpText="Soma dos valores de todos os atendimentos que você já finalizou neste mês."
         icon={FaMoneyBillTrendUp}
         description={(
@@ -66,6 +66,7 @@ export function Overview({ data }: OverviewProps) {
         amount={data.completedMonthValue}
         last='Baseado no mês atual'
       />
+      <div className="w-1 shrink-0 sm:hidden" aria-hidden="true" />
     </div>
   )
 }

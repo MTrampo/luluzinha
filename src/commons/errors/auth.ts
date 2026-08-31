@@ -47,6 +47,14 @@ export const AuthErrorMap: Record<string, ErrorDetail> = {
     message: "O token expirou.",
     status: HttpStatusEnum.BadRequest,
   },
+  [AuthErrorCodeEnum.RefreshTokenNotFound]: {
+    message: "Sua sessão expirou por segurança. Por favor, acesse seu espaço novamente.",
+    status: HttpStatusEnum.Unauthorized,
+  },
+  [AuthErrorCodeEnum.InvalidGrant]: {
+    message: "Sua credencial de acesso é inválida ou expirou. Por favor, acesse seu espaço novamente.",
+    status: HttpStatusEnum.Unauthorized,
+  },
 
   [AuthErrorCodeEnum.UndErrConnectTimeout]: {
     message: "Sobrecarga de conexão. Por favor, tente novamente mais tarde.",

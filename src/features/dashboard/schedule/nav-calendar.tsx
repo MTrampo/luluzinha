@@ -233,7 +233,7 @@ export function NavCalendar({ selectedDate, onSelectDate, filters, onFilterChang
         </Button>
         <Dialog open={isBlockDialogOpen} onOpenChange={setIsBlockDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="lg" className="w-full justify-center gap-3 h-12 [@media(max-height:820px)]:h-9 bg-white hover:bg-purple-50 text-purple-700 border-purple-100 shadow-sm rounded-md transition-all font-bold [@media(max-height:820px)]:text-xs [@media(max-height:820px)]:gap-2">
+            <Button variant="outline" size="lg" className="w-full justify-center gap-3 h-12 [@media(max-height:820px)]:h-9 bg-white hover:bg-purple-100/70 text-purple-700 hover:text-purple-800 border-purple-100 shadow-xs rounded-md transition-all font-bold [@media(max-height:820px)]:text-xs [@media(max-height:820px)]:gap-2">
               <FaTableCellsRowLock className="text-purple-400 text-lg" />
               Bloquear Horário
             </Button>

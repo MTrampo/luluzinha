@@ -9,19 +9,19 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-        outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+        default: "bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-bold shadow-xs shadow-purple-100",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "bg-purple-50 hover:bg-purple-100/90 active:bg-purple-200/90 text-purple-700 hover:text-purple-800 font-bold border border-purple-200/70 shadow-2xs",
+        outline:
+          "border border-purple-200 bg-white hover:bg-purple-50 hover:text-purple-800 text-purple-700 font-bold shadow-2xs",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
-        menu: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 justify-start w-full",
-        theme: "bg-purple-800 text-white hover:bg-purple-800/90",
-        success: "bg-green-600 text-white hover:bg-green-700 disabled:bg-green-300 disabled:opacity-100",
+          "hover:bg-purple-50 hover:text-purple-800 text-purple-900 font-medium",
+        destructive:
+          "bg-red-600 text-white hover:bg-red-700 font-bold shadow-xs",
+        success: "bg-green-600 text-white hover:bg-green-700 disabled:bg-green-300 disabled:opacity-100 font-bold shadow-xs",
+        link: "text-purple-600 underline-offset-4 hover:underline font-semibold",
+        menu: "hover:bg-purple-50 hover:text-purple-800 justify-start w-full font-medium",
+        theme: "bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-bold shadow-xs",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -41,27 +41,28 @@ const buttonVariants = cva(
   }
 )
 
-function Button({
-  className,
-  variant = "default",
-  size = "default",
-  asChild = false,
-  ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
-  const Comp = asChild ? Slot.Root : "button"
-
-  return (
-    <Comp
-      data-slot="button"
-      data-variant={variant}
-      data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
 }
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = "default", size = "default", asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot.Root : "button"
+
+    return (
+      <Comp
+        data-slot="button"
+        data-variant={variant}
+        data-size={size}
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Button.displayName = "Button"
 
 export { Button, buttonVariants }

@@ -84,9 +84,9 @@ export function SelectDateTimeForm({
   const availableOnly = availableSlots.filter(s => s.available);
 
   return (
-    <div className="flex flex-col md:flex-row bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-300 w-full">
+    <div className="flex flex-col md:flex-row bg-transparent md:bg-white md:rounded-2xl md:border md:border-purple-100/60 md:shadow-sm md:overflow-hidden animate-in fade-in duration-300 w-full gap-4 md:gap-0">
 
-      <div className="w-full md:w-[380px] p-6 md:p-8 md:border-r border-gray-100 shrink-0 flex justify-center bg-white">
+      <div className="w-full md:w-[380px] p-4 sm:p-6 md:p-8 bg-white rounded-2xl border border-purple-100/60 md:border-0 md:rounded-none md:border-r md:border-purple-100/60 shrink-0 flex justify-center shadow-xs md:shadow-none">
         <div className="w-full max-w-[340px]">
           <Calendar
             mode="single"
@@ -96,7 +96,7 @@ export function SelectDateTimeForm({
             disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
             className="w-full flex justify-center p-0 bg-transparent"
             classNames={{
-              month_caption: "flex justify-center items-center h-10 w-full text-purple-900 font-bold px-10 mb-4 uppercase",
+              month_caption: "flex justify-center items-center h-10 w-full text-purple-900 font-bold px-10 mb-4 uppercase text-sm",
               nav: "flex items-center justify-between absolute w-full inset-x-0 z-10 px-2",
               button_previous: "h-9 w-9 text-purple-600 hover:bg-purple-100 rounded-md transition-all flex items-center justify-center",
               button_next: "h-9 w-9 text-purple-600 hover:bg-purple-100 rounded-md transition-all flex items-center justify-center",
@@ -114,7 +114,7 @@ export function SelectDateTimeForm({
         </div>
       </div>
 
-      <div className="flex-1 p-6 md:p-8 bg-gray-50/30">
+      <div className="flex-1 p-4 sm:p-6 md:p-8 bg-white rounded-2xl border border-purple-100/60 md:border-0 md:rounded-none md:bg-purple-50/20 shadow-xs md:shadow-none">
         {!selectedDate ? (
           <div className="h-full flex flex-col items-center justify-center text-center min-h-[300px]">
             <Image src={svgSelectDay} alt="Selecione um dia" className="w-56 h-56 drop-shadow-sm opacity-90" priority />

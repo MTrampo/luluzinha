@@ -42,7 +42,7 @@ export function SelectCustomerForm({
         <SearchInput placeholder="Pesquisar por nome ou celular..." />
       </div>
 
-      <div className="overflow-y-auto">
+      <div className="max-h-[380px] sm:max-h-[420px] overflow-y-auto pr-1 sm:pr-2">
         {filteredCustomers.length === 0 ? (
           <div className="text-center py-8 text-gray-500 font-medium">
             Nenhuma poderosa encontrada.
@@ -50,7 +50,7 @@ export function SelectCustomerForm({
             <span className="text-sm text-gray-400">Tente buscar por outro nome ou cadastre uma nova.</span>
           </div>
         ) : (
-          <RadioGroup value={selectedId} onValueChange={handleSelect} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-4">
+          <RadioGroup value={selectedId} onValueChange={handleSelect} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 py-2">
             {filteredCustomers.map((customer) => (
               <div key={customer.id}>
                 <Label

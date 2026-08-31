@@ -39,7 +39,7 @@
 }
 
 /* Identity Theme (Luluzinha) */
-body.theme-luluzinha, .theme-luluzinha {
+html.theme-luluzinha, body.theme-luluzinha, .theme-luluzinha {
   /* Fundo muito suave usando as paletas do Tailwind */
   --background: var(--color-purple-50) !important;
   --foreground: var(--color-neutral-900) !important;
@@ -48,6 +48,12 @@ body.theme-luluzinha, .theme-luluzinha {
   /* Cor primária num tom de roxo vibrante mas sofisticado (purple-600) para dar mais destaque */
   --primary: var(--color-purple-600) !important;
   --primary-foreground: oklch(100% 0.00011 271.152) !important;
+
+  --secondary: var(--color-purple-50) !important;
+  --secondary-foreground: var(--color-purple-700) !important;
+
+  --accent: var(--color-purple-50) !important;
+  --accent-foreground: var(--color-purple-800) !important;
 
   --ring: var(--color-purple-400) !important;
   --border: var(--color-purple-200) !important;

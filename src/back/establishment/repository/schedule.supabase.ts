@@ -2,6 +2,8 @@ import { SCHEDULE_DAY_END_UTC, SCHEDULE_DAY_START_UTC } from "@/commons/constant
 import { serverSupabase } from "@/commons/lib/supabase/server";
 import { ScheduleInsertPayload, ScheduleUpdatePayload, ScheduleProcedureInsertPayload, ScheduleDashSupabase, ScheduleSupabaseJoined } from "@/commons/models/schedule";
 import { ScheduleStatusEnum } from "@/commons/enums/schedule";
+import { TZDate } from "@date-fns/tz";
+import { format } from "date-fns";
 
 const SCHEDULE_DASH_SELECT = `
   id,
@@ -169,10 +171,15 @@ export const checkScheduleConflictsSupabase = async (
   if (conflictingSchedules && conflictingSchedules.length > 0) return { conflict: true, type: 'schedule' };
 
   // 2. Verificar conflitos com BLOQUEIOS (Blocks)
-  const targetDate = startAt.split('T')[0];
-  const startTime = startAt.split('T')[1].substring(0, 5); // HH:mm
-  const endTime = endAt.split('T')[1].substring(0, 5); // HH:mm
-  const dayOfWeek = new Date(startAt).getDay();
+  // startAt e endAt chegam em UTC (ISO String). Para comparar com a tabela schedule_blocks
+  // que utiliza horários locais no Brasil (HH:mm), convertemos para o fuso America/Sao_Paulo:
+  const startTz = new TZDate(new Date(startAt), "America/Sao_Paulo");
+  const endTz = new TZDate(new Date(endAt), "America/Sao_Paulo");
+
+  const targetDate = format(startTz, "yyyy-MM-dd");
+  const startTime = format(startTz, "HH:mm");
+  const endTime = format(endTz, "HH:mm");
+  const dayOfWeek = startTz.getDay();
 
   const { data: conflictingBlocks, error: blockError } = await supabase
     .from('schedule_blocks')

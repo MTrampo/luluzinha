@@ -15,6 +15,7 @@ export enum AuthErrorCodeEnum {
   InvalidPassword = "invalid_password",
   TokenExpired = "token_expired",
   InvalidConfirmationToken = "invalid_confirmation_token",
+  RefreshTokenNotFound = "refresh_token_not_found",
   
   // Geral/Sessão
   UnexpectedFailure = "unexpected_failure",

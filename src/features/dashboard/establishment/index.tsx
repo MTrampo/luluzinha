@@ -47,14 +47,14 @@ export default function EstablishmentDashboard({ establishment }: EstablishmentD
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList variant="line" className="w-full justify-start border-b border-purple-100/60 bg-transparent p-0 gap-6 rounded-none mb-6">
-          <TabsTrigger value="info" className="px-1 pb-3 pt-2 font-semibold bg-transparent rounded-none data-[state=active]:bg-transparent">
+        <TabsList variant="line" className="w-full justify-start border-b border-purple-100/60 bg-transparent p-0 gap-4 sm:gap-6 rounded-none mb-6 overflow-x-auto scrollbar-hide flex-nowrap shrink-0">
+          <TabsTrigger value="info" className="px-1 pb-3 pt-2 font-semibold bg-transparent rounded-none data-[state=active]:bg-transparent shrink-0 text-xs sm:text-sm">
             Informações
           </TabsTrigger>
-          <TabsTrigger value="hours" className="px-1 pb-3 pt-2 font-semibold bg-transparent rounded-none data-[state=active]:bg-transparent">
+          <TabsTrigger value="hours" className="px-1 pb-3 pt-2 font-semibold bg-transparent rounded-none data-[state=active]:bg-transparent shrink-0 text-xs sm:text-sm">
             Horário de Funcionamento
           </TabsTrigger>
-          <TabsTrigger value="blocks" className="px-1 pb-3 pt-2 font-semibold bg-transparent rounded-none data-[state=active]:bg-transparent">
+          <TabsTrigger value="blocks" className="px-1 pb-3 pt-2 font-semibold bg-transparent rounded-none data-[state=active]:bg-transparent shrink-0 text-xs sm:text-sm">
             Meus Bloqueios
           </TabsTrigger>
         </TabsList>

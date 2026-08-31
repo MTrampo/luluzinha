@@ -35,7 +35,7 @@ export function InputSearch({
   onChange,
   onSearch,
   results,
-  icon = <FaMagnifyingGlass />,
+  icon = <FaMagnifyingGlass className="text-purple-400 text-sm" />,
   wrapperClassName,
   resultsAlign = "inline-end",
   showClear = true,
@@ -49,10 +49,17 @@ export function InputSearch({
   )
 
   const isControlled = value !== undefined
-  const currentValue = isControlled ? value ?? "" : internalValue
+  const currentValue = isControlled ? (value ?? "") : internalValue
+
+  React.useEffect(() => {
+    if (defaultValue !== undefined && !isControlled) {
+      setInternalValue(defaultValue)
+    }
+  }, [defaultValue, isControlled])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (!isControlled) setInternalValue(e.target.value)
+    const val = e.target.value
+    if (!isControlled) setInternalValue(val)
     onChange?.(e)
   }
 
@@ -71,23 +78,33 @@ export function InputSearch({
   }
 
   return (
-    <InputGroup className={cn("max-w-xs", wrapperClassName)}>
+    <InputGroup className={cn("w-full bg-white shadow-xs rounded-xl border-purple-100/80 focus-within:border-purple-600 focus-within:ring-2 focus-within:ring-purple-200 transition-all", wrapperClassName)}>
+      <InputGroupAddon align="inline-start" className="pl-3.5 pr-1">
+        {icon}
+      </InputGroupAddon>
+
       <InputGroupInput
         value={currentValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         aria-label={ariaLabel ?? placeholder}
-        className={className}
+        className={cn("h-10 text-sm text-gray-800 placeholder:text-gray-400", className)}
         {...rest}
       />
 
-      {currentValue && showClear ? (
-        <InputGroupButton size="xs" variant="ghost" onClick={handleClear}>
-          <FaXmark />
-        </InputGroupButton>
-      ) : (
-        <InputGroupAddon>{icon}</InputGroupAddon>
+      {currentValue && showClear && (
+        <InputGroupAddon align="inline-end" className="pr-2 pl-1">
+          <InputGroupButton
+            size="xs"
+            variant="ghost"
+            onClick={handleClear}
+            className="text-gray-400 hover:text-gray-600 rounded-full h-6 w-6 p-0 flex items-center justify-center hover:bg-gray-100"
+            title="Limpar pesquisa"
+          >
+            <FaXmark className="text-xs" />
+          </InputGroupButton>
+        </InputGroupAddon>
       )}
 
       {results !== undefined && (

@@ -1,5 +1,7 @@
 import { serverSupabase } from "@/commons/lib/supabase/server"
 import { ResetPasswordRequestBody, UserRequestBody } from "@/commons/models/user"
+import { resolveAuthError } from "@/commons/errors/auth"
+import { AuthError } from "@supabase/supabase-js"
 
 export const signInWithEmail = async(email: string, password: string) => {
   const supabase = await serverSupabase()
@@ -102,10 +104,30 @@ export const updatePassword = async (newPassword: string) => {
 }
 
 export const getUserLogged = async () => {
-  const supabase = await serverSupabase()
-  const { data, error } = await supabase.auth.getUser()
+  try {
+    const supabase = await serverSupabase()
+    const { data, error } = await supabase.auth.getUser()
+    return { data, error }
+  } catch (error) {
+    console.error('[getUserLogged] Falha crítica de autenticação:', error)
+    
+    let errCode: string | undefined
+    if (error && typeof error === 'object' && 'code' in error && typeof error.code === 'string') {
+      errCode = error.code
+    }
+    
+    const resolved = resolveAuthError(errCode)
+    const authError = new AuthError(resolved.message)
+    authError.status = resolved.status
+    if (errCode) {
+      authError.code = errCode
+    }
 
-  return { data, error }
+    return { 
+      data: { user: null }, 
+      error: authError
+    }
+  }
 }
 
 export const getProfileByUserIdSupabase = async (userId: string) => {

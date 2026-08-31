@@ -93,7 +93,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3 pt-4 text-sm text-purple-900/60 font-medium">
                 <div className="flex items-center gap-1.5 animate-hero-check opacity-0">
                   <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-purple-100 text-purple-700 tracking-wider uppercase font-lexend">
-                    Beta
+                    Alpha
                   </span>
                   <span>Espaço de Testes</span>
                 </div>

@@ -32,19 +32,19 @@ export function AppointmentSummary({
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-500 mx-auto pb-8">
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-3">
-          <p className="text-sm font-bold text-gray-500 pl-1 flex items-center gap-2">
-            <FaUser /> Poderosa
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+        <div className="flex flex-col gap-2">
+          <p className="text-xs font-bold uppercase tracking-wider text-purple-900/70 pl-1 flex items-center gap-2">
+            <FaUser className="text-purple-600" /> Poderosa
           </p>
-          <div className="flex items-center gap-4 rounded-xl border border-purple-100 bg-white p-4 shadow-sm relative overflow-hidden">
-            <StandardAvatar initials={customer?.initials || "?"} className="h-12 w-12 border border-purple-50 shadow-sm" />
+          <div className="flex items-center gap-3.5 rounded-xl border border-purple-100/70 bg-white p-3.5 sm:p-4 shadow-xs relative overflow-hidden">
+            <StandardAvatar initials={customer?.initials || "?"} className="h-11 w-11 sm:h-12 sm:w-12 border border-purple-50 shadow-xs shrink-0" />
             <div className="flex flex-col min-w-0 flex-1">
-              <span className="font-bold truncate text-base text-gray-800">
+              <span className="font-bold truncate text-sm sm:text-base text-gray-900">
                 {customer?.nameFormatted || "Nenhuma selecionada"}
               </span>
               {customer?.phoneFormatted && (
-                <span className="text-xs font-semibold text-gray-500 mt-0.5">
+                <span className="text-xs font-semibold text-gray-500 mt-0.5 truncate">
                   {customer.phoneFormatted}
                 </span>
               )}
@@ -52,26 +52,26 @@ export function AppointmentSummary({
           </div>
         </div>
 
-        <div className="flex flex-col gap-3">
-          <p className="text-sm font-bold text-gray-500 pl-1 flex items-center gap-2">
-            <FaCalendarCheck /> Quando?
+        <div className="flex flex-col gap-2">
+          <p className="text-xs font-bold uppercase tracking-wider text-purple-900/70 pl-1 flex items-center gap-2">
+            <FaCalendarCheck className="text-purple-600" /> Quando?
           </p>
-          <div className="flex items-center gap-4 rounded-xl border border-purple-100 bg-white p-4 shadow-sm relative overflow-hidden">
-            <div className="flex items-center justify-center bg-purple-50 w-12 h-12 rounded-xl text-purple-600 font-black text-xl border border-purple-100/50">
-              <FaClock size={20} />
+          <div className="flex items-center gap-3.5 rounded-xl border border-purple-100/70 bg-white p-3.5 sm:p-4 shadow-xs relative overflow-hidden">
+            <div className="flex items-center justify-center bg-purple-50 w-11 h-11 sm:w-12 sm:h-12 rounded-xl text-purple-600 font-black text-xl border border-purple-100/50 shrink-0">
+              <FaClock size={18} />
             </div>
             <div className="flex flex-col min-w-0 flex-1">
               {selectedDate && selectedTime ? (
                 <>
-                  <span className="font-bold truncate text-base text-gray-800 capitalize leading-none">
+                  <span className="font-bold truncate text-sm sm:text-base text-gray-900 capitalize leading-tight">
                     {format(selectedDate, "EEEE, dd 'de' MMMM", { locale: ptBR })}
                   </span>
-                  <span className="text-sm font-bold text-purple-600 mt-1.5">
+                  <span className="text-xs sm:text-sm font-bold text-purple-600 mt-1">
                     às {selectedTime}
                   </span>
                 </>
               ) : (
-                <span className="font-bold truncate text-base text-red-500">
+                <span className="font-bold truncate text-sm sm:text-base text-red-500">
                   Data ou hora pendente
                 </span>
               )}

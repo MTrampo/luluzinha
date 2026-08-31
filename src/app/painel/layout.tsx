@@ -3,7 +3,7 @@ import { AppSidebar } from "@/components/sidebar"
 import { SubscriptionHydrator } from "@/components/subscription/hydrator"
 import { EstablishmentHydrator } from "@/components/establishment/hydrator"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { BetaBanner } from "@/components/feedbacks/beta-banner"
+import { AlphaBanner } from "@/components/feedbacks/beta-banner"
 import { OnboardingGuard } from "@/components/establishment/onboarding-guard"
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
@@ -23,7 +23,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
           <OnboardingGuard>
             <AppSidebar />
             <SidebarInset>
-              <BetaBanner />
+              <AlphaBanner />
               {children}
             </SidebarInset>
           </OnboardingGuard>

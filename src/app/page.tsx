@@ -183,12 +183,12 @@ export default async function Home() {
 
             <Accordion type="single" collapsible className="w-full space-y-4">
 
-              <AccordionItem value="faq-beta" className="border border-purple-100 bg-white rounded-xl px-5 py-2 shadow-sm">
+              <AccordionItem value="faq-alpha" className="border border-purple-100 bg-white rounded-xl px-5 py-2 shadow-sm">
                 <AccordionTrigger className="text-base font-bold text-purple-950 hover:text-purple-600 hover:no-underline font-lexend text-left">
-                  O que significa o sistema estar na fase Beta?
+                  O que significa o sistema estar na fase Alpha?
                 </AccordionTrigger>
                 <AccordionContent className="text-purple-900/70 leading-relaxed pt-2 text-sm">
-                  Significa que a Luluzinha é um sistema novinho e está em desenvolvimento ativo (nosso espaço de testes)! Todas as funções principais como a Agenda de Atendimentos, Cadastro de Poderosas e Histórico de Caixa funcionam 100%, mas ainda estamos polindo alguns detalhes e adicionando novidades. Por fazer parte dessa fase inicial, você conta com um suporte super próximo via WhatsApp e garante o valor especial de lançamento!
+                  Significa que a Luluzinha é um sistema novinho e está em desenvolvimento ativo e testes fechados (nosso espaço Alpha)! Todas as funções principais como a Agenda de Atendimentos, Cadastro de Poderosas e Histórico de Caixa funcionam 100%, mas ainda estamos polindo cada detalhe com um grupo seleto de profissionais. Por fazer parte dessa fase inicial, você conta com suporte direto e exclusivo via WhatsApp e garante condições especiais de lançamento!
                 </AccordionContent>
               </AccordionItem>
 

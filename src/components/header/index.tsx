@@ -25,7 +25,7 @@ export default async function Header() {
               className="h-auto w-10 object-contain"
             />
             <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-purple-100 text-purple-700 tracking-wider uppercase font-lexend">
-              Beta
+              Alpha
             </span>
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">

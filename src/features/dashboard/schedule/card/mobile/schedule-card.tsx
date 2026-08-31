@@ -22,41 +22,45 @@ export function ScheduleCardMobile({ schedule }: ScheduleCardMobileProps) {
 
   return (
     <Card className={cn(
-      "group relative overflow-hidden transition-all hover:shadow-md duration-300 border-purple-100/50 w-full bg-white rounded-md",
+      "group relative overflow-hidden transition-all hover:shadow-md duration-300 border-purple-100/50 w-full bg-white rounded-md flex flex-col",
       "border-l-4",
       currentStatus.border
     )}>
+      {/* Topo: Horário + Duração + Status + Menu */}
+      <div className="flex items-center justify-between px-3 pt-2.5 pb-1">
+        <Link
+          href={`/painel/agenda/atendimento/${schedule.id}`}
+          className="flex items-baseline gap-2 flex-1 min-w-0"
+        >
+          <span className="text-lg font-black text-gray-700 leading-none tracking-tight">
+            {schedule.startTimeFormatted}
+          </span>
+          <span className="text-gray-300">·</span>
+          <div className="flex items-center gap-1 text-[10px] text-gray-400 font-semibold">
+            <FaClock className="w-2.5 h-2.5" />
+            <span>{schedule.totalDurationFormatted}</span>
+          </div>
+        </Link>
+        <div className="flex items-center gap-1 shrink-0">
+          <Badge
+            variant="outline"
+            className={cn(
+              "text-[0.6rem] font-semibold border rounded-md px-1.5 py-0 uppercase tracking-wide",
+              currentStatus.class
+            )}
+          >
+            {currentStatus.label}
+          </Badge>
+          {schedule.status !== ScheduleStatusEnum.COMPLETED && (
+            <AppointmentMenu schedule={schedule} />
+          )}
+        </div>
+      </div>
+
       <Link
         href={`/painel/agenda/atendimento/${schedule.id}`}
-        className="flex flex-col gap-2"
+        className="flex flex-col gap-2 pb-2.5"
       >
-        {/* Topo: Horário + Duração + Status */}
-        <div className="flex items-center justify-between px-3">
-          <div className="flex items-baseline gap-2">
-            <span className="text-lg font-black text-gray-700 leading-none tracking-tight">
-              {schedule.startTimeFormatted}
-            </span>
-            <span className="text-gray-300">·</span>
-            <div className="flex items-center gap-1 text-[10px] text-gray-400 font-semibold">
-              <FaClock className="w-2.5 h-2.5" />
-              <span>{schedule.totalDurationFormatted}</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <Badge
-              variant="outline"
-              className={cn(
-                "text-[0.6rem] font-semibold border rounded-md px-1.5 py-0 uppercase tracking-wide",
-                currentStatus.class
-              )}
-            >
-              {currentStatus.label}
-            </Badge>
-            {schedule.status !== ScheduleStatusEnum.COMPLETED && (
-              <AppointmentMenu schedule={schedule} />
-            )}
-          </div>
-        </div>
 
         {/* Meio: Avatar + Nome */}
         <div className="flex items-center gap-2.5 px-3 pb-2">

@@ -176,27 +176,27 @@ export function HoursTab({ establishmentId, hours, setHours }: HoursTabProps) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 w-full md:w-2/3 md:justify-end">
+              <div className="flex items-center gap-2 sm:gap-3 w-full md:w-2/3 md:justify-end">
                 {isEditingHours ? (
                   !dayConfig.closed ? (
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] uppercase font-bold text-gray-400">Início</span>
+                    <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full">
+                      <div className="flex items-center gap-1 sm:gap-1.5 flex-1 sm:flex-initial">
+                        <span className="text-[10px] uppercase font-bold text-gray-400 shrink-0">Início</span>
                         <Input
                           type="time"
                           value={dayConfig.open}
                           onChange={(e) => handleTimeChange("open", e.target.value)}
-                          className="bg-white border-purple-100 rounded-lg w-28 h-9 text-xs focus-visible:ring-purple-200"
+                          className="bg-white border-purple-100 rounded-lg w-full sm:w-28 h-9 text-xs focus-visible:ring-purple-200"
                         />
                       </div>
-                      <span className="text-gray-300">—</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] uppercase font-bold text-gray-400">Término</span>
+                      <span className="text-gray-300 shrink-0">—</span>
+                      <div className="flex items-center gap-1 sm:gap-1.5 flex-1 sm:flex-initial">
+                        <span className="text-[10px] uppercase font-bold text-gray-400 shrink-0">Término</span>
                         <Input
                           type="time"
                           value={dayConfig.close}
                           onChange={(e) => handleTimeChange("close", e.target.value)}
-                          className="bg-white border-purple-100 rounded-lg w-28 h-9 text-xs focus-visible:ring-purple-200"
+                          className="bg-white border-purple-100 rounded-lg w-full sm:w-28 h-9 text-xs focus-visible:ring-purple-200"
                         />
                       </div>
                     </div>

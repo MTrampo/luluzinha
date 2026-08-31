@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${lexend.variable} antialiased`}
+        className={`${inter.variable} ${lexend.variable} theme-luluzinha antialiased`}
         suppressHydrationWarning
       >
         <SubscriptionGuard />

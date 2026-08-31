@@ -133,7 +133,7 @@ Estou te esperando com muito carinho! ❤️`;
   };
 
   return (
-    <div className="flex flex-col gap-6 animate-in fade-in duration-500 pb-12">
+    <div className="flex flex-col gap-6 animate-in fade-in duration-500 pb-36 lg:pb-12">
 
       {/* HEADER PADRÃO DO SISTEMA */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -329,7 +329,7 @@ Estou te esperando com muito carinho! ❤️`;
                 </div>
 
                 {!isCompleted && (
-                  <div className="flex flex-col gap-2">
+                  <div className="hidden lg:flex flex-col gap-2">
                     {!isCancelled && (
                       <Button 
                         variant="success" 

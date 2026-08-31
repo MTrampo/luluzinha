@@ -1,9 +1,6 @@
 "use client"
-
-import { InputSearch } from "@/components/ui/search";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
-import { cn } from "@/commons/lib/tw-merge";
+ 
+import { SearchInput } from "@/components/inputs/search";
 
 type SearchProcedureProps = {
   placeholder?: string;
@@ -11,28 +8,12 @@ type SearchProcedureProps = {
   wrapperClassName?: string;
 }
 
-export function SearchProcedure({ placeholder, className, wrapperClassName }: SearchProcedureProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const currentQuery = searchParams.get('q') || '';
-
-  const handleSearch = useCallback((value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value) {
-      params.set('q', value);
-    } else {
-      params.delete('q');
-    }
-    router.push(`?${params.toString()}`);
-  }, [router, searchParams]);
-
+export function SearchProcedure({ placeholder = "Buscar procedimento por nome...", className, wrapperClassName }: SearchProcedureProps) {
   return (
-    <InputSearch
+    <SearchInput
       className={className}
-      wrapperClassName={cn("w-50 md:w-full max-w-xs", wrapperClassName)}
-      defaultValue={currentQuery}
-      onSearch={handleSearch}
-      placeholder="Pesquisar por nome..."
+      wrapperClassName={wrapperClassName}
+      placeholder={placeholder}
     />
   );
 }

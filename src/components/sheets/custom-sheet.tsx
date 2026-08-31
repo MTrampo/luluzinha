@@ -27,8 +27,8 @@ export function CustomSheet({ trigger, title, description, children, open, onOpe
           {trigger}
         </SheetTrigger>
       )}
-      <SheetContent side="right" className="p-0 w-[320px] sm:w-100 flex flex-col bg-white gap-0">
-        <SheetHeader>
+      <SheetContent side="right" className="p-0 w-full max-w-[100vw] sm:max-w-md sm:w-105 flex flex-col bg-white gap-0 border-l-purple-100">
+        <SheetHeader className="p-5 sm:p-6 border-b border-purple-50 shrink-0 pr-12">
           <SheetTitle className="text-purple-900 font-bold text-lg">{title}</SheetTitle>
           {description && (
             <SheetDescription className="text-gray-500 text-xs mt-1 leading-normal">
@@ -36,7 +36,7 @@ export function CustomSheet({ trigger, title, description, children, open, onOpe
             </SheetDescription>
           )}
         </SheetHeader>
-        <div className="p-4">
+        <div className="flex-1 min-h-0 overflow-y-auto p-5 sm:p-6">
           {children}
         </div>
       </SheetContent>

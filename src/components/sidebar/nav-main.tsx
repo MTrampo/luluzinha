@@ -14,10 +14,12 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { NavSectionItem, NavSectionGroup, NavRoot } from "@/commons/types/sidebar";
 import { FaChevronRight } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export type NavMainProps = {
   nav?: NavRoot;
@@ -27,6 +29,8 @@ export type NavMainProps = {
 
 export function NavMain({ nav, items, groups }: NavMainProps) {
   const pathname = usePathname()
+  const { setOpenMobile } = useSidebar()
+
   const isActive = (url: string) => {
     if (url === '/painel') return pathname === url;
     return pathname === url || pathname.startsWith(`${url}/`);
@@ -44,10 +48,10 @@ export function NavMain({ nav, items, groups }: NavMainProps) {
               !item.subNavs ? (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={isActive(item.url)}>
-                    <a href={item.url}>
+                    <Link href={item.url} onClick={() => setOpenMobile(false)}>
                       {item.icon}
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ) : (
@@ -70,9 +74,9 @@ export function NavMain({ nav, items, groups }: NavMainProps) {
                         {item.subNavs?.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton asChild>
-                              <a href={subItem.url}>
+                              <Link href={subItem.url} onClick={() => setOpenMobile(false)}>
                                 <span>{subItem.title}</span>
-                              </a>
+                              </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         ))}

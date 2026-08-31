@@ -18,7 +18,7 @@ export default function Error({
 
   const whatsappNumber = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP || '5511999999999';
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    "Olá! Estou usando a Luluzinha (Espaço Beta) e encontrei um erro na página. Você pode me ajudar?"
+    "Olá! Estou usando a Luluzinha (Espaço Alpha) e encontrei um erro na página. Você pode me ajudar?"
   )}`;
 
   return (
@@ -26,7 +26,7 @@ export default function Error({
       <ErrorState
         type="error"
         title="Ops! O nosso sistema deu uma escorregada..."
-        description="Como a Luluzinha ainda está na fase de testes (Beta), algumas ferramentas podem dar um pequeno susto de vez em quando. Já anotamos o que aconteceu para corrigir!"
+        description="Como a Luluzinha ainda está na fase de testes fechados (Alpha), algumas ferramentas podem dar um pequeno susto de vez em quando. Já anotamos o que aconteceu para corrigir!"
         action={
           <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
             <Button onClick={() => reset()} variant="default" className="bg-purple-600 hover:bg-purple-700 text-white rounded-full font-bold px-5 py-2.5">
