@@ -173,12 +173,13 @@ export function Schedule({ schedules, blocks }: ScheduleProps) {
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger asChild>
                 <Button
-                  variant="ghost"
+                  variant="theme"
                   size="icon"
-                  className="xl:hidden text-purple-600 hover:text-purple-700 hover:bg-purple-100/50 transition-all shrink-0 rounded-md"
-                  title="Abrir Agenda"
+                  className="xl:hidden h-9 w-9 shrink-0 rounded-lg shadow-xs font-bold transition-all active:scale-95"
+                  title="Abrir Calendário e Filtros"
+                  aria-label="Abrir Calendário e Filtros"
                 >
-                  <FaCalendarDays size={20} />
+                  <FaCalendarDays className="w-4 h-4 text-white" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="p-0 w-full max-w-[100vw] sm:w-95 border-l-purple-100 flex flex-col bg-white gap-0">

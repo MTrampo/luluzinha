@@ -1,18 +1,52 @@
-import { Button } from "@/components/ui/button";
-import { CustomSheet } from "@/components/sheets/custom-sheet";
+"use client"
+
+import { useCallback } from "react";
 import { SearchInput } from "../../../components/inputs/search";
 import { CustomerFormatted } from "@/commons/models/customer";
-import { CustomerForm } from "@/components/forms/customer-form";
+import { PaginatedResponse } from "@/commons/models/pagination";
+import { getCustomersPaginatedAction } from "@/actions/customer";
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { CustomerCard } from "./card";
-import { FaUserPlus } from "react-icons/fa6";
 import Header from "@/components/header/dashboard";
 import { CustomerFeedbackSearchNotFound } from "./feedback";
+import { NewCustomerButton } from "./new-customer-button";
+import { CustomerCardSkeleton } from "@/components/skeletons/customer-skeleton";
+import { ConnectionErrorRetry } from "@/components/feedback/connection-error";
 
 type CustomersProps = {
-  customers: CustomerFormatted[];
+  initialData: PaginatedResponse<CustomerFormatted>;
+  searchTerm?: string;
 }
 
-export default async function Customers({ customers }: CustomersProps) {
+export default function Customers({ initialData, searchTerm = "" }: CustomersProps) {
+  const fetcher = useCallback(
+    async (nextPage: number) => {
+      const response = await getCustomersPaginatedAction({
+        page: nextPage,
+        pageSize: 12,
+        search: searchTerm,
+      });
+
+      if (response.status === 200 && response.data) {
+        return response.data;
+      }
+      return null;
+    },
+    [searchTerm]
+  );
+
+  const {
+    items: customers,
+    isLoadingMore,
+    hasMore,
+    hasError,
+    loadMore,
+    sentinelRef,
+  } = useInfiniteScroll<CustomerFormatted>({
+    initialData,
+    fetcher,
+  });
+
   return (
     <>
       <Header title="Poderosas" />
@@ -28,18 +62,7 @@ export default async function Customers({ customers }: CustomersProps) {
               </p>
             </div>
 
-            <CustomSheet
-              title="Nova Poderosa"
-              description="Preencha os dados abaixo para cadastrar uma nova cliente."
-              trigger={
-                <Button variant="theme" size="sm" className="font-bold gap-2 shadow-xs shrink-0 rounded-lg h-9 px-3.5">
-                  <FaUserPlus className="text-xs" />
-                  <span className="text-xs sm:text-sm">Nova Poderosa</span>
-                </Button>
-              }
-            >
-              <CustomerForm />
-            </CustomSheet>
+            <NewCustomerButton />
           </div>
 
           <div className="w-full">
@@ -50,13 +73,33 @@ export default async function Customers({ customers }: CustomersProps) {
         {customers.length === 0 ? (
           <CustomerFeedbackSearchNotFound />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            {customers.map((customer) => (
-              <CustomerCard key={customer.id} customer={customer} />
-            ))}
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              {customers.map((customer) => (
+                <CustomerCard key={customer.id} customer={customer} />
+              ))}
+
+              {isLoadingMore && <CustomerCardSkeleton count={4} />}
+            </div>
+
+            {/* Sentinela invisível de rolagem */}
+            {hasMore && !hasError && (
+              <div ref={sentinelRef} className="h-6 w-full" />
+            )}
+
+            {/* Tratamento de oscilação de rede */}
+            {hasError && (
+              <div className="mt-2">
+                <ConnectionErrorRetry
+                  onRetry={loadMore}
+                  message="Não foi possível carregar mais Poderosas."
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
     </>
-  )
+  );
 }
+

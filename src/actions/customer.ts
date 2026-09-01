@@ -3,8 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { CustomerFormInputs, CustomerInsertPayload, CustomerUpdatePayload } from "@/commons/models/customer";
 import { HttpStatusEnum } from "@/commons/enums/http";
-import { addCustomerApi, listCustomersApi, updateCustomerApi, deleteCustomerApi } from "@/back/establishment/service/customer.api";
+import { addCustomerApi, listCustomersApi, listCustomersPaginatedApi, updateCustomerApi, deleteCustomerApi } from "@/back/establishment/service/customer.api";
 import { getEstablishmentCookie } from "@/commons/lib/auth/establishment";
+import { PaginationParams } from "@/commons/models/pagination";
 
 export const addCustomerAction = async (input: CustomerFormInputs) => {
   const establishmentId = await getEstablishmentCookie();
@@ -50,6 +51,21 @@ export const getCustomersAction = async () => {
   const response = await listCustomersApi(establishmentId);
   return response;
 }
+
+export const getCustomersPaginatedAction = async (params: PaginationParams = {}) => {
+  const establishmentId = await getEstablishmentCookie();
+
+  if (!establishmentId) {
+    return {
+      status: HttpStatusEnum.BadRequest,
+      message: "Estabelecimento não identificado.",
+      data: null,
+    };
+  }
+
+  const response = await listCustomersPaginatedApi(establishmentId, params);
+  return response;
+};
 
 export const updateCustomerAction = async (id: string, input: CustomerFormInputs) => {
   const establishmentId = await getEstablishmentCookie();

@@ -1,12 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { CustomSheet } from "@/components/sheets/custom-sheet";
 import { SearchProcedure } from "./search";
 import { ProcedureFormatted } from "@/commons/models/procedure";
-import { ProcedureForm } from "@/components/forms/procedure-form";
 import { ProceduresCard } from "./card";
-import { FaHeartCirclePlus } from "react-icons/fa6";
 import Header from "@/components/header/dashboard";
 import { ProcedureFeedbackSearchNotFound } from "./feedback";
+import { NewProcedureButton } from "./new-procedure-button";
 
 type ProceduresProps = {
   procedures: ProcedureFormatted[];
@@ -28,18 +25,7 @@ export default async function Procedures({ procedures }: ProceduresProps) {
               </p>
             </div>
 
-            <CustomSheet
-              title="Novo Procedimento"
-              description="Preencha os dados abaixo para cadastrar um novo procedimento."
-              trigger={
-                <Button variant="theme" size="sm" className="font-bold gap-2 shadow-xs shrink-0 rounded-lg h-9 px-3.5">
-                  <FaHeartCirclePlus className="text-xs" />
-                  <span className="text-xs sm:text-sm">Novo Procedimento</span>
-                </Button>
-              }
-            >
-              <ProcedureForm />
-            </CustomSheet>
+            <NewProcedureButton />
           </div>
 
           <div className="w-full">

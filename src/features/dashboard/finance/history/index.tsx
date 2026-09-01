@@ -1,7 +1,16 @@
+"use client"
+
+import { useCallback } from "react"
 import { StandardAvatar } from "@/components/avatar"
 import { cn } from "@/commons/lib/tw-merge"
 import Link from "next/link"
 import { FaChevronRight } from "react-icons/fa6"
+import { PaginatedResponse } from "@/commons/models/pagination"
+import { FinanceHistoryItem } from "@/back/finance/service/finance.api"
+import { getFinanceTransactionsPaginatedAction } from "@/actions/finance"
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
+import { TransactionSkeleton } from "@/components/skeletons/transaction-skeleton"
+import { ConnectionErrorRetry } from "@/components/feedback/connection-error"
 
 interface TransactionProps {
   id: string
@@ -38,7 +47,7 @@ export function Transaction({ id, customerName, initials, type, amount, date, is
           )}>
             {isEntry ? "+" : "-"} {amount}
           </span>
-          <small className="text-[10px] sm:text-[11px] font-medium text-gray-400 uppercase">
+          <small className="text-[10px] sm:text-[11px] font-medium text-gray-400">
             {date}
           </small>
         </div>
@@ -46,4 +55,82 @@ export function Transaction({ id, customerName, initials, type, amount, date, is
       </div>
     </Link>
   )
+}
+
+interface FinanceHistoryListProps {
+  initialData: PaginatedResponse<FinanceHistoryItem>;
+  dateLocalIsoString?: string;
+}
+
+export function FinanceHistoryList({
+  initialData,
+  dateLocalIsoString,
+}: FinanceHistoryListProps) {
+  const fetcher = useCallback(
+    async (nextPage: number) => {
+      const response = await getFinanceTransactionsPaginatedAction(
+        dateLocalIsoString,
+        { page: nextPage, pageSize: 10 }
+      );
+
+      if (response.success && response.data) {
+        return response.data;
+      }
+      return null;
+    },
+    [dateLocalIsoString]
+  );
+
+  const {
+    items: transactions,
+    isLoadingMore,
+    hasMore,
+    hasError,
+    loadMore,
+    sentinelRef,
+  } = useInfiniteScroll<FinanceHistoryItem>({
+    initialData,
+    fetcher,
+  });
+
+  if (transactions.length === 0) {
+    return (
+      <div className="p-8 text-center bg-white border border-purple-100/80 rounded-2xl text-purple-900/50 text-sm shadow-xs">
+        Nenhum atendimento finalizado no mês atual. Finalize atendimentos para vê-los aqui!
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="bg-white border border-purple-100/80 rounded-2xl overflow-hidden shadow-xs divide-y divide-purple-100/40">
+        {transactions.map((item) => (
+          <Transaction
+            key={item.id}
+            id={item.id}
+            customerName={item.customerName}
+            initials={item.customerInitials}
+            type="Atendimento Realizado"
+            amount={item.totalPriceFormatted}
+            date={item.dateFormatted}
+          />
+        ))}
+
+        {isLoadingMore && <TransactionSkeleton count={3} />}
+      </div>
+
+      {/* Sentinela de rolagem */}
+      {hasMore && !hasError && (
+        <div ref={sentinelRef} className="h-6 w-full" />
+      )}
+
+      {/* Tratamento de erro na conexão */}
+      {hasError && (
+        <ConnectionErrorRetry
+          onRetry={loadMore}
+          message="Não foi possível carregar mais transações."
+        />
+      )}
+    </div>
+  );
 }

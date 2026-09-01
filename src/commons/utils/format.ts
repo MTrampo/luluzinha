@@ -54,6 +54,19 @@ export const formatDate = (date?: string | null): string => {
 	}
 }
 
+export const formatTransactionDate = (date?: string | null): string => {
+	if (!date) return ""
+	try {
+		const parsed = parseISO(date)
+		if (!isValid(parsed)) return ""
+		return format(parsed, "dd 'de' MMM, HH:mm", { locale: ptBR })
+			.replace(/\./g, "")
+			.replace(/(\b[a-zç]{3,4}\b)(?=,)/i, (m) => m.toUpperCase())
+	} catch {
+		return ""
+	}
+}
+
 export const formatDuration = (minutes?: number | null): string => {
 	if (!minutes) return "0min"
 	if (minutes < 60) return `${minutes}min`

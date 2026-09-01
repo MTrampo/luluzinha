@@ -46,3 +46,29 @@ export const getCustomersByEstablishmentSupabase = async (establishmentId: strin
 
   return { data, error };
 }
+
+export const getCustomersPaginatedSupabase = async (
+  establishmentId: string,
+  params: { page: number; pageSize: number; search?: string }
+) => {
+  const { page, pageSize, search } = params;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const supabase = await serverSupabase();
+  let query = supabase
+    .from('customers')
+    .select('*', { count: 'exact' })
+    .eq('establishment_id', establishmentId);
+
+  if (search && search.trim() !== '') {
+    const term = search.trim();
+    query = query.or(`name.ilike.%${term}%,phone.ilike.%${term}%`);
+  }
+
+  const { data, count, error } = await query
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  return { data, count: count ?? 0, error };
+}

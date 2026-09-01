@@ -1,10 +1,12 @@
 import { ApiResponse } from "@/commons/lib/http/responses";
-import { CustomerInsertPayload, CustomerUpdatePayload, customersFormatter } from "@/commons/models/customer";
+import { CustomerFormatted, CustomerInsertPayload, CustomerUpdatePayload, customersFormatter } from "@/commons/models/customer";
+import { PaginatedResponse, PaginationParams } from "@/commons/models/pagination";
 import {
   addCustomerSupabase,
   updateCustomerSupabase,
   deleteCustomerSupabase,
   getCustomersByEstablishmentSupabase,
+  getCustomersPaginatedSupabase,
 } from "../repository/customer.supabase";
 import { nowBrazilIso } from "@/commons/utils/helper";
 
@@ -80,5 +82,43 @@ export const listCustomersApi = async (establishmentId: string) => {
   return ApiResponse.Ok({
     message: "Poderosas obtidas com sucesso.",
     data: customersFormatter(data || [])
+  });
+}
+
+export const listCustomersPaginatedApi = async (
+  establishmentId: string,
+  params: PaginationParams
+) => {
+  const page = Math.max(1, params.page || 1);
+  const pageSize = Math.min(50, Math.max(1, params.pageSize || 12));
+
+  const { data, count, error } = await getCustomersPaginatedSupabase(establishmentId, {
+    page,
+    pageSize,
+    search: params.search,
+  });
+
+  if (error) {
+    return ApiResponse.InternalError({
+      message: "Erro ao buscar a lista de poderosas.",
+      error: error.message,
+    });
+  }
+
+  const formattedItems = customersFormatter(data || []) || [];
+  const currentOffset = (page - 1) * pageSize;
+  const hasMore = currentOffset + formattedItems.length < count;
+
+  const result: PaginatedResponse<CustomerFormatted> = {
+    items: formattedItems,
+    totalCount: count,
+    page,
+    pageSize,
+    hasMore,
+  };
+
+  return ApiResponse.Ok({
+    message: "Poderosas obtidas com sucesso.",
+    data: result,
   });
 }

@@ -1,4 +1,4 @@
-import { getCustomersAction } from "@/actions/customer";
+import { getCustomersPaginatedAction } from "@/actions/customer";
 import { CustomerFeedbackEmpty, CustomerFeedbackError } from "@/features/dashboard/customers/feedback";
 import Customers from "@/features/dashboard/customers";
 
@@ -8,31 +8,15 @@ type PageProps = {
 
 export default async function PoderosasPage({ searchParams }: PageProps) {
   const { q } = await searchParams;
-  const response = await getCustomersAction();
+  const response = await getCustomersPaginatedAction({ page: 1, pageSize: 12, search: q });
 
-  if (response.status !== 200) {
-    return <CustomerFeedbackError message={response.message} />
+  if (response.status !== 200 || !response.data) {
+    return <CustomerFeedbackError message={response.message || "Erro ao carregar clientes."} />
   }
 
-  let customers = response.data || [];
-
-  if (customers.length === 0 && !q) {
+  if (response.data.totalCount === 0 && !q) {
     return <CustomerFeedbackEmpty />
   }
 
-  if (q) {
-    const term = q.toLowerCase();
-    customers = customers.filter(customer => {
-
-      const phoneDigits = customer.phone?.replace(/\D/g, "") || "";
-      const searchDigits = q.replace(/\D/g, "");
-
-      const matchName = customer.name.toLowerCase().includes(term);
-      const matchPhone = searchDigits.length > 0 && phoneDigits.includes(searchDigits);
-
-      return matchName || matchPhone;
-    });
-  }
-
-  return <Customers customers={customers} />;
+  return <Customers initialData={response.data} searchTerm={q || ""} />;
 }

@@ -29,3 +29,42 @@ export const getSchedulesForFinanceSupabase = async (
 
   return { data, error };
 };
+
+export const getCompletedSchedulesPaginatedSupabase = async (
+  establishmentId: string,
+  startDate: string,
+  endDate: string,
+  params: { page: number; pageSize: number }
+) => {
+  const { page, pageSize } = params;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const supabase = await serverSupabase();
+  const { data, count, error } = await supabase
+    .from("schedules")
+    .select(
+      `
+      id,
+      start_at,
+      status,
+      total_price,
+      total_duration,
+      customer_id,
+      customers (
+        id,
+        name
+      )
+    `,
+      { count: "exact" }
+    )
+    .eq("establishment_id", establishmentId)
+    .eq("status", ScheduleStatusEnum.COMPLETED)
+    .gte("start_at", startDate)
+    .lte("start_at", endDate)
+    .order("start_at", { ascending: false })
+    .range(from, to);
+
+  return { data, count: count ?? 0, error };
+};
+
