@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/commons/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/commons/lib/tw-merge",
+    "ui": "@/components/ui",
+    "lib": "@/commons/lib",
+    "hooks": "@/hooks",
+    "back": "@/back"
+  },
+  "registries": {}
+}
