@@ -9,7 +9,7 @@ export const createPreApprovalSubscriptionApi = async (
 ) => {
   try {
     console.info(`🌐 [PAYMENT:createPreApproval] Criando assinatura individual no MP | email: ${payerEmail} | subId: ${subscriptionId} | preço: ${planPrice} | plano: ${planName}`)
-    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+    let baseUrl = process.env.NEXT_PUBLIC_APP_URL
     if (process.env.ENVIRONMENT === "development" && process.env.DEV_TUNNEL_URL) {
       console.info("🔧 [PAYMENT:createPreApproval] Modo dev detectado. Usando URL do Dev Tunnel para retorno do Mercado Pago.")
       baseUrl = process.env.DEV_TUNNEL_URL
