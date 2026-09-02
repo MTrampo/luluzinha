@@ -74,10 +74,11 @@ export function HoursTab({ establishmentId, hours, setHours }: HoursTabProps) {
         } else {
           toast.error(response.message || "Erro ao salvar os horários.")
         }
-      } catch (err) {
+      } catch {
         toast.error("Ocorreu um erro inesperado. Tente novamente.")
       }
     })
+
   }
 
   return (

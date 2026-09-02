@@ -10,11 +10,33 @@ import {
   syncSubscriptionStatusApi,
   getEstablishmentInvoicesApi
 } from "@/back/account/service/subscription.api"
+import { listActivePlansApi, getPlanConfigBySlugApi } from "@/back/configuration/service/plan.api"
 
-export const getSubscriptionEndpointAction = async (mpPayerEmail: string) => {
-  const response = await createCheckoutSessionApi(mpPayerEmail)
+export const getSubscriptionEndpointAction = async (mpPayerEmail: string, planSlug?: string) => {
+  const response = await createCheckoutSessionApi(mpPayerEmail, planSlug)
   return response
 }
+
+export const getActivePlansAction = async () => {
+  const response = await listActivePlansApi()
+  return {
+    status: response.status,
+    message: response.message,
+    data: response.data || [],
+    error: response.error
+  }
+}
+
+export const getPlanConfigBySlugAction = async (slug: string) => {
+  const response = await getPlanConfigBySlugApi(slug)
+  return {
+    status: response.status,
+    message: response.message,
+    data: response.data,
+    error: response.error
+  }
+}
+
 
 export const manageSubscriptionEndpointAction = async () => {
   const response = await manageUserSubscriptionApi()

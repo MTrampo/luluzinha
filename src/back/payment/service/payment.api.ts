@@ -1,9 +1,14 @@
 import { ApiResponse } from "@/commons/lib/http/responses"
 import { clientPreAproval, clientInvoice } from "@/commons/lib/mercadopago/server"
 
-export const createPreApprovalSubscriptionApi = async (payerEmail: string, subscriptionId: string, planPrice: number) => {
+export const createPreApprovalSubscriptionApi = async (
+  payerEmail: string,
+  subscriptionId: string,
+  planPrice: number,
+  planName: string = "Luluzinha"
+) => {
   try {
-    console.info(`🌐 [PAYMENT:createPreApproval] Criando assinatura individual no MP | email: ${payerEmail} | subId: ${subscriptionId} | preço: ${planPrice}`)
+    console.info(`🌐 [PAYMENT:createPreApproval] Criando assinatura individual no MP | email: ${payerEmail} | subId: ${subscriptionId} | preço: ${planPrice} | plano: ${planName}`)
     let baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
     if (process.env.ENVIRONMENT === "development" && process.env.DEV_TUNNEL_URL) {
       console.info("🔧 [PAYMENT:createPreApproval] Modo dev detectado. Usando URL do Dev Tunnel para retorno do Mercado Pago.")
@@ -14,7 +19,7 @@ export const createPreApprovalSubscriptionApi = async (payerEmail: string, subsc
     const response = await clientPreAproval.create({
       body: {
         back_url: backUrl,
-        reason: "Fundadoras",
+        reason: planName,
         auto_recurring: {
           frequency: 1,
           frequency_type: "months",
@@ -30,6 +35,7 @@ export const createPreApprovalSubscriptionApi = async (payerEmail: string, subsc
         status: "pending"
       } as unknown as Parameters<typeof clientPreAproval.create>[0]["body"],
     })
+
 
     if (!response || !response.init_point) {
       console.error("❌ [PAYMENT:createPreApproval] Resposta inválida do MP", response)

@@ -31,7 +31,7 @@ export function CardActionMenu({ procedure }: CardActionMenuProps) {
         } else {
           toast.error(response.message);
         }
-      } catch (error) {
+      } catch {
         toast.error("Ocorreu um erro ao excluir o procedimento.");
       } finally {
         setIsDeleteOpen(false);
@@ -48,11 +48,12 @@ export function CardActionMenu({ procedure }: CardActionMenuProps) {
         } else {
           toast.error(response.message);
         }
-      } catch (error) {
+      } catch {
         toast.error("Ocorreu um erro ao alterar o status do procedimento.");
       }
     });
   }
+
 
   return (
     <>

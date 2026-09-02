@@ -13,10 +13,7 @@ import {
   FaCalendarDay,
   FaClock,
   FaPenToSquare,
-  FaXmark,
   FaReceipt,
-  FaCircleInfo,
-  FaShareNodes,
   FaWandMagicSparkles,
   FaCakeCandles,
   FaArrowLeft,
@@ -27,6 +24,7 @@ import {
   FaCheckDouble,
   FaRotateLeft
 } from "react-icons/fa6"
+
 import Link from "next/link"
 import { cn } from "@/commons/lib/tw-merge"
 import { ConfirmDialog } from "@/components/dialogs/confirm-dialog"

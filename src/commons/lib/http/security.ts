@@ -12,7 +12,8 @@ export function handleRouteAccess(request: NextRequest, user: unknown, supabaseR
   const pathname = request.nextUrl.pathname
 
   const isPublicApiRoute = publicApiRoutes.some(path => pathname.startsWith(path))
-  const isPublicPath = publicPaths.some(path => pathname === path)
+  const isPublicPath = publicPaths.some(path => pathname === path) || pathname.startsWith('/convite')
+
 
   // API não autenticada → 401
   if (!user && pathname.startsWith('/api/') && !isPublicApiRoute) {

@@ -65,7 +65,9 @@ function StepperContent({ customers, procedures, activeEstablishment }: NewAppoi
         console.error("Erro ao ler rascunho", e);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   const saveDraftToSession = () => {
     const draft = {
@@ -162,7 +164,7 @@ function StepperContent({ customers, procedures, activeEstablishment }: NewAppoi
         currentStepId={stepper.state.current.data.id}
       />
 
-      <div className="min-h-[400px]">
+      <div className="min-h-100">
         {stepper.flow.switch({
           "customer": () => (
             <SelectCustomerForm

@@ -109,7 +109,117 @@ export default function HomeAnimations() {
         .fromTo(".animate-feature-card", { opacity: 0, y: 30 }, { opacity: 1, y: 0, stagger: 0.2, duration: 1 }, "-=0.4");
     });
 
-    // 3. Scroll Trigger for 'Why Luluzinha' reasons
+    // 3. Scroll Trigger para Showcase de Divulgação (Stories & Status)
+    gsap.fromTo(".animate-story-mockup",
+      { opacity: 0, scale: 0.92, y: 35 },
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: "#divulgacao",
+          start: "top 75%",
+          toggleActions: "play none none none",
+        }
+      }
+    );
+
+    gsap.fromTo(".animate-story-title",
+      { opacity: 0, y: 25 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: "#divulgacao",
+          start: "top 75%",
+          toggleActions: "play none none none",
+        }
+      }
+    );
+
+    gsap.fromTo(".animate-story-desc",
+      { opacity: 0, y: 20 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: "#divulgacao",
+          start: "top 72%",
+          toggleActions: "play none none none",
+        }
+      }
+    );
+
+    gsap.fromTo(".animate-story-card",
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        stagger: 0.15,
+        duration: 0.6,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".animate-story-card",
+          start: "top 85%",
+          toggleActions: "play none none none",
+        }
+      }
+    );
+
+    // 4. Scroll Trigger para Como Funciona em 3 Passos
+    gsap.fromTo(".animate-how-title",
+      { opacity: 0, y: 25 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: "#como-funciona",
+          start: "top 75%",
+          toggleActions: "play none none none",
+        }
+      }
+    );
+
+    gsap.fromTo(".animate-how-desc",
+      { opacity: 0, y: 20 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: "#como-funciona",
+          start: "top 72%",
+          toggleActions: "play none none none",
+        }
+      }
+    );
+
+    gsap.fromTo(".animate-how-card",
+      { opacity: 0, y: 35 },
+      {
+        opacity: 1,
+        y: 0,
+        stagger: 0.18,
+        duration: 0.7,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".animate-how-card",
+          start: "top 85%",
+          toggleActions: "play none none none",
+        }
+      }
+    );
+
+    // 5. Scroll Trigger for 'Why Luluzinha' reasons
     gsap.fromTo(".animate-reason-item",
       { opacity: 0, x: 30 },
       {
@@ -125,13 +235,14 @@ export default function HomeAnimations() {
       }
     );
 
-    // 4. Scroll Trigger for pricing card
+    // 6. Scroll Trigger for pricing cards (suporta múltiplos cards com stagger)
     gsap.fromTo(".animate-pricing-card",
       { opacity: 0, scale: 0.95, y: 30 },
       {
         opacity: 1,
         scale: 1,
         y: 0,
+        stagger: 0.15,
         duration: 0.8,
         scrollTrigger: {
           trigger: "#preco",
@@ -140,6 +251,8 @@ export default function HomeAnimations() {
         }
       }
     );
+
+
 
     return () => {
       mm.revert();

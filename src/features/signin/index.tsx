@@ -26,8 +26,9 @@ export function SignInFlow() {
     try {
       const response = await signInUserAction(data)
       if (response.status === HttpStatusEnum.Ok && response.data?.user) {
-        const { user, establishments, subscription, profile, redirectPath } = response.data;
+        const { user, establishments, profile, redirectPath } = response.data;
         const userId = user.id
+
 
         // 1. Salva o perfil
         setProfile({
@@ -89,8 +90,11 @@ export function SignInFlow() {
     }
   }
 
-  const verifyCode = async (data: OtpFormInputs) => {
+  const verifyCode = async (_data: OtpFormInputs) => {
+    void _data;
     // Lógica para verificar o código OTP
+
+
     // Se for válido, redirecionar para a página de redefinição de senha
     // Caso contrário, exibir uma mensagem de erro
   }

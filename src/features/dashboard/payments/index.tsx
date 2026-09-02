@@ -11,13 +11,13 @@ import { SubscriptionFormatted } from "@/commons/models/subscription"
 import { InvoiceFormatted } from "@/commons/models/payment"
 import {
   FaCrown,
-  FaCalendarAlt,
   FaCheck,
   FaInfoCircle,
   FaReceipt,
   FaLock,
   FaFileInvoiceDollar
 } from "react-icons/fa"
+
 import { getSubscriptionStatus } from "@/components/maps/status-map"
 
 type PaymentsDashboardProps = {
@@ -71,9 +71,10 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
       } else {
         toast.error(response.message || "Erro ao cancelar assinatura.")
       }
-    } catch (err) {
+    } catch {
       toast.error("Ocorreu um erro inesperado ao processar o cancelamento.")
     } finally {
+
       setIsPending(false)
     }
   }

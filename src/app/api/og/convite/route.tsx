@@ -86,8 +86,9 @@ export async function GET(req: Request) {
                 marginBottom: '20px',
               }}
             >
-              Horários Disponíveis
+              Dias Disponíveis
             </h1>
+
 
             <p
               style={{

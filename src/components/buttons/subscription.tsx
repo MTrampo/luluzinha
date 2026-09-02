@@ -11,9 +11,10 @@ import { toast } from "sonner";
 interface ButtonSubscriptionProps extends VariantProps<typeof buttonVariants> {
   className?: string;
   children: ReactNode;
+  planSlug?: string;
 }
 
-export const ButtonSubscription = ({ className, children, variant, size }: ButtonSubscriptionProps) => {
+export const ButtonSubscription = ({ className, children, variant, size, planSlug }: ButtonSubscriptionProps) => {
   const [isPending, startTransition] = useTransition()
 
   const handleClick = () => {
@@ -27,7 +28,7 @@ export const ButtonSubscription = ({ className, children, variant, size }: Butto
           return
         }
 
-        const url = await getSubscriptionEndpointAction(userEmail)
+        const url = await getSubscriptionEndpointAction(userEmail, planSlug)
         if (!url || !url.data) {
           toast.error(url.message || "Erro ao criar sessão de checkout com Mercado Pago")
           return
@@ -41,6 +42,7 @@ export const ButtonSubscription = ({ className, children, variant, size }: Butto
       }
     })
   }
+
 
   return (
     <Button variant={variant} size={size} className={className} onClick={handleClick} disabled={isPending}>

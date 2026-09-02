@@ -19,7 +19,7 @@ export const signUpUserAction = async (input: UserSignUpFormInputs) => {
   return response
 }
 
-export const verifyOtpCodeAction = async (email: string, code: string) => {
+export const verifyOtpCodeAction = async (email: string, code: string, invitationToken?: string) => {
   const response = await confirmUserEmailApi(email, code)
 
   if (response.status === HttpStatusEnum.Ok && response.data?.user) {
@@ -37,10 +37,21 @@ export const verifyOtpCodeAction = async (email: string, code: string) => {
       phone: null,
       address: null
     })
+
+    // 3. Se houver token de convite, ativa a assinatura gratuita e consome o convite
+    if (invitationToken) {
+      try {
+        const { activateInvitationAction } = await import("@/actions/invitation")
+        await activateInvitationAction(userId, invitationToken)
+      } catch (err) {
+        console.error("Erro ao ativar convite após verificação de OTP:", err)
+      }
+    }
   }
 
   return response
 }
+
 
 export const signOutAction = async () => {
   const response = await signOutApi()

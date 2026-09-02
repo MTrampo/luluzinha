@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, CheckCircle2, Sparkle, Calendar, Users, TrendingUp, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Calendar, Users, TrendingUp, Sparkles } from "lucide-react";
+
 import mockupS26 from "@/commons/assets/imgs/mockup-s26.png";
 import mockupDell from "@/commons/assets/imgs/mockup-dell.png";
 import mockupMovingHand from "@/commons/assets/imgs/mockup-moving-hand.png";

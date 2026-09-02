@@ -70,10 +70,11 @@ export function InfoTab({ establishment }: InfoTabProps) {
         } else {
           toast.error(response.message || "Erro ao salvar as informações.")
         }
-      } catch (err) {
+      } catch {
         toast.error("Ocorreu um erro inesperado. Tente novamente.")
       }
     })
+
   }
 
   const SelectedIconComponent = EstablishmentIconMap[selectedIcon] || FaPaintbrush

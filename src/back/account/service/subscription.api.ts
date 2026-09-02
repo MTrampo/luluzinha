@@ -12,9 +12,7 @@ import { clientPreAproval } from "@/commons/lib/mercadopago/server"
 import { getInvoicesByEstablishmentIdApi } from "@/back/payment/service/invoice.api"
 import { invoiceFormatter } from "@/commons/models/payment"
 
-const planSlug = process.env.MP_PLAN_SLUG
-
-export const createCheckoutSessionApi = async (mpPayerEmail: string) => {
+export const createCheckoutSessionApi = async (mpPayerEmail: string, requestedPlanSlug?: string) => {
   const userResult = await getUserLoggedApi()
   if (!userResult.data) {
     return ApiResponse.Unauthorized({
@@ -35,7 +33,6 @@ export const createCheckoutSessionApi = async (mpPayerEmail: string) => {
 
   console.log("Usuário autenticado:", { userId, userEmail })
 
-  // Buscar establishment do usuário
   const establishmentResult = await getEstablishmentsByOwnerIdApi(userId)
   if (establishmentResult.error || !Array.isArray(establishmentResult.data) || establishmentResult.data.length === 0) {
     return ApiResponse.NotFound({
@@ -46,30 +43,42 @@ export const createCheckoutSessionApi = async (mpPayerEmail: string) => {
   const establishment = establishmentResult.data[0]
   console.log("Estabelecimento encontrado:", establishment)
 
-  // Buscar configuração do plano 'starter'
-  if (!planSlug) {
-    return ApiResponse.InternalError({
-      message: "Configuração de plano não encontrada."
-    })
-  }
+  const targetPlanSlug = requestedPlanSlug || process.env.MP_PLAN_SLUG || "financier-luluzinha"
 
-  const planConfigResult = await getPlanConfigBySlugApi(planSlug)
+  const planConfigResult = await getPlanConfigBySlugApi(targetPlanSlug)
   if (planConfigResult.error || !planConfigResult.data) {
     return ApiResponse.NotFound({
-      message: `O plano '${planSlug}' não foi localizado.`
+      message: `O plano '${targetPlanSlug}' não foi localizado ou não está ativo no momento.`
     })
   }
 
   const planConfig = planConfigResult.data
   console.log("Configuração do plano encontrada:", planConfig)
 
+  // Se o plano for gratuito (ex: Alpha R$ 0,00), ativa diretamente sem passar pelo Mercado Pago
+  if (Number(planConfig.price) <= 0) {
+    const freeActivation = await activateFreeSubscriptionApi(userId, targetPlanSlug)
+    if (freeActivation.error) {
+      return ApiResponse.InternalError({
+        message: freeActivation.message,
+        error: freeActivation.error
+      })
+    }
+    return ApiResponse.Ok<string>({
+      message: "Plano gratuito ativado com sucesso!",
+      data: "/painel"
+    })
+  }
+
+
   // Criar ou atualizar subscription
   const updatedSubscriptionResult = await upsertSubscriptionApi(
     {
+
       subscriptionId: establishment.subscription_id,
       planName: planConfig.name,
       planPrice: planConfig.price,
-      mpPlanId: planConfig.mp_plan_id,
+      mpPlanId: planConfig.mpPlanId,
       establishmentId: establishment.id,
       mpPayerEmail
     }
@@ -94,7 +103,8 @@ export const createCheckoutSessionApi = async (mpPayerEmail: string) => {
   const initPoint = await createPreApprovalSubscriptionApi(
     targetPayerEmail,
     subscriptionId,
-    planConfig.price
+    planConfig.price,
+    planConfig.name
   )
 
   if (initPoint.error || !initPoint.data) {
@@ -117,6 +127,7 @@ export const createCheckoutSessionApi = async (mpPayerEmail: string) => {
     data: initPoint.data.initPoint
   })
 }
+
 
 export const upsertSubscriptionApi = async (updateSubscription: UpdateSubscription) => {
   const subscriptionData: SubscriptionPreApprovalPayload = {
@@ -509,5 +520,67 @@ export const getEstablishmentInvoicesApi = async () => {
       isOwner: true,
       invoices: formattedInvoices
     }
+  })
+}
+
+export const activateFreeSubscriptionApi = async (userId: string, requestedPlanSlug: string) => {
+  const establishmentResult = await getEstablishmentsByOwnerIdApi(userId)
+  if (establishmentResult.error || !Array.isArray(establishmentResult.data) || establishmentResult.data.length === 0) {
+    return ApiResponse.NotFound({
+      message: "Nenhum estabelecimento associado para ativar a assinatura."
+    })
+  }
+
+  const establishment = establishmentResult.data[0]
+
+  const planConfigResult = await getPlanConfigBySlugApi(requestedPlanSlug)
+  if (planConfigResult.error || !planConfigResult.data) {
+    return ApiResponse.NotFound({
+      message: `O plano '${requestedPlanSlug}' não foi localizado ou não está ativo no momento.`
+    })
+  }
+
+  const planConfig = planConfigResult.data
+
+  const now = new Date()
+  const currentPeriodStart = now.toISOString()
+  // Validade de 30 dias para o plano Alpha
+  const periodEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
+  const currentPeriodEnd = periodEnd.toISOString()
+
+  const subscriptionData: SubscriptionPreApprovalPayload = {
+    base_value: 0,
+    plan_name: planConfig.name,
+    mp_preapproval_plan_id: planConfig.mpPlanId,
+    mp_status: MercadoPagoStatusEnum.Authorized,
+    current_period_start: currentPeriodStart,
+    current_period_end: currentPeriodEnd,
+    updated_at: nowBrazilIso(),
+  }
+
+  const { data: updatedSub, error } = await upsertSubscriptionSupabase(
+    subscriptionData,
+    establishment.subscription_id,
+    establishment.id
+  )
+
+  if (error || !updatedSub?.id) {
+    return ApiResponse.InternalError({
+      message: "Falha ao registrar assinatura gratuita.",
+      error: error?.message
+    })
+  }
+
+  const payload: SubscriptionPayloadCookie = {
+    subscriptionId: updatedSub.id,
+    status: MercadoPagoStatusEnum.Authorized,
+    currentPeriodEnd: currentPeriodEnd
+  }
+
+  await setCookieSubscription(JSON.stringify(payload))
+
+  return ApiResponse.Ok({
+    message: "Assinatura gratuita ativada com sucesso!",
+    data: payload
   })
 }

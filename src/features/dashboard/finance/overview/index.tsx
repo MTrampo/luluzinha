@@ -1,8 +1,8 @@
 "use client"
 
 import { CardFinance } from "../card";
-import { PercentageBadge } from "../percentage";
 import { FaChartLine, FaUsers, FaCalendarCheck, FaMoneyBillTrendUp } from "react-icons/fa6";
+
 import { FinanceOverviewData } from "@/back/finance/service/finance.api";
 
 type OverviewProps = {

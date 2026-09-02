@@ -9,54 +9,120 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      config_plans: {
+      plan_invitations: {
         Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          is_active: boolean
+          max_uses: number
+          plan_slug: string
+          recipient_email: string | null
+          recipient_name: string | null
+          token: string
+          used_at: string | null
+          used_by_user_id: string | null
+          used_count: number
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_active?: boolean
+          max_uses?: number
+          plan_slug: string
+          recipient_email?: string | null
+          recipient_name?: string | null
+          token: string
+          used_at?: string | null
+          used_by_user_id?: string | null
+          used_count?: number
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_active?: boolean
+          max_uses?: number
+          plan_slug?: string
+          recipient_email?: string | null
+          recipient_name?: string | null
+          token?: string
+          used_at?: string | null
+          used_by_user_id?: string | null
+          used_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_invitations_plan_slug_fkey"
+            columns: ["plan_slug"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["slug"]
+          }
+        ]
+      }
+      plans: {
+        Row: {
+          badge: string | null
           billing_period: string | null
           created_at: string | null
           description: string | null
+          features: Json | null
           history_retention_days: number | null
           id: string
           is_active: boolean | null
+          is_featured: boolean | null
           max_procedures: number | null
           max_users: number | null
           mp_plan_id: string
           name: string
           price: number
           slug: string
+          sort_order: number | null
           updated_at: string | null
         }
         Insert: {
+          badge?: string | null
           billing_period?: string | null
           created_at?: string | null
           description?: string | null
+          features?: Json | null
           history_retention_days?: number | null
           id?: string
           is_active?: boolean | null
+          is_featured?: boolean | null
           max_procedures?: number | null
           max_users?: number | null
           mp_plan_id: string
           name: string
           price: number
           slug: string
+          sort_order?: number | null
           updated_at?: string | null
         }
         Update: {
+          badge?: string | null
           billing_period?: string | null
           created_at?: string | null
           description?: string | null
+          features?: Json | null
           history_retention_days?: number | null
           id?: string
           is_active?: boolean | null
+          is_featured?: boolean | null
           max_procedures?: number | null
           max_users?: number | null
           mp_plan_id?: string
           name?: string
           price?: number
           slug?: string
+          sort_order?: number | null
           updated_at?: string | null
         }
         Relationships: []
       }
+
       customers: {
         Row: {
           birthday: string | null

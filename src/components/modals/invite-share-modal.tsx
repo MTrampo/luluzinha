@@ -60,12 +60,12 @@ export function InviteShareModal({ isOpen, onClose, availableDays }: InviteShare
       const absoluteUrl = `${window.location.origin}${imageUrl}`;
       const response = await fetch(imageUrl);
       const blob = await response.blob();
-      const file = new File([blob], "horarios.png", { type: "image/png" });
+      const file = new File([blob], "dias-disponiveis.png", { type: "image/png" });
 
       if (globalThis.navigator.share && globalThis.navigator.canShare && globalThis.navigator.canShare({ files: [file] })) {
         await globalThis.navigator.share({
           files: [file],
-          title: "Meus Horários Disponíveis",
+          title: "Meus Dias Disponíveis",
           text: "Poderosa, reserve seu momento de brilho! ✨",
         });
       } else {
@@ -84,20 +84,21 @@ export function InviteShareModal({ isOpen, onClose, availableDays }: InviteShare
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[400px] bg-white border-purple-100 rounded-3xl overflow-hidden p-0 gap-0">
+      <DialogContent className="max-w-100 bg-white border-purple-100 rounded-3xl overflow-hidden p-0 gap-0">
         <div className="bg-purple-50/50 px-6 py-6 border-b border-purple-100">
           <DialogHeader>
             <DialogTitle className="text-xl font-black text-purple-900 leading-tight">
               Sua vitrine está pronta!
             </DialogTitle>
             <DialogDescription className="text-purple-600/70 font-medium m-0">
-              Compartilhe seus horários livres e atraia mais Poderosas.
+              Compartilhe seus dias livres e atraia mais Poderosas.
             </DialogDescription>
           </DialogHeader>
         </div>
 
+
         <div className="p-6 flex flex-col items-center">
-          <div className="relative aspect-9/16 w-full max-w-[240px] rounded-2xl overflow-hidden shadow-xl border-[6px] border-white ring-1 ring-purple-100 bg-purple-50">
+          <div className="relative aspect-9/16 w-full max-w-60 rounded-2xl overflow-hidden shadow-xl border-[6px] border-white ring-1 ring-purple-100 bg-purple-50">
             {isLoading && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-3">

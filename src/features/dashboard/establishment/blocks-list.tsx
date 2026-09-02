@@ -20,6 +20,7 @@ interface BlocksListProps {
 }
 
 export function BlocksList({ establishmentId, onAddBlock }: BlocksListProps) {
+  void establishmentId;
   const [blocks, setBlocks] = useState<BlockFormatted[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -32,8 +33,20 @@ export function BlocksList({ establishmentId, onAddBlock }: BlocksListProps) {
   }
 
   useEffect(() => {
-    fetchBlocks()
+    let isMounted = true;
+    listScheduleBlocksAction().then((response) => {
+      if (isMounted) {
+        if (response.status === HttpStatusEnum.Ok) {
+          setBlocks(response.data || [])
+        }
+        setLoading(false)
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
   }, [])
+
 
   const handleDelete = async (id: string) => {
     const response = await deleteScheduleBlockAction(id)

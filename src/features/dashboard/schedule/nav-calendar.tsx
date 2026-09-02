@@ -28,17 +28,20 @@ export function NavCalendar({ selectedDate, onSelectDate, filters, onFilterChang
   const maxDate = useMemo(() => addMonths(new Date(), 3), [])
 
   const [localSearch, setLocalSearch] = useState(filters.search)
+  const [prevSearch, setPrevSearch] = useState(filters.search)
   const filtersRef = useRef(filters)
   const onFilterChangeRef = useRef(onFilterChange)
+
+  if (filters.search !== prevSearch) {
+    setPrevSearch(filters.search)
+    setLocalSearch(filters.search)
+  }
 
   useEffect(() => {
     filtersRef.current = filters
     onFilterChangeRef.current = onFilterChange
   }, [filters, onFilterChange])
 
-  useEffect(() => {
-    setLocalSearch(filters.search)
-  }, [filters.search])
 
   useEffect(() => {
     const timer = setTimeout(() => {

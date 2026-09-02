@@ -1,136 +1,133 @@
 import Header from "@/components/header";
+import { getActivePlansAction } from "@/actions/subscription";
+import { PlanCard } from "@/features/subscription/plan-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { FaCalendarDay, FaCalendarWeek, FaCashRegister, FaClockRotateLeft, FaHandcuffs, FaHandshakeSimple, FaMobileButton, FaPaintbrush, FaShareNodes } from "react-icons/fa6";
-import { IoWomanSharp } from "react-icons/io5";
-import { ButtonSubscription } from "@/components/buttons/subscription";
+import { FaCalendarDay, FaHandcuffs, FaHandshakeSimple, FaShieldHalved } from "react-icons/fa6";
 
-export default function Subscription() {
+export default async function SubscriptionPage() {
+  const { data: allPlans } = await getActivePlansAction();
+  // Planos públicos da vitrine (exclui convites Alpha privados com valor 0)
+  const plans = allPlans.filter((p) => p.price > 0);
+
+
   return (
     <>
       <Header />
-      <main className="mx-auto px-6 py-12 sm:py-24 max-w-5xl md:max-w-7xl">
-        <h1>Seja uma Fundadora</h1>
-        <p>Tudo o que você precisa para dominar sua agenda e valorizar seu trabalho com o Plano Fundadoras, por apenas <span className="font-medium">R$ 9,90/mês</span> (oferta limitada).</p>
-        <div className="flex flex-col gap-6">
-          <div className="grid grid-cols-3 my-6 gap-4">
-            <Card className="gap-1">
-              <CardHeader className="flex items-center gap-1">
-                <FaCalendarWeek className="text-purple-900" />
-                <CardTitle>Agenda de Atendimentos</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Agenda pessoal e ilimitada (gerenciada por você) com visão rápida do dia e da semana.
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card className="gap-1">
-              <CardHeader className="flex items-center gap-1">
-                <IoWomanSharp className="text-purple-900" />
-                <CardTitle>Minhas Poderosas</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Cadastro ilimitado de clientes para ter o contato de todas sempre à mão no seu espaço digital.
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card className="gap-1">
-              <CardHeader className="flex items-center gap-1">
-                <FaCashRegister className="text-purple-900" />
-                <CardTitle>Seu Caixa</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Saiba exatamente quanto entrou no seu espaço com o Histórico de Recebíveis.
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card className="gap-1">
-              <CardHeader className="flex items-center gap-1">
-                <FaPaintbrush className="text-purple-900" />
-                <CardTitle>Procedimentos</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Cadastre até 6 procedimentos personalizados no seu menu com preço e duração.
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card className="gap-1">
-              <CardHeader className="flex items-center gap-1">
-                <FaClockRotateLeft className="text-purple-900" />
-                <CardTitle>Histórico de 1 Mês</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Acompanhe a retenção do histórico de atendimentos e caixa por no máximo 1 mês.
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card className="gap-1">
-              <CardHeader className="flex items-center gap-1">
-                <FaShareNodes className="text-purple-900" />
-                <CardTitle>Compartilhar Horários</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Compartilhe seus horários disponíveis de forma personalizada e acesse de qualquer celular, tablet ou PC.
-                </CardDescription>
-              </CardContent>
-            </Card>
+      <main className="mx-auto px-4 sm:px-6 py-8 sm:py-16 max-w-5xl md:max-w-7xl">
+        {/* Cabeçalho da Página */}
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-100/80 text-purple-900 text-xs font-bold uppercase tracking-wider mb-3">
+            ✨ Invista no seu Espaço
           </div>
-          <div>
-            <h3>
-              Pagamento
-            </h3>
-            <p>Estrutura de pagamento seguro e protegido, gerenciado exclusivamente pelo <span className="font-medium">Mercado Pago</span>.</p>
-            <div className="grid grid-cols-3 my-6 gap-4">
-              <Card className="gap-1">
-                <CardHeader className="flex items-center gap-1">
-                  <FaHandshakeSimple className="text-purple-900" />
-                  <CardTitle>Transparência</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    Cobrança mensal recorrente, sem taxas escondidas ou letras miúdas.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="gap-1">
-                <CardHeader className="flex items-center gap-1">
-                  <FaHandcuffs className="text-purple-900" />
-                  <CardTitle>Sem Fidelidade</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    Cancele a qualquer momento, sem burocracia ou penalidades.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="gap-1">
-                <CardHeader className="flex items-center gap-1">
-                  <FaCalendarDay className="text-purple-900" />
-                  <CardTitle>Data de Cobrança</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    A cobrança mensal será realizada sempre no mesmo dia em que você iniciou sua assinatura.
-                  </CardDescription>
-                </CardContent>
-              </Card>
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-purple-950 tracking-tight leading-tight">
+            Escolha o plano ideal para você brilhar
+          </h1>
+          <p className="mt-3 text-sm sm:text-base text-gray-600 font-medium">
+            Tudo o que você precisa para dominar sua agenda, encantar suas Poderosas e valorizar o seu trabalho.
+          </p>
+        </div>
+
+        {/* Grade de Planos (Mobile First & 100% Responsiva) */}
+        {plans.length === 0 ? (
+          <div className="p-8 text-center bg-white border border-purple-100 rounded-3xl text-purple-950/70 text-sm max-w-lg mx-auto shadow-sm">
+            Nenhum plano disponível para assinatura no momento. Entre em contato com o suporte!
+          </div>
+        ) : (
+          <div
+            className={`grid gap-6 sm:gap-8 mx-auto items-stretch ${
+              plans.length === 1
+                ? "max-w-md grid-cols-1"
+                : plans.length === 2
+                ? "max-w-4xl grid-cols-1 md:grid-cols-2"
+                : "max-w-6xl grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            }`}
+          >
+            {plans.map((plan) => (
+              <PlanCard key={plan.id} plan={plan} />
+            ))}
+          </div>
+        )}
+
+        {/* Seção de Segurança e Transparência no Pagamento */}
+        <div className="mt-14 sm:mt-20 pt-10 border-t border-purple-100/80 max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-purple-900 mb-1">
+              <FaShieldHalved className="w-3.5 h-3.5 text-emerald-600" />
+              Pagamento 100% Seguro
             </div>
+            <h3 className="text-lg sm:text-xl font-bold text-purple-950">
+              Gerenciado exclusivamente pelo Mercado Pago
+            </h3>
+            <p className="text-xs sm:text-sm text-gray-500">
+              Total tranquilidade e controle para você focar no que faz de melhor.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Card className="border border-purple-50 bg-white/70 shadow-2xs">
+              <CardHeader className="flex flex-row items-center gap-3 p-4 sm:p-5">
+                <div className="p-2 rounded-xl bg-purple-100/60 text-purple-900 shrink-0">
+                  <FaHandshakeSimple className="w-4 h-4" />
+                </div>
+                <CardTitle className="text-sm sm:text-base font-bold text-purple-950">
+                  Transparência
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-4 sm:px-5 pb-5 pt-0">
+                <CardDescription className="text-xs sm:text-sm text-gray-500 leading-normal">
+                  Cobrança recorrente clara, sem taxas escondidas ou letras miúdas.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-purple-50 bg-white/70 shadow-2xs">
+              <CardHeader className="flex flex-row items-center gap-3 p-4 sm:p-5">
+                <div className="p-2 rounded-xl bg-purple-100/60 text-purple-900 shrink-0">
+                  <FaHandcuffs className="w-4 h-4" />
+                </div>
+                <CardTitle className="text-sm sm:text-base font-bold text-purple-950">
+                  Sem Fidelidade
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-4 sm:px-5 pb-5 pt-0">
+                <CardDescription className="text-xs sm:text-sm text-gray-500 leading-normal">
+                  Cancele quando quiser, direto pelo painel, sem multas ou burocracia.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-purple-50 bg-white/70 shadow-2xs">
+              <CardHeader className="flex flex-row items-center gap-3 p-4 sm:p-5">
+                <div className="p-2 rounded-xl bg-purple-100/60 text-purple-900 shrink-0">
+                  <FaCalendarDay className="w-4 h-4" />
+                </div>
+                <CardTitle className="text-sm sm:text-base font-bold text-purple-950">
+                  Data Fixa
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-4 sm:px-5 pb-5 pt-0">
+                <CardDescription className="text-xs sm:text-sm text-gray-500 leading-normal">
+                  A cobrança é realizada sempre no mesmo dia do mês em que você assinou.
+                </CardDescription>
+              </CardContent>
+            </Card>
           </div>
         </div>
-        <ButtonSubscription variant="theme" size="lg" className="w-full">
-          TORNAR-ME UMA FUNDADORA
-        </ButtonSubscription>
-        <p className="text-muted-foreground text-sm leading-normal font-normal text-center">
-          Ao assinar, você concorda com nossos <Link className="text-purple-950" href="/documento/termo">Termos de Serviço</Link>{" "}
-          e <Link className="text-purple-950" href="/documento/politica">Política de Privacidade</Link>.
+
+        {/* Rodapé Legal */}
+        <p className="text-muted-foreground text-xs leading-normal font-normal text-center mt-10">
+          Ao assinar, você concorda com nossos{" "}
+          <Link className="text-purple-950 font-semibold underline underline-offset-2" href="/documento/termo">
+            Termos de Serviço
+          </Link>{" "}
+          e{" "}
+          <Link className="text-purple-950 font-semibold underline underline-offset-2" href="/documento/politica">
+            Política de Privacidade
+          </Link>
+          .
         </p>
       </main>
     </>
-  )
+  );
 }
