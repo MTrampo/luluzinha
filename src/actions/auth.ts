@@ -11,13 +11,34 @@ export const signInUserAction = async (input: UserSignInFormInputs) => {
   return response
 }
 
-export const signUpUserAction = async (input: UserSignUpFormInputs) => {
+export const signUpUserAction = async (input: UserSignUpFormInputs, invitationToken?: string) => {
+  // Durante a fase Alpha Fechada, cadastros são restritos a convidadas com token válido
+  if (!invitationToken) {
+    return {
+      status: HttpStatusEnum.Forbidden,
+      message: "No momento, o cadastro na Luluzinha é restrito a convidadas na fase Alpha Fechada.",
+      data: null
+    }
+  }
+
+  const { validateInvitationTokenApi } = await import("@/back/configuration/service/invitation.api");
+  const invitationRes = await validateInvitationTokenApi(invitationToken);
+
+  if (invitationRes.status !== HttpStatusEnum.Ok || !invitationRes.data) {
+    return {
+      status: HttpStatusEnum.Forbidden,
+      message: invitationRes.message || "Convite inválido ou expirado.",
+      data: null
+    }
+  }
+
   const response = await signUpUserApi({
     ...input,
     name: input.email.split('@')[0],
   })
   return response
 }
+
 
 export const verifyOtpCodeAction = async (email: string, code: string, invitationToken?: string) => {
   const response = await confirmUserEmailApi(email, code)

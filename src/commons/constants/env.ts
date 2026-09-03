@@ -1,0 +1,6 @@
+export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || ""
+export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
+export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || ""
+export const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+export const SUB_SECRET_KEY = process.env.SUB_SECRET || "luluzinha:auth:sub"
+export const ESTABLISHMENT_SECRET_KEY = process.env.ESTABLISHMENT_SECRET || "luluzinha:auth:establishment_id"

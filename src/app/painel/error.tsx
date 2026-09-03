@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { ErrorState } from '@/components/errors/error-state'
 import { FaRotateLeft, FaWhatsapp } from 'react-icons/fa6'
+import { whatsappNumber } from '@/commons/constants/support'
 
 export default function Error({
   error,
@@ -16,7 +17,6 @@ export default function Error({
     console.error(error)
   }, [error])
 
-  const whatsappNumber = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP || '5511999999999';
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     "Olá! Estou usando a Luluzinha (Espaço Alpha) e encontrei um erro na página. Você pode me ajudar?"
   )}`;

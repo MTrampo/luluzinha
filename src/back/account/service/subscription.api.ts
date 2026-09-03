@@ -12,7 +12,7 @@ import { clientPreAproval } from "@/commons/lib/mercadopago/server"
 import { getInvoicesByEstablishmentIdApi } from "@/back/payment/service/invoice.api"
 import { invoiceFormatter } from "@/commons/models/payment"
 
-export const createCheckoutSessionApi = async (mpPayerEmail: string, requestedPlanSlug?: string) => {
+export const createCheckoutSessionApi = async (mpPayerEmail: string, requestedPlanSlug: string) => {
   const userResult = await getUserLoggedApi()
   if (!userResult.data) {
     return ApiResponse.Unauthorized({
@@ -43,12 +43,10 @@ export const createCheckoutSessionApi = async (mpPayerEmail: string, requestedPl
   const establishment = establishmentResult.data[0]
   console.log("Estabelecimento encontrado:", establishment)
 
-  const targetPlanSlug = requestedPlanSlug || process.env.MP_PLAN_SLUG || "financier-luluzinha"
-
-  const planConfigResult = await getPlanConfigBySlugApi(targetPlanSlug)
+  const planConfigResult = await getPlanConfigBySlugApi(requestedPlanSlug)
   if (planConfigResult.error || !planConfigResult.data) {
     return ApiResponse.NotFound({
-      message: `O plano '${targetPlanSlug}' não foi localizado ou não está ativo no momento.`
+      message: `O plano '${requestedPlanSlug}' não foi localizado ou não está ativo no momento.`
     })
   }
 
@@ -57,7 +55,7 @@ export const createCheckoutSessionApi = async (mpPayerEmail: string, requestedPl
 
   // Se o plano for gratuito (ex: Alpha R$ 0,00), ativa diretamente sem passar pelo Mercado Pago
   if (Number(planConfig.price) <= 0) {
-    const freeActivation = await activateFreeSubscriptionApi(userId, targetPlanSlug)
+    const freeActivation = await activateFreeSubscriptionApi(userId, requestedPlanSlug)
     if (freeActivation.error) {
       return ApiResponse.InternalError({
         message: freeActivation.message,

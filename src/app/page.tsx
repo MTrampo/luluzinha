@@ -55,11 +55,12 @@ export default async function Home() {
                 </p>
                 <div className="pt-2">
                   <Button className="group bg-purple-600 hover:bg-purple-700 text-white rounded-full font-semibold px-6 py-5 shadow-md shadow-purple-100 transition-all duration-200" asChild>
-                    <Link href={user ? "/painel" : "/cadastrar"} className="inline-flex items-center">
-                      {user ? "Acessar meu espaço" : "Quero transformar meu espaço"}
+                    <Link href={user ? "/painel" : "#preco"} className="inline-flex items-center">
+                      {user ? "Acessar meu espaço" : "Conhecer nossos planos"}
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 delay-75 group-hover:translate-x-1.5" />
                     </Link>
                   </Button>
+
                 </div>
               </div>
 
@@ -233,10 +234,11 @@ export default async function Home() {
                 className="group bg-white text-purple-950 hover:bg-purple-50 font-black text-base px-8 sm:px-10 py-6 sm:py-7 rounded-full shadow-xl shadow-black/20 hover:shadow-2xl active:scale-[0.98] transition-all duration-200"
                 asChild
               >
-                <Link href={user ? "/painel" : "/cadastrar"}>
-                  {user ? "Entrar no meu espaço digital" : "Criar meu espaço digital"}
+                <Link href={user ? "/painel" : "#preco"}>
+                  {user ? "Entrar no meu espaço digital" : "Conhecer nossos planos"}
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 delay-75 group-hover:translate-x-1.5" />
                 </Link>
+
               </Button>
             </div>
           </div>

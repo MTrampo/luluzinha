@@ -4,7 +4,7 @@ import { createScheduleApi, deleteScheduleApi, getScheduleByIdApi, getSchedulesA
 import { revalidatePath } from "next/cache";
 import { HttpStatusEnum } from "@/commons/enums/http";
 import { ScheduleInsertPayload, ScheduleUpdatePayload, ScheduleProcedureInsertPayload } from "@/commons/models/schedule";
-import { getEstablishmentCookie } from "@/commons/lib/auth/establishment";
+import { getOrResolveEstablishmentId } from "@/commons/lib/auth/establishment";
 import { ApiResponse } from "@/commons/lib/http/responses";
 
 export const createScheduleAction = async (schedule: ScheduleInsertPayload, procedures: Omit<ScheduleProcedureInsertPayload, 'schedule_id'>[]) => {
@@ -18,17 +18,20 @@ export const createScheduleAction = async (schedule: ScheduleInsertPayload, proc
 }
 
 export const getSchedulesAction = async () => {
-  const id = (await getEstablishmentCookie())!;
+  const id = await getOrResolveEstablishmentId();
+  if (!id) return ApiResponse.Ok({ message: "Nenhum espaço ativo.", data: [] });
   return await getSchedulesApi(id);
 }
 
 export const getSchedulesByDateAction = async (dateIsoString: string) => {
-  const id = (await getEstablishmentCookie())!;
+  const id = await getOrResolveEstablishmentId();
+  if (!id) return ApiResponse.Ok({ message: "Nenhum espaço ativo.", data: { schedules: [], blocks: [], busyIntervals: [] } });
   return await getSchedulesByDateApi(id, dateIsoString);
 }
 
 export const getSchedulesWeekAction = async () => {
-  const id = (await getEstablishmentCookie())!;
+  const id = await getOrResolveEstablishmentId();
+  if (!id) return ApiResponse.Ok({ message: "Nenhum espaço ativo.", data: [] });
   return await getSchedulesWeekApi(id);
 }
 
@@ -61,7 +64,8 @@ export const updateScheduleWithProceduresAction = async (
   schedule: ScheduleUpdatePayload,
   procedures: Omit<ScheduleProcedureInsertPayload, 'schedule_id'>[]
 ) => {
-  const establishmentId = (await getEstablishmentCookie())!;
+  const establishmentId = await getOrResolveEstablishmentId();
+  if (!establishmentId) return ApiResponse.NotFound({ message: "Espaço não encontrado." });
   const response = await updateScheduleWithProceduresApi(establishmentId, scheduleId, schedule, procedures);
 
   if (response.status === HttpStatusEnum.Ok) {
@@ -72,7 +76,8 @@ export const updateScheduleWithProceduresAction = async (
 }
 
 export const resumeScheduleAction = async (scheduleId: string, startAt: string, endAt: string) => {
-  const establishmentId = (await getEstablishmentCookie())!;
+  const establishmentId = await getOrResolveEstablishmentId();
+  if (!establishmentId) return ApiResponse.NotFound({ message: "Espaço não encontrado." });
   const response = await resumeScheduleApi(establishmentId, scheduleId, startAt, endAt);
 
   if (response.status === HttpStatusEnum.Ok) {
@@ -81,3 +86,4 @@ export const resumeScheduleAction = async (scheduleId: string, startAt: string, 
 
   return response;
 }
+

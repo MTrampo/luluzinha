@@ -3,7 +3,7 @@ import { getActivePlansAction } from "@/actions/subscription";
 import { PlanCard } from "@/features/subscription/plan-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { FaCalendarDay, FaHandcuffs, FaHandshakeSimple, FaShieldHalved } from "react-icons/fa6";
+import { FaCalendarDay, FaHandcuffs, FaHandshakeSimple, FaShieldHalved, FaWandMagicSparkles } from "react-icons/fa6";
 
 export default async function SubscriptionPage() {
   const { data: allPlans } = await getActivePlansAction();
@@ -18,8 +18,10 @@ export default async function SubscriptionPage() {
         {/* Cabeçalho da Página */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-100/80 text-purple-900 text-xs font-bold uppercase tracking-wider mb-3">
-            ✨ Invista no seu Espaço
+            <FaWandMagicSparkles className="w-3.5 h-3.5 text-purple-700" />
+            Invista no seu Espaço
           </div>
+
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-purple-950 tracking-tight leading-tight">
             Escolha o plano ideal para você brilhar
           </h1>

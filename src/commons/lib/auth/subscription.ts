@@ -1,8 +1,9 @@
 'use server'
 
 import { cookies } from 'next/headers'
+import { SUB_SECRET_KEY } from '@/commons/constants/env'
 
-const KEY_SUB = process.env.SUB_SECRET || 'luluzinha:auth:sub';
+const KEY_SUB = SUB_SECRET_KEY;
 const expiresIn = 60 * 60 * 24 * 30 * 1000; // 30 dias em ms
 
 export async function setCookieSubscription(token: string): Promise<void> {
