@@ -2,6 +2,7 @@ import { serverSupabase } from "@/commons/lib/supabase/server"
 import { ResetPasswordRequestBody, UserRequestBody } from "@/commons/models/user"
 import { resolveAuthError } from "@/commons/errors/auth"
 import { AuthError } from "@supabase/supabase-js"
+import { APP_URL } from "@/commons/constants/env"
 
 export const signInWithEmail = async(email: string, password: string) => {
   const supabase = await serverSupabase()
@@ -66,7 +67,7 @@ export const resendOtpCode = async (email: string) => {
     email: email,
     options: {
       // Garante que o usuário permaneça no fluxo de OTP
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback` 
+      emailRedirectTo: `${APP_URL}/auth/callback` 
     }
   })
 

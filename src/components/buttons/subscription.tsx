@@ -11,7 +11,7 @@ import { toast } from "sonner";
 interface ButtonSubscriptionProps extends VariantProps<typeof buttonVariants> {
   className?: string;
   children: ReactNode;
-  planSlug?: string;
+  planSlug: string;
 }
 
 export const ButtonSubscription = ({ className, children, variant, size, planSlug }: ButtonSubscriptionProps) => {

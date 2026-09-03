@@ -1,10 +1,10 @@
 'use server'
 
-import { 
-  createCheckoutSessionApi, 
-  manageUserSubscriptionApi, 
-  associateSubscriptionPayerEmailApi, 
-  refreshSubscriptionApi, 
+import {
+  createCheckoutSessionApi,
+  manageUserSubscriptionApi,
+  associateSubscriptionPayerEmailApi,
+  refreshSubscriptionApi,
   getUserSubscriptionDetailsApi,
   cancelSubscriptionApi,
   syncSubscriptionStatusApi,
@@ -12,7 +12,7 @@ import {
 } from "@/back/account/service/subscription.api"
 import { listActivePlansApi, getPlanConfigBySlugApi } from "@/back/configuration/service/plan.api"
 
-export const getSubscriptionEndpointAction = async (mpPayerEmail: string, planSlug?: string) => {
+export const getSubscriptionEndpointAction = async (mpPayerEmail: string, planSlug: string) => {
   const response = await createCheckoutSessionApi(mpPayerEmail, planSlug)
   return response
 }

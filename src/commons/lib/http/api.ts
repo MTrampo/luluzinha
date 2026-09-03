@@ -1,5 +1,6 @@
 import { HttpStatusEnum } from "@/commons/enums/http";
 import { FetchOptions, ResponseProps } from "@/commons/models/api";
+import { APP_URL } from "@/commons/constants/env";
 
 export async function api<TResponse = null, TBody = Record<string, unknown>>(
   endpoint: string,
@@ -7,7 +8,7 @@ export async function api<TResponse = null, TBody = Record<string, unknown>>(
 ): Promise<ResponseProps<TResponse>> {
   const { params, headers, body, ...rest } = options;
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_APP_URL}${endpoint}`);
+  const url = new URL(`${APP_URL}${endpoint}`);
   if (params) {
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
   }

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { MercadoPagoStatusEnum } from '@/commons/enums/subscription'
 import type { SubscriptionPayloadCookie } from '@/commons/models/subscription'
+import { SUB_SECRET_KEY } from '@/commons/constants/env'
 
 const publicApiRoutes = ['/api/webhooks']
 const publicPaths = ['/', '/entrar', '/cadastrar', '/assinatura', '/documento/termo', '/documento/politica']
@@ -36,7 +37,7 @@ export function handleRouteAccess(request: NextRequest, user: unknown, supabaseR
 
   // Autenticado acessando /painel/** → verificar assinatura
   if (user && pathname.startsWith('/painel')) {
-    const cookieName = process.env.SUB_SECRET || ''
+    const cookieName = SUB_SECRET_KEY
     const cookieValue = request.cookies.get(cookieName)?.value
 
     try {

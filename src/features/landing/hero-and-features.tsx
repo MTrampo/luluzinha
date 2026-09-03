@@ -77,11 +77,12 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
                 ) : (
                   <>
                     <Button size="lg" className="group bg-purple-600 hover:bg-purple-700 text-white font-bold text-base px-8 py-6 rounded-full shadow-lg hover:shadow-xl hover:shadow-purple-100 transition-all duration-200 transform" asChild>
-                      <Link href="/cadastrar">
-                        Começar gratuitamente
+                      <Link href="#preco">
+                        Conhecer nossos planos
                         <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 delay-75 group-hover:translate-x-1.5" />
                       </Link>
                     </Button>
+
                     <Button size="lg" variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50/50 hover:text-purple-900 font-semibold text-base px-8 py-6 rounded-full transition-all duration-200" asChild>
                       <Link href="/entrar">
                         Entrar no meu espaço
