@@ -6,7 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { AlphaBanner } from "@/components/feedbacks/beta-banner"
 import { OnboardingGuard } from "@/components/establishment/onboarding-guard"
 
+export const dynamic = 'force-dynamic'
+
 export default async function Layout({ children }: { children: React.ReactNode }) {
+
   return (
     <div className="theme-luluzinha min-h-screen flex flex-col bg-background text-foreground">
       <TooltipProvider delayDuration={0}>

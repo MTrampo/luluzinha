@@ -5,7 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Link from "next/link";
 import { FaCalendarDay, FaHandcuffs, FaHandshakeSimple, FaShieldHalved, FaWandMagicSparkles } from "react-icons/fa6";
 
+export const dynamic = 'force-dynamic';
+
 export default async function SubscriptionPage() {
+
   const { data: allPlans } = await getActivePlansAction();
   // Planos públicos da vitrine (exclui convites Alpha privados com valor 0)
   const plans = allPlans.filter((p) => p.price > 0);

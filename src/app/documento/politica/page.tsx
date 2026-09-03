@@ -1,6 +1,9 @@
 import Header from "@/components/header";
 
+export const dynamic = 'force-dynamic';
+
 export default function PrivacyPolicy() {
+
   const lastUpdate = "23 de Julho de 2026";
   const appName = "Luluzinha";
 
