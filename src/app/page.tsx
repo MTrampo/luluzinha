@@ -12,7 +12,10 @@ import { StoryShareShowcase } from "@/features/landing/story-share-showcase";
 import { HowItWorksSection } from "@/features/landing/how-it-works";
 import { LandingPricingCard } from "@/features/landing/pricing-card";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
+
   const [userResponse, plansResponse] = await Promise.all([
     getUserLoggedApi(),
     getActivePlansAction()

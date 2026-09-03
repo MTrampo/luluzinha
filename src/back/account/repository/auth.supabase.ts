@@ -110,7 +110,18 @@ export const getUserLogged = async () => {
     const { data, error } = await supabase.auth.getUser()
     return { data, error }
   } catch (error) {
-    console.error('[getUserLogged] Falha crítica de autenticação:', error)
+    // Re-lança o sinal interno do Next.js para Dynamic Server Usage (cookies em build time)
+    if (
+      error &&
+      typeof error === 'object' &&
+      'digest' in error &&
+      typeof error.digest === 'string' &&
+      error.digest.startsWith('DYNAMIC_SERVER_USAGE')
+    ) {
+      throw error
+    }
+
+    console.error('[getUserLogged] Falha de autenticação:', error)
     
     let errCode: string | undefined
     if (error && typeof error === 'object' && 'code' in error && typeof error.code === 'string') {
@@ -130,6 +141,7 @@ export const getUserLogged = async () => {
     }
   }
 }
+
 
 export const getProfileByUserIdSupabase = async (userId: string) => {
   const supabase = await serverSupabase()

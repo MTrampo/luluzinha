@@ -1,6 +1,9 @@
 import Header from "@/components/header";
 
+export const dynamic = 'force-dynamic';
+
 export default function TermsOfUse() {
+
   const lastUpdate = "05 de Fevereiro de 2026";
   const appName = "Luluzinha";
 
