@@ -1,6 +1,7 @@
 import Header from "@/components/header";
-import { validateInvitationAction } from "@/actions/invitation";
+import { validateInvitationAction, acceptInvitationRedirectAction } from "@/actions/invitation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
@@ -16,6 +17,8 @@ import {
 } from "react-icons/fa6";
 import { LuSparkles } from "react-icons/lu";
 
+import { setInvitationCookie } from "@/commons/lib/auth/invitation";
+
 interface ConvitePageProps {
   params: Promise<{
     token: string;
@@ -29,9 +32,15 @@ export default async function ConvitePage({ params }: ConvitePageProps) {
   const plan = invitation?.plan;
 
   const isInvalid = !invitation || !invitation.isAvailable;
+
+  if (!isInvalid && invitation?.token) {
+    await setInvitationCookie(invitation.token);
+  }
+
   const errorMessage =
     result.message ||
     "Este convite VIP já foi utilizado por outra Luluzinha ou expirou após o prazo limite de 24 horas.";
+
 
   return (
     <>
@@ -170,16 +179,17 @@ export default async function ConvitePage({ params }: ConvitePageProps) {
                 </CardContent>
 
                 <CardFooter className="px-6 sm:px-10 pb-10 pt-2 flex flex-col gap-4 bg-purple-50/20 border-t border-purple-50">
-                  <Button
-                    variant="theme"
-                    size="lg"
-                    className="w-full font-bold text-sm sm:text-base tracking-wide shadow-lg active:scale-[0.99] transition-transform py-7 rounded-2xl"
-                    asChild
-                  >
-                    <Link href={`/cadastrar?convite=${invitation.token}`}>
+                  <form action={acceptInvitationRedirectAction} className="w-full">
+                    <input type="hidden" name="token" value={invitation.token} />
+                    <Button
+                      type="submit"
+                      variant="theme"
+                      size="lg"
+                      className="w-full font-bold text-sm sm:text-base tracking-wide shadow-lg active:scale-[0.99] transition-transform py-7 rounded-2xl cursor-pointer"
+                    >
                       ACEITAR CONVITE E CRIAR MEU ESPAÇO
-                    </Link>
-                  </Button>
+                    </Button>
+                  </form>
 
                   <p className="text-xs text-gray-500 text-center leading-relaxed">
                     Ao aceitar este convite, você concorda com nossos{" "}
@@ -193,6 +203,7 @@ export default async function ConvitePage({ params }: ConvitePageProps) {
                     .
                   </p>
                 </CardFooter>
+
               </Card>
             </div>
 

@@ -24,6 +24,13 @@ CREATE POLICY "Allow anon and authenticated insert into waitlist"
     TO anon, authenticated
     WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow anon and authenticated select into waitlist" ON public.waitlist;
+CREATE POLICY "Allow anon and authenticated select into waitlist"
+    ON public.waitlist
+    FOR SELECT
+    TO anon, authenticated
+    USING (true);
+
 -- Permitir leitura e gerenciamento total apenas para service_role
 DROP POLICY IF EXISTS "Allow service_role full access on waitlist" ON public.waitlist;
 CREATE POLICY "Allow service_role full access on waitlist"
@@ -32,3 +39,4 @@ CREATE POLICY "Allow service_role full access on waitlist"
     TO service_role
     USING (true)
     WITH CHECK (true);
+

@@ -1,8 +1,18 @@
 import { serverSupabase } from "@/commons/lib/supabase/server"
+import { internalSupabase } from "@/commons/lib/supabase/internal"
 import { ResetPasswordRequestBody, UserRequestBody } from "@/commons/models/user"
 import { resolveAuthError } from "@/commons/errors/auth"
 import { AuthError } from "@supabase/supabase-js"
 import { APP_URL } from "@/commons/constants/env"
+
+async function getInternalClient() {
+  try {
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return internalSupabase();
+    }
+  } catch {}
+  return await serverSupabase();
+}
 
 export const signInWithEmail = async(email: string, password: string) => {
   const supabase = await serverSupabase()
@@ -37,7 +47,7 @@ export const killAuthSupabase = async () => {
 }
 
 export const createProfileSupabase = async (userId: string, name: string, avatarUrl?: string | null) => {
-  const supabase = await serverSupabase()
+  const supabase = await getInternalClient()
 
   const { data, error } = await supabase.from("profiles").upsert({
     id: userId,

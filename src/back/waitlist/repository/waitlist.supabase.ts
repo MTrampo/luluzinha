@@ -1,8 +1,17 @@
+import { internalSupabase } from "@/commons/lib/supabase/internal";
 import { serverSupabase } from "@/commons/lib/supabase/server";
 import { WaitlistCreateInput } from "@/commons/models/waitlist";
 
+async function getClient() {
+  try {
+    return internalSupabase();
+  } catch {
+    return await serverSupabase();
+  }
+}
+
 export async function createWaitlistEntrySupabase(input: WaitlistCreateInput) {
-  const supabase = await serverSupabase();
+  const supabase = await getClient();
 
   const { data, error } = await supabase
     .from("waitlist")
@@ -20,7 +29,7 @@ export async function createWaitlistEntrySupabase(input: WaitlistCreateInput) {
 }
 
 export async function findWaitlistEntryByContactSupabase(params: { phone?: string | null; email?: string | null }) {
-  const supabase = await serverSupabase();
+  const supabase = await getClient();
 
   let query = supabase.from("waitlist").select("*");
 
@@ -39,7 +48,7 @@ export async function findWaitlistEntryByContactSupabase(params: { phone?: strin
 }
 
 export async function listWaitlistSupabase() {
-  const supabase = await serverSupabase();
+  const supabase = await getClient();
 
   const { data, error } = await supabase
     .from("waitlist")
@@ -48,3 +57,4 @@ export async function listWaitlistSupabase() {
 
   return { data, error };
 }
+
