@@ -1,6 +1,5 @@
-import { ImageResponse } from '@vercel/og';
+import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
 
 let outfitData: ArrayBuffer | null = null;
 let interData: ArrayBuffer | null = null;
