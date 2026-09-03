@@ -52,12 +52,30 @@ export const activateInvitationAction = async (userId: string, token: string) =>
   }
 }
 
+export const saveInvitationCookieAction = async (token: string) => {
+  const { setInvitationCookie } = await import("@/commons/lib/auth/invitation")
+  await setInvitationCookie(token)
+  return { status: 200, message: "Cookie de convite salvo." }
+}
+
+export const acceptInvitationRedirectAction = async (formData: FormData) => {
+  const token = formData.get("token") as string
+  if (token) {
+    const { setInvitationCookie } = await import("@/commons/lib/auth/invitation")
+    await setInvitationCookie(token)
+  }
+  const { redirect } = await import("next/navigation")
+  redirect(`/cadastrar?convite=${token}`)
+}
+
 export const generateInvitationAction = async (params?: {
+
   planSlug?: string;
   recipientName?: string;
   recipientEmail?: string;
   expiresInHours?: number;
 }) => {
+  const { generateInvitationApi } = await import("@/back/configuration/service/invitation.api")
   const response = await generateInvitationApi(params || {})
   return {
     status: response.status,
@@ -66,3 +84,5 @@ export const generateInvitationAction = async (params?: {
     error: response.error ?? null,
   }
 }
+
+

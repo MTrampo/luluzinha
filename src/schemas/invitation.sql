@@ -24,3 +24,15 @@ CREATE POLICY "Permitir leitura pública de convites ativos por token"
 ON public.plan_invitations
 FOR SELECT
 USING (true);
+
+CREATE POLICY "Permitir atualização de convites"
+ON public.plan_invitations
+FOR UPDATE
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "Permitir inserção de convites"
+ON public.plan_invitations
+FOR INSERT
+WITH CHECK (true);
+

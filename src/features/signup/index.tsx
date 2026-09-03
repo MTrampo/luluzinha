@@ -25,20 +25,25 @@ import {
   FaCheck, 
   FaWandMagicSparkles, 
   FaArrowLeft, 
-  FaArrowRight 
+  FaArrowRight,
+  FaHeart
 } from "react-icons/fa6";
 import { LuSparkles } from "react-icons/lu";
 import { toast } from "sonner";
 import Link from "next/link";
 
-export function SignUpFlow() {
+interface SignUpFlowProps {
+  initialToken?: string;
+}
+
+export function SignUpFlow({ initialToken }: SignUpFlowProps) {
   const route = useRouter();
   const searchParams = useSearchParams();
-  const inviteTokenParam = searchParams.get('convite');
+  const inviteTokenParam = initialToken || searchParams.get('convite');
 
   const [email, setEmail] = useState('');
   const [step, setStep] = useState<SignUpStepType>('register');
-  const [inviteToken, setInviteToken] = useState<string | null>(inviteTokenParam);
+  const [inviteToken, setInviteToken] = useState<string | null>(inviteTokenParam || null);
   const [invitation, setInvitation] = useState<PlanInvitationFormatted | null>(null);
   const [isValidating, setIsValidating] = useState<boolean>(!!inviteTokenParam);
 
@@ -48,6 +53,7 @@ export function SignUpFlow() {
   const [waitlistPhone, setWaitlistPhone] = useState("");
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [waitlistSuccess, setWaitlistSuccess] = useState(false);
+
 
   const formatPhone = (val: string) => {
     const raw = val.replace(/\D/g, "").slice(0, 11);
@@ -92,9 +98,11 @@ export function SignUpFlow() {
   };
 
   useEffect(() => {
-    if (inviteTokenParam) {
-      setInviteToken(inviteTokenParam);
-      validateInvitationAction(inviteTokenParam).then((res) => {
+    const activeToken = initialToken || inviteTokenParam;
+    if (activeToken) {
+      setInviteToken(activeToken);
+      setIsValidating(true);
+      validateInvitationAction(activeToken).then((res) => {
         if (res.data && res.data.isAvailable) {
           setInvitation(res.data);
         }
@@ -103,32 +111,35 @@ export function SignUpFlow() {
     } else {
       setIsValidating(false);
     }
-  }, [inviteTokenParam]);
+  }, [initialToken, inviteTokenParam]);
+
 
   // Passo 1: Cadastro das credenciais (E-mail e Senha)
   const signUpUser = async (data: UserSignUpFormInputs) => {
     const toastId = loadingToast('Criando seu espaço...');
     try {
       const response = await signUpUserAction(data, inviteToken || undefined);
-      updateToast(toastId, response.status, response.message);
 
-      if (response.status === HttpStatusEnum.Ok) {
+      if (response.status === HttpStatusEnum.Ok && response.data) {
+        updateToast(toastId, response.status, response.message);
         setEmail(data.email);
         setStep('verify');
+      } else {
+        updateToast(toastId, response.status, response.message);
       }
     } catch {
       updateToast(toastId, HttpStatusEnum.InternalServerError);
     }
   };
 
-  // Passo 1b: Confirmação do OTP de verificação
+  // Passo 2: Verificação do código OTP enviado no e-mail
   const verifyCode = async (data: OtpFormInputs) => {
-    const toastId = loadingToast('Verificando código de acesso...');
+    const toastId = loadingToast('Confirmando seu código...');
     try {
       const response = await verifyOtpCodeAction(email, data.code, inviteToken || undefined);
-      updateToast(toastId, response.status, response.message);
 
       if (response.status === HttpStatusEnum.Ok) {
+        updateToast(toastId, response.status, response.message);
         // Redireciona diretamente para o painel com o espaço ativado
         route.push('/painel');
       }
@@ -152,13 +163,13 @@ export function SignUpFlow() {
   // Se NÃO houver convite ou o convite for inválido/esgotado -> Exibe tela de Acesso Restrito & Lista de Espera
   if (!invitation) {
     return (
-      <div className="w-full max-w-xl mx-auto p-4 sm:p-6 space-y-6 animate-in fade-in duration-300">
-        <div className="bg-white border border-purple-100 rounded-3xl p-6 sm:p-10 shadow-xl shadow-purple-950/5 text-center space-y-6">
+      <div className="w-full max-w-lg mx-auto space-y-4 animate-in fade-in duration-300">
+        <div className="bg-white border border-purple-100/90 rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 shadow-xl shadow-purple-950/5 text-center space-y-5 sm:space-y-6">
           
-          {/* Cabeçalho do Card */}
-          <div className="space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-purple-100 text-purple-800 flex items-center justify-center mx-auto shadow-inner">
-              <FaLock className="w-6 h-6 text-purple-700" />
+          {/* Cabeçalho Acolhedor */}
+          <div className="space-y-2.5">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-purple-100 text-purple-800 flex items-center justify-center mx-auto shadow-inner">
+              <FaLock className="w-5 h-5 sm:w-6 sm:h-6 text-purple-700" />
             </div>
 
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 text-purple-900 text-xs font-bold uppercase tracking-wider">
@@ -166,46 +177,55 @@ export function SignUpFlow() {
               Fase Alpha Fechada
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-black text-purple-950 font-lexend tracking-tight">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-purple-950 font-lexend tracking-tight">
               Acesso Exclusivo por Convite
             </h2>
 
-            <p className="text-sm text-purple-900/70 font-medium leading-relaxed max-w-md mx-auto">
-              Neste momento, a Luluzinha está aberta apenas para manicures participantes dos testes fechados.
+            <p className="text-xs sm:text-sm text-purple-900/75 font-medium leading-relaxed max-w-md mx-auto">
+              Estamos preparando cada detalhe com muito carinho e realizando testes fechados com manicures convidadas para valorizar a sua rotina real de atendimento.
             </p>
           </div>
 
-          {/* Estado de Sucesso na Lista de Espera */}
+          {/* Estado de Sucesso ou Formulário da Lista de Espera */}
           {waitlistSuccess ? (
-            <div className="bg-purple-50/60 border border-purple-100 rounded-2xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-200">
-              <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-                <FaCheck className="w-5 h-5" />
+            <div className="bg-purple-50/70 border border-purple-200/80 rounded-2xl p-6 sm:p-8 space-y-5 animate-in fade-in zoom-in-95 duration-200 text-center">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-inner">
+                <FaCheck className="w-6 h-6" />
               </div>
-              <div className="space-y-1">
-                <h3 className="text-lg font-bold text-purple-950 font-lexend">
-                  Lugar garantido, {waitlistName.split(" ")[0]}!
+
+              <div className="space-y-2">
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-purple-900 bg-purple-100 px-3 py-1 rounded-full">
+                  <FaHeart className="w-3 h-3 text-pink-600" />
+                  Prioridade Garantida
+                </span>
+                <h3 className="text-xl sm:text-2xl font-black text-purple-950 font-lexend">
+                  Que alegria ter você com a gente, {waitlistName.split(" ")[0]}!
                 </h3>
-                <p className="text-xs text-purple-900/70 leading-relaxed max-w-sm mx-auto">
-                  Você receberá um convite especial com prioridade no seu WhatsApp assim que liberarmos as vagas do <strong>Beta Público</strong>.
+                <p className="text-xs sm:text-sm text-purple-900/80 leading-relaxed max-w-md mx-auto">
+                  Seu lugar no <strong>Beta Público</strong> está guardado com muito carinho. Assim que liberarmos os novos acessos, você será uma das primeiras a receber o convite VIP direto no seu WhatsApp para transformar o seu espaço.
                 </p>
               </div>
-              <Button asChild variant="outline" className="rounded-full border-purple-200 text-purple-900 font-bold text-xs">
-                <Link href="/">
-                  <FaArrowLeft className="w-3 h-3 mr-1.5" />
-                  Voltar para o início
-                </Link>
-              </Button>
+
+              <div className="pt-2">
+                <Button asChild variant="default" className="w-full rounded-xl font-bold text-sm sm:text-base h-12 shadow-md">
+                  <Link href="/">
+                    Conhecer Mais Sobre a Luluzinha
+                  </Link>
+                </Button>
+              </div>
             </div>
           ) : (
-            /* Formulário da Lista de Espera */
-            <div className="bg-purple-50/40 border border-purple-100/70 rounded-2xl p-5 sm:p-6 text-left space-y-4">
+            <div className="bg-purple-50/50 border border-purple-100/80 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-left space-y-4">
               <div className="space-y-1 text-center sm:text-left">
-                <h3 className="text-sm font-bold text-purple-950 font-lexend flex items-center justify-center sm:justify-start gap-1.5">
+                <div className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-900 uppercase tracking-wide">
                   <FaWandMagicSparkles className="w-3.5 h-3.5 text-purple-700" />
-                  Quer testar no Beta Público?
+                  Lista de Espera VIP
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-purple-950 font-lexend">
+                  Garanta seu lugar no Beta Público
                 </h3>
-                <p className="text-xs text-purple-900/60 font-medium">
-                  Cadastre-se na Lista de Espera VIP e seja avisada com prioridade no WhatsApp:
+                <p className="text-xs text-purple-900/70 font-medium leading-relaxed">
+                  Sabemos o quanto o seu tempo e o seu talento são especiais. Deixe seu contato para receber um convite VIP prioritário assim que abrirmos as novas vagas:
                 </p>
               </div>
 
@@ -221,7 +241,7 @@ export function SignUpFlow() {
                     value={waitlistName}
                     onChange={(e) => setWaitlistName(e.target.value)}
                     disabled={isWaitlistPending}
-                    className="rounded-xl border-purple-200 focus-visible:ring-purple-600 h-10 text-sm bg-white"
+                    className="rounded-xl border-purple-200 focus-visible:ring-purple-600 h-11 text-sm bg-white"
                     required
                   />
                 </div>
@@ -238,13 +258,13 @@ export function SignUpFlow() {
                     onChange={handlePhoneChange}
                     disabled={isWaitlistPending}
                     type="tel"
-                    className="rounded-xl border-purple-200 focus-visible:ring-purple-600 h-10 text-sm bg-white"
+                    className="rounded-xl border-purple-200 focus-visible:ring-purple-600 h-11 text-sm bg-white"
                   />
                 </div>
 
                 <div className="space-y-1">
                   <Label htmlFor="signup-waitlist-email" className="text-xs font-bold text-purple-950 flex items-center gap-1.5">
-                    <FaEnvelope className="w-3 h-3 text-purple-600" />
+                    <FaEnvelope className="w-3.5 h-3.5 text-purple-600" />
                     E-mail (Opcional)
                   </Label>
                   <Input
@@ -254,38 +274,52 @@ export function SignUpFlow() {
                     onChange={(e) => setWaitlistEmail(e.target.value)}
                     disabled={isWaitlistPending}
                     type="email"
-                    className="rounded-xl border-purple-200 focus-visible:ring-purple-600 h-10 text-sm bg-white"
+                    className="rounded-xl border-purple-200 focus-visible:ring-purple-600 h-11 text-sm bg-white"
                   />
                 </div>
 
                 <Button
                   type="submit"
                   disabled={isWaitlistPending}
-                  className="w-full bg-purple-700 hover:bg-purple-800 text-white rounded-full font-bold h-11 text-sm shadow-md shadow-purple-900/15"
+                  className="w-full bg-purple-900 hover:bg-purple-800 text-white rounded-xl font-bold h-12 text-sm sm:text-base shadow-md shadow-purple-950/10 active:scale-[0.99] transition-transform cursor-pointer"
                 >
-                  {isWaitlistPending ? "Guardando seu lugar..." : "Entrar na Lista de Espera VIP"}
+                  {isWaitlistPending ? "Guardando seu lugar..." : "Quero Meu Acesso VIP"}
                 </Button>
               </form>
             </div>
           )}
 
-          {/* Links Auxiliares */}
+          {/* Links Auxiliares sem duplicações */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs border-t border-purple-100 text-purple-900/70">
-            <Link
-              href="/"
-              className="hover:text-purple-950 font-semibold hover:underline inline-flex items-center gap-1"
-            >
-              <FaArrowLeft className="w-3 h-3" />
-              Voltar para o início
-            </Link>
+            {!waitlistSuccess ? (
+              <>
+                <Link
+                  href="/"
+                  className="hover:text-purple-950 font-semibold hover:underline inline-flex items-center gap-1"
+                >
+                  <FaArrowLeft className="w-3 h-3" />
+                  Voltar para o início
+                </Link>
 
-            <Link
-              href="/entrar"
-              className="text-purple-700 hover:text-purple-950 font-bold hover:underline inline-flex items-center gap-1"
-            >
-              Já é cadastrada? Entrar
-              <FaArrowRight className="w-3 h-3" />
-            </Link>
+                <Link
+                  href="/entrar"
+                  className="text-purple-700 hover:text-purple-950 font-bold hover:underline inline-flex items-center gap-1"
+                >
+                  Já é cadastrada? Entrar
+                  <FaArrowRight className="w-3 h-3" />
+                </Link>
+              </>
+            ) : (
+              <div className="w-full text-center">
+                <Link
+                  href="/entrar"
+                  className="text-purple-700 hover:text-purple-950 font-bold hover:underline inline-flex items-center gap-1"
+                >
+                  Já possui uma conta ativa? Acessar meu espaço
+                  <FaArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            )}
           </div>
 
         </div>
@@ -295,7 +329,7 @@ export function SignUpFlow() {
 
   // Se HOUVER convite VIP ativo -> Exibe fluxo de cadastro normal
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 md:p-8 space-y-4">
+    <div className="w-full max-w-4xl mx-auto space-y-4">
       <div className="bg-linear-to-r from-purple-700 to-purple-900 text-white p-4 rounded-2xl shadow-md flex items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-white/15 text-amber-300">

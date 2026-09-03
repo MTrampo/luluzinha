@@ -4,6 +4,8 @@ import "@/commons/styles/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { SubscriptionGuard } from "@/components/subscription/guard";
 import { CookieConsent } from "@/components/feedbacks/cookie-consent";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "Luluzinha | Seu Espaço Digital",
@@ -24,9 +26,13 @@ export default function RootLayout({
 
         <SubscriptionGuard />
         {children}
+        <Analytics />
+        <SpeedInsights />
         <Toaster richColors position="top-right" />
         <CookieConsent />
       </body>
     </html>
   );
 }
+
+

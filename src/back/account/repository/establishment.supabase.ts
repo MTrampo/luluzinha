@@ -1,6 +1,17 @@
 import { authSupabase, serverSupabase } from "@/commons/lib/supabase/server";
+import { internalSupabase } from "@/commons/lib/supabase/internal";
 import { EstablishmentUpdateInput, EstablishmentSupabase } from "@/commons/models/establishment";
 import { PostgrestError } from "@supabase/supabase-js";
+
+async function getClient() {
+  try {
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return internalSupabase();
+    }
+  } catch {}
+  return await serverSupabase();
+}
+
 
 export const selectIdAndSubscriptionIdEstablishmentByUserIdSupabase = async (userId: string) => {
   const supabase = await serverSupabase()
@@ -27,7 +38,7 @@ export const getEstablishmentBySubscriptionIdSupabase = async (subscriptionId: s
 }
 
 export const getEstablishmentsByOwnerIdSupabase = async (userId: string) => {
-  const supabase = await serverSupabase()
+  const supabase = await getClient()
 
   const { data, error } = await supabase
     .from('establishments')
@@ -36,6 +47,7 @@ export const getEstablishmentsByOwnerIdSupabase = async (userId: string) => {
 
   return {  data, error }
 }
+
 
 export const getEstablishmentsByOwnerIdAuthSupabase = async (userId: string, token: string) => {
   const supabase = authSupabase(token)
@@ -90,7 +102,7 @@ export const insertEstablishmentSupabase = async (
     opening_hours: any
   }
 ) => {
-  const supabase = await serverSupabase()
+  const supabase = await getClient()
 
   const { data, error } = await supabase
     .from('establishments')
@@ -102,4 +114,5 @@ export const insertEstablishmentSupabase = async (
     .single()
 
   return { data, error }
-}
+}
+

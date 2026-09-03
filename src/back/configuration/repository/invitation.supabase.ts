@@ -1,19 +1,29 @@
 import { serverSupabase } from "@/commons/lib/supabase/server";
+import { internalSupabase } from "@/commons/lib/supabase/internal";
+
+async function getClient() {
+  try {
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return internalSupabase();
+    }
+  } catch {}
+  return await serverSupabase();
+}
 
 export async function getInvitationByTokenSupabase(token: string) {
-  const supabase = await serverSupabase();
+  const supabase = await getClient();
 
   const { data, error } = await supabase
     .from('plan_invitations')
     .select('*')
     .eq('token', token)
-    .single();
+    .maybeSingle();
 
   return { data, error };
 }
 
 export async function consumeInvitationSupabase(invitationId: string, userId: string) {
-  const supabase = await serverSupabase();
+  const supabase = await getClient();
 
   const { data, error } = await supabase
     .from('plan_invitations')
@@ -37,7 +47,7 @@ export async function createInvitationSupabase(params: {
   recipientEmail?: string;
   expiresInHours?: number;
 }) {
-  const supabase = await serverSupabase();
+  const supabase = await getClient();
   const expiresInMs = (params.expiresInHours ?? 24) * 60 * 60 * 1000;
   const expiresAt = new Date(Date.now() + expiresInMs).toISOString();
 
@@ -58,3 +68,4 @@ export async function createInvitationSupabase(params: {
 
   return { data, error };
 }
+

@@ -1,5 +1,15 @@
 import { authSupabase, serverSupabase } from "@/commons/lib/supabase/server";
+import { internalSupabase } from "@/commons/lib/supabase/internal";
 import { SubscriptionPreApprovalPayload, SubscriptionUpdatePayload } from "@/commons/models/subscription";
+
+async function getClient() {
+  try {
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return internalSupabase();
+    }
+  } catch {}
+  return await serverSupabase();
+}
 
 export const getSubscriptionIdByUserIdSupabase = async (userId: string) => {
   const supabase = await serverSupabase()
@@ -30,7 +40,8 @@ export const upsertSubscriptionSupabase = async (
   subscriptionId: string | null,
   establishmentId: string
 ) => {
-  const supabase = await serverSupabase()
+  const supabase = await getClient()
+
 
   // Se existe subscription_id, atualiza. Caso contrário, cria um novo registro
   if (subscriptionId) {

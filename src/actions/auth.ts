@@ -64,6 +64,8 @@ export const verifyOtpCodeAction = async (email: string, code: string, invitatio
       try {
         const { activateInvitationAction } = await import("@/actions/invitation")
         await activateInvitationAction(userId, invitationToken)
+        const { clearInvitationCookie } = await import("@/commons/lib/auth/invitation")
+        await clearInvitationCookie()
       } catch (err) {
         console.error("Erro ao ativar convite após verificação de OTP:", err)
       }
@@ -72,6 +74,7 @@ export const verifyOtpCodeAction = async (email: string, code: string, invitatio
 
   return response
 }
+
 
 
 export const signOutAction = async () => {
