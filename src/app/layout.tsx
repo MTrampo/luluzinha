@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og.png",
+        url: "/opengraph-image.png",
         width: 1200,
         height: 630,
         alt: "Luluzinha - Seu Espaço Digital",
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     title: "Luluzinha | Seu Espaço Digital",
     description:
       "Organize sua agenda de atendimentos, suas poderosas e seu caixa com leveza e profissionalismo.",
-    images: ["/og.png"],
+    images: ["/opengraph-image.png"],
   },
   robots: {
     index: true,
