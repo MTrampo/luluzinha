@@ -9,4 +9,5 @@ ignoredBuiltDependencies:
 minimumReleaseAgeExclude:
   - fflate@0.7.5
 overrides:
-  fflate: ^0.7.5
+  fflate: '>=0.7.5'
+  satori>fflate: '>=0.7.5'
