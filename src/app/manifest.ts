@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Luluzinha',
     short_name: 'Luluzinha',
-    description: 'Seu Espaço Digital Completo para Manicures',
+    description: 'Seu Espaço Digital',
     start_url: '/',
     display: 'standalone',
     background_color: '#f9edff',

@@ -19,16 +19,16 @@ import type { Metadata } from "next";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Luluzinha | Seu Espaço Digital Completo para Manicures",
+  title: "Luluzinha",
   description:
-    "O aplicativo acolhedor e completo para manicures e nail designers organizarem sua agenda de atendimentos, suas poderosas clientes e seu caixa.",
+    "Criamos um espaço completo e fácil de usar, eliminando a papelada para você focar no que faz de melhor: deixar as unhas maravilhosas.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Luluzinha | Seu Espaço Digital Completo para Manicures",
+    title: "Luluzinha",
     description:
-      "Organize sua agenda de atendimentos, suas poderosas e seu caixa com leveza e carinho. O aplicativo feito para você brilhar ainda mais.",
+      "Organize sua agenda de atendimentos, suas poderosas e seu caixa com leveza e carinho. O sistema feito para você brilhar ainda mais.",
     url: "/",
   },
 };
@@ -54,7 +54,7 @@ export default async function Home() {
         "@type": "SoftwareApplication",
         "name": "Luluzinha",
         "url": appUrl,
-        "image": `${appUrl}/og.png`,
+        "image": `${appUrl}/opengraph-image.png`,
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web, iOS, Android",
         "offers": {
@@ -62,7 +62,7 @@ export default async function Home() {
           "price": "29.90",
           "priceCurrency": "BRL",
         },
-        "description": "Ecossistema digital completo e acolhedor para gestão de agenda de atendimentos, clientes poderosas e controle de caixa para manicures e nail designers.",
+        "description": "Criamos um espaço completo e fácil de usar, eliminando a papelada para você focar no que faz de melhor: deixar as unhas maravilhosas.",
         "inLanguage": "pt-BR",
         "areaServed": "BR",
       },
@@ -174,10 +174,10 @@ export default async function Home() {
               {/* Grid Responsivo Adaptativo para até 3 Planos */}
               <div
                 className={`grid gap-8 mx-auto items-stretch ${publicPlans.length === 1
-                    ? "max-w-md grid-cols-1"
-                    : publicPlans.length === 2
-                      ? "max-w-4xl grid-cols-1 md:grid-cols-2"
-                      : "max-w-6xl grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  ? "max-w-md grid-cols-1"
+                  : publicPlans.length === 2
+                    ? "max-w-4xl grid-cols-1 md:grid-cols-2"
+                    : "max-w-6xl grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
                   }`}
               >
                 {publicPlans.map((plan) => (

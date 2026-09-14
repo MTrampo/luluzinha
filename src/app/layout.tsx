@@ -21,9 +21,9 @@ export const metadata: Metadata = {
   description:
     "Criamos um espaço completo e fácil de usar, eliminando a papelada para você focar no que faz de melhor: deixar as unhas maravilhosas.",
   applicationName: "Luluzinha",
-  authors: [{ name: "Luluzinha", url: appUrl }],
-  creator: "Luluzinha Tecnologia",
-  publisher: "Luluzinha",
+  authors: [{ name: "Meu Trampo", url: "https://meutrampo.dev.br" }],
+  creator: "Meu Trampo",
+  publisher: "Meu Trampo",
   keywords: [
     "manicure",
     "nail designer",
