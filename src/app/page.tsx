@@ -25,12 +25,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  openGraph: {
-    title: "Luluzinha",
-    description:
-      "Organize sua agenda de atendimentos, suas poderosas e seu caixa com leveza e carinho. O sistema feito para você brilhar ainda mais.",
-    url: "/",
-  },
 };
 
 export default async function Home() {
