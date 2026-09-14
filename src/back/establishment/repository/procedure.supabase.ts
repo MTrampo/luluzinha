@@ -58,3 +58,13 @@ export const getProceduresByEstablishmentSupabase = async (establishmentId: stri
 
   return { data, error }
 }
+
+export const countAllProceduresByEstablishmentSupabase = async (establishmentId: string) => {
+  const supabase = await serverSupabase()
+  const { count, error } = await supabase
+    .from('procedures')
+    .select('*', { count: 'exact', head: true })
+    .eq('establishment_id', establishmentId)
+
+  return { count: count ?? 0, error }
+}

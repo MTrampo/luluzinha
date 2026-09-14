@@ -45,3 +45,20 @@ export const procedureFormatter = (data: ProcedureSupabase): ProcedureFormatted 
 export const proceduresFormatter = (data: ProcedureSupabase[] | null): ProcedureFormatted[] | null => {
   return data ? data.map(procedureFormatter) : null;
 };
+
+export interface ProcedureLimitInfo {
+  totalCount: number;
+  maxProcedures: number;
+  canAddMore: boolean;
+  planName: string;
+  historyRetentionDays: number;
+}
+
+export const createDefaultProcedureLimitInfo = (): ProcedureLimitInfo => ({
+  totalCount: 0,
+  maxProcedures: 6,
+  canAddMore: false,
+  planName: "Fundadoras",
+  historyRetentionDays: 30,
+});
+

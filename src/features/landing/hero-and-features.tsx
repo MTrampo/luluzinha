@@ -30,7 +30,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
             <div className="lg:col-span-7 flex flex-col justify-center text-left space-y-12 animate-hero-text-content opacity-0">
               <div className="space-y-6">
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-purple-950 tracking-tight leading-[1.1] font-lexend animate-hero-title opacity-0">
-                  Seu espaço digital completo para você <span className="text-purple-600 font-extrabold">brilhar ainda mais</span>
+                  Seu espaço digital completo, para você <span className="text-purple-600 font-extrabold">brilhar ainda mais</span>
                 </h1>
 
                 {/* Mockup Laptop & Celular para Mobile/Tablet (Abaixo do título) */}

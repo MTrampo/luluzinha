@@ -2,6 +2,27 @@ import { Database } from "@/commons/types/database.types";
 import { formatCurrencyBRL } from "@/commons/utils/format";
 
 export type PlanConfigSupabase = Database['public']['Tables']['plans']['Row'];
+export type ConfigPlanSupabase = Database['public']['Tables']['config_plans']['Row'];
+
+export interface ConfigPlanFormatted {
+  id: string;
+  name: string;
+  maxProcedures: number;
+  maxUsers: number;
+  historyRetentionDays: number;
+  isDefault: boolean;
+}
+
+export const configPlanFormatter = (data: ConfigPlanSupabase): ConfigPlanFormatted => {
+  return {
+    id: data.id,
+    name: data.name,
+    maxProcedures: data.max_procedures ?? 6,
+    maxUsers: data.max_users ?? 1,
+    historyRetentionDays: data.history_retention_days ?? 30,
+    isDefault: data.is_default ?? false,
+  };
+};
 
 export interface PlanConfigFormatted {
   id: string;
@@ -11,6 +32,7 @@ export interface PlanConfigFormatted {
   price: number;
   priceFormatted: string;
   mpPlanId: string;
+  configPlanId: string | null;
   maxProcedures: number;
   maxUsers: number;
   historyRetentionDays: number;
@@ -20,9 +42,13 @@ export interface PlanConfigFormatted {
   badge: string | null;
   sortOrder: number;
   features: string[];
+  config?: ConfigPlanFormatted | null;
 }
 
-export const planFormatter = (data: PlanConfigSupabase): PlanConfigFormatted => {
+export const planFormatter = (
+  data: PlanConfigSupabase,
+  config?: ConfigPlanSupabase | null
+): PlanConfigFormatted => {
   let parsedFeatures: string[] = [];
 
   if (data.features) {
@@ -40,6 +66,10 @@ export const planFormatter = (data: PlanConfigSupabase): PlanConfigFormatted => 
     }
   }
 
+  const maxProcedures = config?.max_procedures ?? 6;
+  const maxUsers = config?.max_users ?? 1;
+  const historyRetentionDays = config?.history_retention_days ?? 30;
+
   return {
     id: data.id,
     slug: data.slug,
@@ -48,18 +78,20 @@ export const planFormatter = (data: PlanConfigSupabase): PlanConfigFormatted => 
     price: Number(data.price),
     priceFormatted: formatCurrencyBRL(Number(data.price)),
     mpPlanId: data.mp_plan_id,
-    maxProcedures: data.max_procedures ?? 6,
-    maxUsers: data.max_users ?? 1,
-    historyRetentionDays: data.history_retention_days ?? 30,
+    configPlanId: data.config_plan_id,
+    maxProcedures,
+    maxUsers,
+    historyRetentionDays,
     billingPeriod: data.billing_period || 'monthly',
     isActive: data.is_active ?? true,
     isFeatured: data.is_featured ?? false,
     badge: data.badge,
     sortOrder: data.sort_order ?? 0,
     features: parsedFeatures,
+    config: config ? configPlanFormatter(config) : null,
   };
 };
 
 export const plansFormatter = (data: PlanConfigSupabase[] | null): PlanConfigFormatted[] => {
-  return data ? data.map(planFormatter) : [];
+  return data ? data.map(p => planFormatter(p)) : [];
 };

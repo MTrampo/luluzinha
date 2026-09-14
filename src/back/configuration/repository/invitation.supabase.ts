@@ -40,6 +40,21 @@ export async function consumeInvitationSupabase(invitationId: string, userId: st
   return { data, error };
 }
 
+export async function deactivateInvitationSupabase(invitationId: string) {
+  const supabase = await getClient();
+
+  const { data, error } = await supabase
+    .from('plan_invitations')
+    .update({
+      is_active: false,
+    })
+    .eq('id', invitationId)
+    .select()
+    .single();
+
+  return { data, error };
+}
+
 export async function createInvitationSupabase(params: {
   token: string;
   planSlug: string;

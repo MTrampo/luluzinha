@@ -6,7 +6,20 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { AlphaBanner } from "@/components/feedbacks/beta-banner"
 import { OnboardingGuard } from "@/components/establishment/onboarding-guard"
 
+import type { Metadata } from "next"
+
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Luluzinha",
+    default: "Meu Espaço | Luluzinha",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
 

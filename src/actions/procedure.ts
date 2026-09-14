@@ -1,23 +1,30 @@
 'use server'
 
 import { revalidatePath } from "next/cache";
-
-import { ProcedureFormInputs, ProcedureInsertPayload } from "@/commons/models/procedure";
+import {
+  ProcedureFormInputs,
+  ProcedureInsertPayload,
+  ProcedureLimitInfo,
+  createDefaultProcedureLimitInfo,
+} from "@/commons/models/procedure";
 import { HttpStatusEnum } from "@/commons/enums/http";
-import { addProcedureApi, listProceduresApi, updateProcedureApi, deleteProcedureApi, toggleProcedureActiveApi } from "@/back/establishment/service/procedure.api";
+import {
+  addProcedureApi,
+  listProceduresApi,
+  updateProcedureApi,
+  deleteProcedureApi,
+  toggleProcedureActiveApi,
+  getProcedureLimitInfoApi,
+} from "@/back/establishment/service/procedure.api";
 import { convertTimeToMinutes, parseCurrencyBRLToNumber } from "@/commons/utils/helper";
 import { getEstablishmentCookie } from "@/commons/lib/auth/establishment";
-
+import { ApiResponse } from "@/commons/lib/http/responses";
 
 export const addProcedureAction = async (input: ProcedureFormInputs) => {
   const establishmentId = await getEstablishmentCookie();
 
   if (!establishmentId) {
-    return {
-      status: HttpStatusEnum.BadRequest,
-      message: "Estabelecimento não identificado.",
-      data: null
-    }
+    return ApiResponse.BadRequest({ message: "Estabelecimento não identificado." });
   }
 
   const payload: ProcedureInsertPayload = {
@@ -43,11 +50,7 @@ export const getProceduresAction = async () => {
   const establishmentId = await getEstablishmentCookie();
 
   if (!establishmentId) {
-    return {
-      status: HttpStatusEnum.BadRequest,
-      message: "Estabelecimento não identificado.",
-      data: []
-    }
+    return ApiResponse.Ok({ message: "Estabelecimento não identificado.", data: [] });
   }
 
   const response = await listProceduresApi(establishmentId);
@@ -58,11 +61,7 @@ export const updateProcedureAction = async (id: string, input: ProcedureFormInpu
   const establishmentId = await getEstablishmentCookie();
 
   if (!establishmentId) {
-    return {
-      status: HttpStatusEnum.BadRequest,
-      message: "Estabelecimento não identificado.",
-      data: null
-    }
+    return ApiResponse.BadRequest({ message: "Estabelecimento não identificado." });
   }
 
   const payload: Partial<ProcedureInsertPayload> = {
@@ -85,11 +84,7 @@ export const deleteProcedureAction = async (id: string) => {
   const establishmentId = await getEstablishmentCookie();
 
   if (!establishmentId) {
-    return {
-      status: HttpStatusEnum.BadRequest,
-      message: "Estabelecimento não identificado.",
-      data: null
-    }
+    return ApiResponse.BadRequest({ message: "Estabelecimento não identificado." });
   }
 
   const response = await deleteProcedureApi(id);
@@ -105,11 +100,7 @@ export const toggleProcedureActiveAction = async (id: string, isActive: boolean)
   const establishmentId = await getEstablishmentCookie();
 
   if (!establishmentId) {
-    return {
-      status: HttpStatusEnum.BadRequest,
-      message: "Estabelecimento não identificado.",
-      data: null
-    }
+    return ApiResponse.BadRequest({ message: "Estabelecimento não identificado." });
   }
 
   const response = await toggleProcedureActiveApi(id, isActive);
@@ -120,3 +111,17 @@ export const toggleProcedureActiveAction = async (id: string, isActive: boolean)
 
   return response;
 }
+
+export const getProcedureLimitInfoAction = async () => {
+  const establishmentId = await getEstablishmentCookie();
+
+  if (!establishmentId) {
+    return ApiResponse.Ok<ProcedureLimitInfo>({
+      message: "Nenhum espaço ativo.",
+      data: createDefaultProcedureLimitInfo(),
+    });
+  }
+
+  return await getProcedureLimitInfoApi(establishmentId);
+}
+

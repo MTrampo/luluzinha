@@ -12,7 +12,24 @@ import { StoryShareShowcase } from "@/features/landing/story-share-showcase";
 import { HowItWorksSection } from "@/features/landing/how-it-works";
 import { LandingPricingCard } from "@/features/landing/pricing-card";
 
+import type { Metadata } from "next";
+
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: "Luluzinha | Seu Espaço Digital Completo para Manicures",
+  description:
+    "O aplicativo acolhedor e completo para manicures e nail designers organizarem sua agenda de atendimentos, suas poderosas clientes e seu caixa.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Luluzinha | Seu Espaço Digital Completo para Manicures",
+    description:
+      "Organize sua agenda de atendimentos, suas poderosas e seu caixa com leveza e carinho. O aplicativo feito para você brilhar ainda mais.",
+    url: "/",
+  },
+};
 
 export default async function Home() {
 
@@ -28,9 +45,41 @@ export default async function Home() {
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .slice(0, 3);
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://luluzinha.app";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Luluzinha",
+        "url": appUrl,
+        "image": `${appUrl}/og.png`,
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web, iOS, Android",
+        "offers": {
+          "@type": "Offer",
+          "price": "29.90",
+          "priceCurrency": "BRL",
+        },
+        "description": "Ecossistema digital completo e acolhedor para gestão de agenda de atendimentos, clientes poderosas e controle de caixa para manicures e nail designers.",
+        "inLanguage": "pt-BR",
+        "areaServed": "BR",
+      },
+      {
+        "@type": "Organization",
+        "name": "Luluzinha",
+        "url": appUrl,
+        "logo": `${appUrl}/logo.png`,
+      },
+    ],
+  };
 
   return (
     <div className="min-h-screen bg-purple-50/20 flex flex-col antialiased overflow-x-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Header com estilo roxo translúcido */}
       <Header />
 

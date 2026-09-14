@@ -2,6 +2,11 @@ import Header from "@/components/header/dashboard";
 import { FinanceHistoryList } from "@/features/dashboard/finance/history";
 import { Overview } from "@/features/dashboard/finance/overview";
 import { getFinanceDashboardAction } from "@/actions/finance";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Seu Caixa",
+};
 
 export default async function CashRegister() {
   const { data, error } = await getFinanceDashboardAction();

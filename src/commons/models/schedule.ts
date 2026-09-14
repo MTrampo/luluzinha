@@ -261,3 +261,34 @@ export function formatBlock(block: BlockScheduleSupabase): BlockFormatted {
 export function blocksFormatter(data: BlockScheduleSupabase[] | null): BlockFormatted[] {
   return data ? data.map(formatBlock) : [];
 }
+
+export interface ScheduleBusyInterval {
+  startAt: string;
+  endAt: string;
+}
+
+export interface ScheduleDateData {
+  schedules: ScheduleDash[];
+  blocks: BlockFormatted[];
+  busyIntervals: ScheduleBusyInterval[];
+  historyRetentionDays: number;
+  isRestrictedByRetention: boolean;
+}
+
+export interface ScheduleRetentionData {
+  historyRetentionDays: number;
+  planName: string;
+}
+
+export const createEmptyScheduleDateData = (historyRetentionDays = 30): ScheduleDateData => ({
+  schedules: [],
+  blocks: [],
+  busyIntervals: [],
+  historyRetentionDays,
+  isRestrictedByRetention: false,
+});
+
+export const createDefaultScheduleRetentionData = (): ScheduleRetentionData => ({
+  historyRetentionDays: 30,
+  planName: "Fundadoras",
+});

@@ -23,9 +23,10 @@ type TimelineItem =
 interface ScheduleProps {
   schedules: ScheduleDash[];
   blocks: BlockFormatted[];
+  historyRetentionDays?: number;
 }
 
-export function Schedule({ schedules, blocks }: ScheduleProps) {
+export function Schedule({ schedules, blocks, historyRetentionDays }: ScheduleProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dateParam = searchParams.get("data");
@@ -198,6 +199,7 @@ export function Schedule({ schedules, blocks }: ScheduleProps) {
                       onSelectDate={handleDateSelect}
                       filters={filters}
                       onFilterChange={setFilters}
+                      historyRetentionDays={historyRetentionDays}
                     />
                   )}
                 </div>
@@ -239,6 +241,7 @@ export function Schedule({ schedules, blocks }: ScheduleProps) {
               onSelectDate={handleDateSelect}
               filters={filters}
               onFilterChange={setFilters}
+              historyRetentionDays={historyRetentionDays}
             />
           </div>
         </div>

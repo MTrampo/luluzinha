@@ -1,9 +1,28 @@
 'use server'
 
-import { createScheduleApi, deleteScheduleApi, getScheduleByIdApi, getSchedulesApi, updateScheduleApi, getSchedulesByDateApi, getSchedulesWeekApi, updateScheduleWithProceduresApi, resumeScheduleApi } from "@/back/establishment/service/schedule.api";
+import {
+  createScheduleApi,
+  deleteScheduleApi,
+  getScheduleByIdApi,
+  getSchedulesApi,
+  updateScheduleApi,
+  getSchedulesByDateApi,
+  getSchedulesWeekApi,
+  updateScheduleWithProceduresApi,
+  resumeScheduleApi,
+  getEstablishmentRetentionDaysApi,
+} from "@/back/establishment/service/schedule.api";
 import { revalidatePath } from "next/cache";
 import { HttpStatusEnum } from "@/commons/enums/http";
-import { ScheduleInsertPayload, ScheduleUpdatePayload, ScheduleProcedureInsertPayload } from "@/commons/models/schedule";
+import {
+  ScheduleInsertPayload,
+  ScheduleUpdatePayload,
+  ScheduleProcedureInsertPayload,
+  ScheduleDateData,
+  ScheduleRetentionData,
+  createEmptyScheduleDateData,
+  createDefaultScheduleRetentionData,
+} from "@/commons/models/schedule";
 import { getOrResolveEstablishmentId } from "@/commons/lib/auth/establishment";
 import { ApiResponse } from "@/commons/lib/http/responses";
 
@@ -25,7 +44,12 @@ export const getSchedulesAction = async () => {
 
 export const getSchedulesByDateAction = async (dateIsoString: string) => {
   const id = await getOrResolveEstablishmentId();
-  if (!id) return ApiResponse.Ok({ message: "Nenhum espaço ativo.", data: { schedules: [], blocks: [], busyIntervals: [] } });
+  if (!id) {
+    return ApiResponse.Ok<ScheduleDateData>({
+      message: "Nenhum espaço ativo.",
+      data: createEmptyScheduleDateData(),
+    });
+  }
   return await getSchedulesByDateApi(id, dateIsoString);
 }
 
@@ -86,4 +110,16 @@ export const resumeScheduleAction = async (scheduleId: string, startAt: string, 
 
   return response;
 }
+
+export const getScheduleRetentionDaysAction = async () => {
+  const id = await getOrResolveEstablishmentId();
+  if (!id) {
+    return ApiResponse.Ok<ScheduleRetentionData>({
+      message: "Nenhum espaço ativo.",
+      data: createDefaultScheduleRetentionData(),
+    });
+  }
+  return await getEstablishmentRetentionDaysApi(id);
+}
+
 

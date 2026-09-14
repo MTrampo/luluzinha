@@ -99,19 +99,50 @@ export type Database = {
           }
         ]
       }
+      config_plans: {
+        Row: {
+          created_at: string | null
+          history_retention_days: number
+          id: string
+          is_default: boolean
+          max_procedures: number
+          max_users: number
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          history_retention_days?: number
+          id?: string
+          is_default?: boolean
+          max_procedures?: number
+          max_users?: number
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          history_retention_days?: number
+          id?: string
+          is_default?: boolean
+          max_procedures?: number
+          max_users?: number
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       plans: {
         Row: {
           badge: string | null
           billing_period: string | null
+          config_plan_id: string | null
           created_at: string | null
           description: string | null
           features: Json | null
-          history_retention_days: number | null
           id: string
           is_active: boolean | null
           is_featured: boolean | null
-          max_procedures: number | null
-          max_users: number | null
           mp_plan_id: string
           name: string
           price: number
@@ -122,15 +153,13 @@ export type Database = {
         Insert: {
           badge?: string | null
           billing_period?: string | null
+          config_plan_id?: string | null
           created_at?: string | null
           description?: string | null
           features?: Json | null
-          history_retention_days?: number | null
           id?: string
           is_active?: boolean | null
           is_featured?: boolean | null
-          max_procedures?: number | null
-          max_users?: number | null
           mp_plan_id: string
           name: string
           price: number
@@ -141,15 +170,13 @@ export type Database = {
         Update: {
           badge?: string | null
           billing_period?: string | null
+          config_plan_id?: string | null
           created_at?: string | null
           description?: string | null
           features?: Json | null
-          history_retention_days?: number | null
           id?: string
           is_active?: boolean | null
           is_featured?: boolean | null
-          max_procedures?: number | null
-          max_users?: number | null
           mp_plan_id?: string
           name?: string
           price?: number
@@ -157,7 +184,15 @@ export type Database = {
           sort_order?: number | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "plans_config_plan_id_fkey"
+            columns: ["config_plan_id"]
+            isOneToOne: false
+            referencedRelation: "config_plans"
+            referencedColumns: ["id"]
+          }
+        ]
       }
 
       customers: {

@@ -15,38 +15,45 @@ export const ApiResponse = {
     data: input.data as T,
   }),
 
-  BadRequest: (input: ResponseInput<null>): ResponseProps<null> => ({
+  BadRequest: <T = null>(input: ResponseInput<T>): ResponseProps<T> => ({
     status: HttpStatusEnum.BadRequest,
     message: input.message,
-    data: null,
+    data: (input.data ?? null) as T,
     error: input.error
   }),
 
-  Unauthorized: (input: ResponseInput<null>): ResponseProps<null> => ({
+  Unauthorized: <T = null>(input: ResponseInput<T>): ResponseProps<T> => ({
     status: HttpStatusEnum.Unauthorized,
     message: input.message,
-    data: null,
+    data: (input.data ?? null) as T,
     error: input.error
   }),
 
-  NotFound: (input: ResponseInput<null>): ResponseProps<null> => ({
+  NotFound: <T = null>(input: ResponseInput<T>): ResponseProps<T> => ({
     status: HttpStatusEnum.NotFound,
     message: input.message,
-    data: null,
+    data: (input.data ?? null) as T,
     error: input.error
   }),
 
-  Conflict: (input: ResponseInput<null>): ResponseProps<null> => ({
+  Forbidden: <T = null>(input: ResponseInput<T>): ResponseProps<T> => ({
+    status: HttpStatusEnum.Forbidden,
+    message: input.message,
+    data: (input.data ?? null) as T,
+    error: input.error
+  }),
+
+  Conflict: <T = null>(input: ResponseInput<T>): ResponseProps<T> => ({
     status: HttpStatusEnum.Conflict,
     message: input.message,
-    data: null,
+    data: (input.data ?? null) as T,
     error: input.error
   }),
 
-  InternalError: (input: ResponseInput<null>): ResponseProps<null> => ({
+  InternalError: <T = null>(input: ResponseInput<T>): ResponseProps<T> => ({
     status: HttpStatusEnum.InternalServerError,
     message: input.message || "Erro interno no servidor",
-    data: null,
+    data: (input.data ?? null) as T,
     error: input.error
   }),
 };

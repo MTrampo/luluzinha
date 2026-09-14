@@ -1,6 +1,11 @@
 import Header from "@/components/header/dashboard";
 import { getSchedulesWeekAction } from "@/actions/schedule";
 import { CardWeekDay } from "@/features/dashboard";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Início",
+};
 
 export default async function Home() {
   const schedulesRes = await getSchedulesWeekAction();

@@ -4,7 +4,18 @@ import type { SubscriptionPayloadCookie } from '@/commons/models/subscription'
 import { SUB_SECRET_KEY } from '@/commons/constants/env'
 
 const publicApiRoutes = ['/api/webhooks']
-const publicPaths = ['/', '/entrar', '/cadastrar', '/assinatura', '/documento/termo', '/documento/politica']
+const publicPaths = [
+  '/',
+  '/entrar',
+  '/cadastrar',
+  '/assinatura',
+  '/documento/termo',
+  '/documento/politica',
+  '/manifest.webmanifest',
+  '/manifest.json',
+  '/robots.txt',
+  '/sitemap.xml',
+]
 const authPaths = ['/entrar', '/cadastrar']
 
 const GRACE_PERIOD_MS = 3 * 24 * 60 * 60 * 1000 // 3 dias em ms

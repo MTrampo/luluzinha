@@ -1,15 +1,35 @@
 import { ApiResponse } from "@/commons/lib/http/responses";
-import { ProcedureInsertPayload, ProcedureUpdatePayload, proceduresFormatter } from "@/commons/models/procedure";
+import { ProcedureInsertPayload, ProcedureUpdatePayload, proceduresFormatter, ProcedureLimitInfo } from "@/commons/models/procedure";
 import {
   addProcedureSupabase,
   updateProcedureSupabase,
   setProcedureActiveSupabase,
   deleteProcedureSupabase,
   getProceduresByEstablishmentSupabase,
+  countAllProceduresByEstablishmentSupabase,
 } from "../repository/procedure.supabase";
+import { getPlanConfigByEstablishmentIdSupabase } from "@/back/account/repository/subscription.supabase";
 import { nowBrazilIso } from "@/commons/utils/helper";
 
 export const addProcedureApi = async (payload: ProcedureInsertPayload) => {
+  // 1. Validar limite de procedimentos do plano
+  const { data: planLimits } = await getPlanConfigByEstablishmentIdSupabase(payload.establishment_id);
+  const { count, error: countError } = await countAllProceduresByEstablishmentSupabase(payload.establishment_id);
+
+  if (countError) {
+    return ApiResponse.InternalError({
+      message: "Erro ao verificar limites do plano.",
+      error: countError.message
+    });
+  }
+
+  if (count >= planLimits.maxProcedures) {
+    return ApiResponse.Forbidden({
+      message: `Você atingiu o limite de ${planLimits.maxProcedures} procedimentos cadastrados no seu plano. Para adicionar novos serviços, você pode excluir procedimentos que não utiliza ou expandir seu espaço.`,
+      error: "limite_procedimentos_atingido"
+    });
+  }
+
   const payloadToInsert: ProcedureInsertPayload = {
     name: payload.name,
     duration: payload.duration,
@@ -103,4 +123,31 @@ export const listProceduresApi = async (establishmentId: string) => {
     message: "Procedimentos obtidos com sucesso.",
     data: proceduresFormatter(data)
   })
+}
+
+export const getProcedureLimitInfoApi = async (establishmentId: string) => {
+  const { data: planLimits } = await getPlanConfigByEstablishmentIdSupabase(establishmentId);
+  const { count, error } = await countAllProceduresByEstablishmentSupabase(establishmentId);
+
+  if (error) {
+    return ApiResponse.InternalError({
+      message: "Erro ao verificar limites de procedimentos.",
+      error: error.message
+    });
+  }
+
+  const totalCount = count ?? 0;
+  const maxProcedures = planLimits.maxProcedures;
+  const canAddMore = totalCount < maxProcedures;
+
+  return ApiResponse.Ok<ProcedureLimitInfo>({
+    message: "Limites de procedimentos obtidos com sucesso.",
+    data: {
+      totalCount,
+      maxProcedures,
+      canAddMore,
+      planName: planLimits.planName,
+      historyRetentionDays: planLimits.historyRetentionDays,
+    }
+  });
 }

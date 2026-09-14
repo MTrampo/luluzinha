@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { ChangeEvent, useState, useEffect, useMemo, useRef } from "react"
-import { addMonths } from "date-fns"
+import { addMonths, subDays, startOfDay } from "date-fns"
 import { Calendar } from "@/components/ui/calendar"
 import { Button } from "@/components/ui/button"
 import { FaCalendarPlus, FaTableCellsRowLock, FaLock, FaMagnifyingGlass } from "react-icons/fa6"
@@ -20,12 +20,14 @@ interface NavCalendarProps {
   onSelectDate: (date: Date | undefined) => void
   filters: ScheduleFilters
   onFilterChange: (filters: ScheduleFilters) => void
+  historyRetentionDays?: number
 }
 
-export function NavCalendar({ selectedDate, onSelectDate, filters, onFilterChange }: NavCalendarProps) {
+export function NavCalendar({ selectedDate, onSelectDate, filters, onFilterChange, historyRetentionDays = 30 }: NavCalendarProps) {
   const [isBlockDialogOpen, setIsBlockDialogOpen] = useState(false)
   const [openSections, setOpenSections] = useState<string[]>(["calendar", "search", "status", "highlights"])
   const maxDate = useMemo(() => addMonths(new Date(), 3), [])
+  const minDate = useMemo(() => subDays(startOfDay(new Date()), historyRetentionDays), [historyRetentionDays])
 
   const [localSearch, setLocalSearch] = useState(filters.search)
   const [prevSearch, setPrevSearch] = useState(filters.search)
@@ -88,7 +90,7 @@ export function NavCalendar({ selectedDate, onSelectDate, filters, onFilterChang
         mode="single"
         selected={selectedDate}
         onSelect={onSelectDate}
-        disabled={{ after: maxDate }}
+        disabled={[{ after: maxDate }, { before: minDate }]}
         className="w-full flex justify-center p-0 bg-transparent"
         classNames={{
           month_caption: "flex justify-center items-center h-10 [@media(max-height:820px)]:h-7 w-full text-purple-900 font-bold px-10 mb-4 [@media(max-height:820px)]:mb-1 uppercase",
@@ -107,7 +109,7 @@ export function NavCalendar({ selectedDate, onSelectDate, filters, onFilterChang
         }}
       />
     )
-  }, [selectedDate, onSelectDate, maxDate])
+  }, [selectedDate, onSelectDate, maxDate, minDate])
 
   return (
     <aside className="w-full h-full flex flex-col bg-white overflow-hidden">
