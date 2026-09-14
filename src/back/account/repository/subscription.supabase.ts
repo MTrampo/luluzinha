@@ -29,7 +29,7 @@ export const getSubscriptionByMpSubscriptionIdSupabase = async (mpSubscriptionId
   const { data } = await supabase
     .from('subscriptions')
     .select('*')
-    .eq('mp_preapproval_id', mpSubscriptionId)
+    .eq('mp_subscription_id', mpSubscriptionId)
     .single()
 
   return data ?? null
