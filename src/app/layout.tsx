@@ -6,8 +6,7 @@ import { SubscriptionGuard } from "@/components/subscription/guard";
 import { CookieConsent } from "@/components/feedbacks/cookie-consent";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://luluzinha.app";
+import { APP_URL as appUrl } from "@/commons/constants/env";
 
 export const viewport: Viewport = {
   themeColor: "#3c0366",

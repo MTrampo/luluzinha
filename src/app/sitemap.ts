@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next';
+import { APP_URL } from '@/commons/constants/env';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://luluzinha.app';
+  const baseUrl = APP_URL;
   const lastModified = new Date();
 
   return [
