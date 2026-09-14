@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Luluzinha | Seu Espaço Digital",
+    title: "Luluzinha",
     description:
       "Organize sua agenda de atendimentos, suas poderosas e seu caixa com leveza e carinho. O sistema feito para você brilhar ainda mais.",
     url: appUrl,
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luluzinha | Seu Espaço Digital",
+    title: "Luluzinha",
     description:
       "Organize sua agenda de atendimentos, suas poderosas e seu caixa com leveza e profissionalismo.",
     images: ["/opengraph-image.png"],
