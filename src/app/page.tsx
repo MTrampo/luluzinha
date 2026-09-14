@@ -12,6 +12,8 @@ import { StoryShareShowcase } from "@/features/landing/story-share-showcase";
 import { HowItWorksSection } from "@/features/landing/how-it-works";
 import { LandingPricingCard } from "@/features/landing/pricing-card";
 
+import { APP_URL as appUrl } from "@/commons/constants/env";
+
 import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
@@ -45,7 +47,6 @@ export default async function Home() {
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .slice(0, 3);
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://luluzinha.app";
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
