@@ -1,4 +1,4 @@
-import { getProceduresAction } from "@/actions/procedure";
+import { getProceduresAction, getProcedureLimitInfoAction } from "@/actions/procedure";
 import { ProcedureFormatted } from "@/commons/models/procedure";
 import Procedures from "@/features/dashboard/procedures";
 import { ProcedureFeedbackEmpty, ProcedureFeedbackError } from "@/features/dashboard/procedures/feedback";
@@ -14,7 +14,10 @@ export default async function ProceduresPage(props: ProceduresPageProps) {
   let procedures: ProcedureFormatted[] = [];
   let errorMessage: string | null = null;
 
-  const response = await getProceduresAction();
+  const [response, limitRes] = await Promise.all([
+    getProceduresAction(),
+    getProcedureLimitInfoAction(),
+  ]);
 
   if (response.status === 200) {
     procedures = response.data || [];
@@ -30,5 +33,5 @@ export default async function ProceduresPage(props: ProceduresPageProps) {
   if (errorMessage) return <ProcedureFeedbackError message={errorMessage} />
   if (procedures.length === 0 && !q) return <ProcedureFeedbackEmpty />
 
-  return <Procedures procedures={procedures} />
+  return <Procedures procedures={procedures} limitInfo={limitRes.data} />
 }

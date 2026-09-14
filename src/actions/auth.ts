@@ -1,10 +1,22 @@
 'use server'
 
-import { confirmUserEmailApi, getUserLoggedApi, resetUserPasswordApi, sendPasswordResetEmailApi, signInUserApi, signOutApi, signUpUserApi, createProfileApi } from "@/back/account/service/auth.api";
+import {
+  confirmUserEmailApi,
+  getUserLoggedApi,
+  resetUserPasswordApi,
+  sendPasswordResetEmailApi,
+  signInUserApi,
+  signOutApi,
+  signUpUserApi,
+  createProfileApi,
+} from "@/back/account/service/auth.api";
 import { HttpStatusEnum } from "@/commons/enums/http";
 import { ForgotPasswordFormInputs, UserSignInFormInputs, UserSignUpFormInputs } from "@/commons/models/user";
 import { revalidatePath } from "next/cache";
 import { createEstablishmentApi } from "@/back/account/service/establishment.api";
+import { validateInvitationTokenApi } from "@/back/configuration/service/invitation.api";
+import { getInvitationCookie, clearInvitationCookie } from "@/commons/lib/auth/invitation";
+import { activateInvitationAction } from "@/actions/invitation";
 
 export const signInUserAction = async (input: UserSignInFormInputs) => {
   const response = await signInUserApi(input)
@@ -21,7 +33,6 @@ export const signUpUserAction = async (input: UserSignUpFormInputs, invitationTo
     }
   }
 
-  const { validateInvitationTokenApi } = await import("@/back/configuration/service/invitation.api");
   const invitationRes = await validateInvitationTokenApi(invitationToken);
 
   if (invitationRes.status !== HttpStatusEnum.Ok || !invitationRes.data) {
@@ -59,20 +70,24 @@ export const verifyOtpCodeAction = async (email: string, code: string, invitatio
       address: null
     })
 
-    // 3. Se houver token de convite, ativa a assinatura gratuita e consome o convite
-    if (invitationToken) {
+    // 3. Se houver token de convite (parâmetro ou cookie), ativa a assinatura gratuita e consome o convite
+    const activeToken = invitationToken || (await getInvitationCookie());
+
+    if (activeToken) {
       try {
-        const { activateInvitationAction } = await import("@/actions/invitation")
-        await activateInvitationAction(userId, invitationToken)
-        const { clearInvitationCookie } = await import("@/commons/lib/auth/invitation")
-        await clearInvitationCookie()
+        const activationRes = await activateInvitationAction(userId, activeToken);
+        if (activationRes.error) {
+          console.warn("Aviso ao ativar convite após OTP:", activationRes.error);
+        }
+        await clearInvitationCookie();
       } catch (err) {
-        console.error("Erro ao ativar convite após verificação de OTP:", err)
+        console.error("Erro ao ativar convite após verificação de OTP:", err);
       }
     }
   }
 
   return response
+
 }
 
 

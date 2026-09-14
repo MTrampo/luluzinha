@@ -12,7 +12,7 @@ export default async function SchedulePage({ searchParams }: SchedulePageProps) 
   const targetDate = data || todayBrazilIso();
 
   const response = await getSchedulesByDateAction(targetDate);
-  const { schedules = [], blocks = [] } = response.data || {};
+  const { schedules = [], blocks = [], historyRetentionDays } = response.data || {};
 
   return (
     <>
@@ -21,6 +21,7 @@ export default async function SchedulePage({ searchParams }: SchedulePageProps) 
         <Schedule
           schedules={schedules}
           blocks={blocks}
+          historyRetentionDays={historyRetentionDays}
         />
       </div>
     </>

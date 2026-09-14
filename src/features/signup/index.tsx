@@ -105,6 +105,8 @@ export function SignUpFlow({ initialToken }: SignUpFlowProps) {
       validateInvitationAction(activeToken).then((res) => {
         if (res.data && res.data.isAvailable) {
           setInvitation(res.data);
+        } else {
+          toast.error(res.message || "Este convite VIP já foi utilizado por outra Luluzinha ou expirou.");
         }
         setIsValidating(false);
       });

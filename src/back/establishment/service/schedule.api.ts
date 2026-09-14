@@ -1,10 +1,22 @@
 import { addScheduleSupabase, deleteScheduleSupabase, getScheduleByIdSupabase, getSchedulesByEstablishmentSupabase, updateScheduleSupabase, getSchedulesByDateSupabase, getSchedulesByRangeSupabase, checkScheduleConflictsSupabase, updateScheduleWithProceduresSupabase } from "../repository/schedule.supabase";
 import { getScheduleBlocksByDateSupabase } from "../repository/blocks.supabase";
+import { getPlanConfigByEstablishmentIdSupabase } from "@/back/account/repository/subscription.supabase";
 import { ApiResponse } from "@/commons/lib/http/responses";
 import { nowBrazilIso } from "@/commons/utils/helper";
-import { ScheduleInsertPayload, ScheduleUpdatePayload, ScheduleProcedureInsertPayload, schedulesFormatter, formatSchedule, schedulesWeekDayFormatter, schedulesDashFormatter, ScheduleDashSupabase, blocksFormatter } from "@/commons/models/schedule";
-import { startOfWeek, endOfWeek } from "date-fns";
+import { ScheduleInsertPayload, ScheduleUpdatePayload, ScheduleProcedureInsertPayload, schedulesFormatter, formatSchedule, schedulesWeekDayFormatter, schedulesDashFormatter, ScheduleDashSupabase, blocksFormatter, ScheduleDateData, ScheduleRetentionData, createEmptyScheduleDateData } from "@/commons/models/schedule";
+import { startOfWeek, endOfWeek, subDays, startOfDay, parseISO } from "date-fns";
 import { ScheduleStatusEnum } from "@/commons/enums/schedule";
+
+export const getEstablishmentRetentionDaysApi = async (establishmentId: string) => {
+  const { data: planLimits } = await getPlanConfigByEstablishmentIdSupabase(establishmentId);
+  return ApiResponse.Ok<ScheduleRetentionData>({
+    message: "Retenção obtida com sucesso.",
+    data: {
+      historyRetentionDays: planLimits.historyRetentionDays,
+      planName: planLimits.planName,
+    }
+  });
+};
 
 export const createScheduleApi = async (schedule: ScheduleInsertPayload, procedures: Omit<ScheduleProcedureInsertPayload, 'schedule_id'>[]) => {
   const payloadToInsert: ScheduleInsertPayload = {
@@ -63,6 +75,21 @@ export const getSchedulesApi = async (establishmentId: string) => {
 }
 
 export const getSchedulesByDateApi = async (establishmentId: string, dateIsoString: string) => {
+  // 1. Validação de Retenção do Plano
+  const { data: planLimits } = await getPlanConfigByEstablishmentIdSupabase(establishmentId);
+  const minAllowedDate = subDays(startOfDay(new Date()), planLimits.historyRetentionDays);
+  const requestedDate = parseISO(dateIsoString);
+
+  if (requestedDate < minAllowedDate) {
+    return ApiResponse.Ok<ScheduleDateData>({
+      message: `A data selecionada ultrapassa o limite de histórico de ${planLimits.historyRetentionDays} dias do seu plano.`,
+      data: {
+        ...createEmptyScheduleDateData(planLimits.historyRetentionDays),
+        isRestrictedByRetention: true,
+      }
+    });
+  }
+
   const [schedulesRes, blocksRes] = await Promise.all([
     getSchedulesByDateSupabase(establishmentId, dateIsoString),
     getScheduleBlocksByDateSupabase(establishmentId, dateIsoString)
@@ -89,12 +116,14 @@ export const getSchedulesByDateApi = async (establishmentId: string, dateIsoStri
     }))
   ];
 
-  return ApiResponse.Ok({
+  return ApiResponse.Ok<ScheduleDateData>({
     message: "Dados da agenda obtidos com sucesso.",
     data: {
       schedules,
       blocks,
-      busyIntervals
+      busyIntervals,
+      historyRetentionDays: planLimits.historyRetentionDays,
+      isRestrictedByRetention: false,
     }
   });
 }

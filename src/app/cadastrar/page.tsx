@@ -1,7 +1,7 @@
 import { SignUpFlow } from "@/features/signup";
 import { Suspense } from "react";
 import { Spinner } from "@/components/ui/spinner";
-import { getInvitationCookie } from "@/commons/lib/auth/invitation";
+import { getInvitationCookie, setInvitationCookie } from "@/commons/lib/auth/invitation";
 
 export const dynamic = 'force-dynamic';
 
@@ -11,6 +11,11 @@ export default async function Signup({
   searchParams: Promise<{ convite?: string }>;
 }) {
   const { convite } = await searchParams;
+
+  if (convite) {
+    await setInvitationCookie(convite);
+  }
+
   const cookieToken = await getInvitationCookie();
   const activeToken = convite || cookieToken || undefined;
 

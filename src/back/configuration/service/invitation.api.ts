@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/commons/lib/http/responses";
-import { getInvitationByTokenSupabase, consumeInvitationSupabase, createInvitationSupabase } from "../repository/invitation.supabase";
+import { getInvitationByTokenSupabase, consumeInvitationSupabase, createInvitationSupabase, deactivateInvitationSupabase } from "../repository/invitation.supabase";
 import { getPlanConfigBySlugSupabase } from "../repository/plan.supabase";
 import { invitationFormatter, PlanInvitationFormatted } from "@/commons/models/invitation";
 import { planFormatter } from "@/commons/models/plan";
@@ -33,8 +33,12 @@ export async function validateInvitationTokenApi(token: string) {
   }
 
   if (formatted.isExpired) {
+    // Atualizar no banco de dados para is_active = false
+    if (invitation.is_active) {
+      await deactivateInvitationSupabase(invitation.id);
+    }
     return ApiResponse.BadRequest({
-      message: "Este convite VIP expirou após o prazo limite de 24 horas.",
+      message: "Este convite VIP expirou após o prazo limite.",
       error: "convite_expirado"
     });
   }

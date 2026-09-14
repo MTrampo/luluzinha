@@ -2,11 +2,12 @@ import {
   getSchedulesForFinanceSupabase,
   getCompletedSchedulesPaginatedSupabase,
 } from "../repository/finance.supabase";
+import { getPlanConfigByEstablishmentIdSupabase } from "@/back/account/repository/subscription.supabase";
 import { ApiResponse } from "@/commons/lib/http/responses";
 import { ScheduleStatusEnum } from "@/commons/enums/schedule";
 import { formatCurrencyBRL, formatTransactionDate } from "@/commons/utils/format";
 import { getInitials } from "@/commons/utils/helper";
-import { parseISO, isSameDay } from "date-fns";
+import { parseISO, isSameDay, subDays, startOfDay } from "date-fns";
 import { PaginatedResponse, PaginationParams } from "@/commons/models/pagination";
 
 export type FinanceOverviewData = {
@@ -76,10 +77,39 @@ export const getFinanceDashboardApi = async (
   lastDayOfMonthIso: string,
   pagination: PaginationParams = { page: 1, pageSize: 10 }
 ) => {
-  // 1. Busca todos do mês para os cálculos de overview
+  // 1. Limite de retenção do plano
+  const { data: planLimits } = await getPlanConfigByEstablishmentIdSupabase(establishmentId);
+  const minRetentionDate = subDays(startOfDay(new Date()), planLimits.historyRetentionDays);
+  const firstDayDate = parseISO(firstDayOfMonthIso);
+  const lastDayDate = parseISO(lastDayOfMonthIso);
+
+  if (lastDayDate < minRetentionDate) {
+    return ApiResponse.Ok<FinanceDashboardData>({
+      message: `Os dados solicitados ultrapassam o limite de retenção de ${planLimits.historyRetentionDays} dias do seu plano.`,
+      data: {
+        overview: {
+          projectedDay: formatCurrencyBRL(0),
+          completedDayCount: "0",
+          completedMonthCount: "0",
+          completedMonthValue: formatCurrencyBRL(0),
+        },
+        history: {
+          items: [],
+          totalCount: 0,
+          page: 1,
+          pageSize: pagination.pageSize || 10,
+          hasMore: false,
+        },
+      },
+    });
+  }
+
+  const effectiveStartDate = (firstDayDate < minRetentionDate ? minRetentionDate : firstDayDate).toISOString();
+
+  // 2. Busca do período respeitando a retenção
   const { data: schedules, error: schedulesError } = await getSchedulesForFinanceSupabase(
     establishmentId,
-    firstDayOfMonthIso,
+    effectiveStartDate,
     lastDayOfMonthIso
   );
 
@@ -180,9 +210,30 @@ export const getFinanceTransactionsPaginatedApi = async (
   const page = Math.max(1, params.page || 1);
   const pageSize = Math.min(50, Math.max(1, params.pageSize || 10));
 
+  // 1. Limite de retenção do plano
+  const { data: planLimits } = await getPlanConfigByEstablishmentIdSupabase(establishmentId);
+  const minRetentionDate = subDays(startOfDay(new Date()), planLimits.historyRetentionDays);
+  const firstDayDate = parseISO(firstDayOfMonthIso);
+  const lastDayDate = parseISO(lastDayOfMonthIso);
+
+  if (lastDayDate < minRetentionDate) {
+    return ApiResponse.Ok({
+      message: "Transações fora da janela de retenção do plano.",
+      data: {
+        items: [],
+        totalCount: 0,
+        page,
+        pageSize,
+        hasMore: false,
+      },
+    });
+  }
+
+  const effectiveStartDate = (firstDayDate < minRetentionDate ? minRetentionDate : firstDayDate).toISOString();
+
   const { data, count, error } = await getCompletedSchedulesPaginatedSupabase(
     establishmentId,
-    firstDayOfMonthIso,
+    effectiveStartDate,
     lastDayOfMonthIso,
     { page, pageSize }
   );

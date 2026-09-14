@@ -107,3 +107,99 @@ export const getSubscriptionIdByUserIdAuthSupabase = async (userId: string, toke
 
   return null
 }
+
+export interface EstablishmentPlanLimits {
+  planSlug: string;
+  planName: string;
+  maxProcedures: number;
+  maxUsers: number;
+  historyRetentionDays: number;
+  isDefault: boolean;
+  subscriptionStatus: string;
+}
+
+export const getPlanConfigByEstablishmentIdSupabase = async (establishmentId: string): Promise<{
+  data: EstablishmentPlanLimits;
+  error: null;
+}> => {
+  const supabase = await getClient();
+
+  const fallbackLimits: EstablishmentPlanLimits = {
+    planSlug: 'financier-luluzinha',
+    planName: 'Fundadoras',
+    maxProcedures: 6,
+    maxUsers: 1,
+    historyRetentionDays: 30,
+    isDefault: true,
+    subscriptionStatus: 'pending',
+  };
+
+  try {
+    const { data: establishment } = await supabase
+      .from('establishments')
+      .select('id, subscription_id, subscriptions(*)')
+      .eq('id', establishmentId)
+      .maybeSingle();
+
+    const subscription = establishment?.subscriptions as {
+      mp_preapproval_plan_id?: string | null;
+      mp_status?: string;
+    } | null;
+
+    if (subscription?.mp_preapproval_plan_id) {
+      const { data: plan } = await supabase
+        .from('plans')
+        .select('*, config_plans(*)')
+        .eq('mp_plan_id', subscription.mp_preapproval_plan_id)
+        .maybeSingle();
+
+      if (plan) {
+        const config = (plan as unknown as { config_plans?: {
+          max_procedures: number;
+          max_users: number;
+          history_retention_days: number;
+          is_default: boolean;
+        } })?.config_plans;
+
+        if (config) {
+          return {
+            data: {
+              planSlug: plan.slug,
+              planName: plan.name,
+              maxProcedures: config.max_procedures ?? 6,
+              maxUsers: config.max_users ?? 1,
+              historyRetentionDays: config.history_retention_days ?? 30,
+              isDefault: config.is_default ?? false,
+              subscriptionStatus: subscription.mp_status || 'pending',
+            },
+            error: null,
+          };
+        }
+      }
+    }
+
+    // Se não encontrou plano específico, busca a configuração padrão (is_default = true)
+    const { data: defaultConfig } = await supabase
+      .from('config_plans')
+      .select('*')
+      .eq('is_default', true)
+      .maybeSingle();
+
+    if (defaultConfig) {
+      return {
+        data: {
+          ...fallbackLimits,
+          maxProcedures: defaultConfig.max_procedures ?? 6,
+          maxUsers: defaultConfig.max_users ?? 1,
+          historyRetentionDays: defaultConfig.history_retention_days ?? 30,
+          subscriptionStatus: subscription?.mp_status || 'pending',
+        },
+        error: null,
+      };
+    }
+  } catch (err) {
+    console.error("Erro ao buscar limites do plano para o estabelecimento:", err);
+  }
+
+  return { data: fallbackLimits, error: null };
+};

@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/commons/lib/http/responses";
-import { getActivePlansSupabase, getPlanConfigBySlugSupabase } from "../repository/plan.supabase";
-import { planFormatter, plansFormatter } from "@/commons/models/plan";
+import { getActivePlansSupabase, getPlanConfigBySlugSupabase, getDefaultConfigPlanSupabase } from "../repository/plan.supabase";
+import { planFormatter, plansFormatter, configPlanFormatter, ConfigPlanFormatted } from "@/commons/models/plan";
 
 export async function getPlanConfigBySlugApi(slug: string) {
   const { data, error } = await getPlanConfigBySlugSupabase(slug);
@@ -11,9 +11,11 @@ export async function getPlanConfigBySlugApi(slug: string) {
     });
   }
 
+  const config = (data as unknown as { config_plans?: Parameters<typeof planFormatter>[1] })?.config_plans ?? null;
+
   return ApiResponse.Ok({
     message: "Plano obtido com sucesso.",
-    data: planFormatter(data),
+    data: planFormatter(data, config),
   });
 }
 
@@ -26,8 +28,36 @@ export async function listActivePlansApi() {
     });
   }
 
+  const formatted = (data || []).map(p => {
+    const config = (p as unknown as { config_plans?: Parameters<typeof planFormatter>[1] })?.config_plans ?? null;
+    return planFormatter(p, config);
+  });
+
   return ApiResponse.Ok({
     message: "Planos ativos obtidos com sucesso.",
-    data: plansFormatter(data),
+    data: formatted,
+  });
+}
+
+export async function getDefaultConfigPlanApi() {
+  const { data, error } = await getDefaultConfigPlanSupabase();
+  if (error || !data) {
+    const fallbackConfig: ConfigPlanFormatted = {
+      id: "default",
+      name: "Padrão Luluzinha (Fundadoras)",
+      maxProcedures: 6,
+      maxUsers: 1,
+      historyRetentionDays: 30,
+      isDefault: true,
+    };
+    return ApiResponse.Ok({
+      message: "Configuração padrão do sistema.",
+      data: fallbackConfig,
+    });
+  }
+
+  return ApiResponse.Ok({
+    message: "Configuração padrão obtida com sucesso.",
+    data: configPlanFormatter(data),
   });
 }
