@@ -4,8 +4,18 @@ import { PlanCard } from "@/features/subscription/plan-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { FaCalendarDay, FaHandcuffs, FaHandshakeSimple, FaShieldHalved, FaWandMagicSparkles } from "react-icons/fa6";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: "Planos e Assinatura",
+  description:
+    "Conheça os planos da Luluzinha e escolha o que melhor atende às necessidades do seu espaço digital de manicure.",
+  alternates: {
+    canonical: "/assinatura",
+  },
+};
 
 export default async function SubscriptionPage() {
 

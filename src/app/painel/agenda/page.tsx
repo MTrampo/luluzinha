@@ -2,6 +2,11 @@ import Header from "@/components/header/dashboard";
 import { Schedule } from "@/features/dashboard/schedule";
 import { getSchedulesByDateAction } from "@/actions/schedule";
 import { todayBrazilIso } from "@/commons/utils/helper";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Agenda de Atendimentos",
+};
 
 type SchedulePageProps = {
   searchParams: Promise<{ data?: string }>;

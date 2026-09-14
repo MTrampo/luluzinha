@@ -1,6 +1,16 @@
 import Header from "@/components/header";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: "Termos de Uso",
+  description:
+    "Conheça os termos e condições de uso do ecossistema de gestão Luluzinha para prestadores de serviço.",
+  alternates: {
+    canonical: "/documento/termo",
+  },
+};
 
 export default function TermsOfUse() {
 

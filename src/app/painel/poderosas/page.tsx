@@ -1,6 +1,11 @@
 import { getCustomersPaginatedAction } from "@/actions/customer";
 import { CustomerFeedbackEmpty, CustomerFeedbackError } from "@/features/dashboard/customers/feedback";
 import Customers from "@/features/dashboard/customers";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Poderosas",
+};
 
 type PageProps = {
   searchParams: Promise<{ q?: string }>;

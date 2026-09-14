@@ -2,6 +2,11 @@ import { getProceduresAction, getProcedureLimitInfoAction } from "@/actions/proc
 import { ProcedureFormatted } from "@/commons/models/procedure";
 import Procedures from "@/features/dashboard/procedures";
 import { ProcedureFeedbackEmpty, ProcedureFeedbackError } from "@/features/dashboard/procedures/feedback";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Menu de Procedimentos",
+};
 
 type ProceduresPageProps = {
   searchParams: Promise<{ q?: string }>

@@ -1,7 +1,16 @@
 import { SignInFlow } from "@/features/signin";
-
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: "Entrar no Seu Espaço",
+  description:
+    "Acesse seu espaço digital na Luluzinha para gerenciar sua agenda de atendimentos, suas poderosas clientes e seu caixa.",
+  alternates: {
+    canonical: "/entrar",
+  },
+};
 
 export default function SingnIn() {
   return (

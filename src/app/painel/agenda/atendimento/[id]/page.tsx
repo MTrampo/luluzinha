@@ -5,8 +5,7 @@ import { ErrorState } from "@/components/errors/error-state";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Detalhes do Atendimento | Luluzinha",
-  description: "Visualize as informações detalhadas do atendimento da sua Poderosa.",
+  title: "Detalhes do Atendimento",
 };
 
 interface PageProps {

@@ -2,6 +2,11 @@ import { redirect } from "next/navigation"
 import { getUserLoggedAction } from "@/actions/auth"
 import { getUserSubscriptionAction, getInvoicesAction } from "@/actions/subscription"
 import PaymentsDashboard from "@/features/dashboard/payments"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Histórico de Recebíveis",
+}
 
 export default async function PagamentosPage() {
   const userResult = await getUserLoggedAction()

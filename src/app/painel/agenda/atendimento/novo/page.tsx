@@ -3,6 +3,11 @@ import { getCustomersAction } from "@/actions/customer";
 import { getProceduresAction } from "@/actions/procedure";
 import { getActiveEstablishmentsAction } from "@/actions/establishment";
 import { NewAppointment } from "@/features/dashboard/schedule/steps/new-appointment";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Novo Atendimento",
+};
 
 export default async function NewAppointmentPage() {
   const [customersRes, proceduresRes, activeEstablishmentRes] = await Promise.all([

@@ -1,6 +1,16 @@
 import Header from "@/components/header";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: "Política de Privacidade",
+  description:
+    "Saiba como a Luluzinha coleta, utiliza e protege os dados do seu espaço e das suas poderosas clientes.",
+  alternates: {
+    canonical: "/documento/politica",
+  },
+};
 
 export default function PrivacyPolicy() {
 

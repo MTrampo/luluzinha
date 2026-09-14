@@ -18,6 +18,16 @@ import {
 import { LuSparkles } from "react-icons/lu";
 
 import { setInvitationCookie } from "@/commons/lib/auth/invitation";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Convite VIP",
+  description: "Você foi convidada com muito carinho para fazer parte da fase exclusiva da Luluzinha.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 interface ConvitePageProps {
   params: Promise<{

@@ -30,7 +30,7 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row justify-between items-center text-xs text-neutral-500 gap-4">
           <p>© {new Date().getFullYear()} Luluzinha. Todos os direitos reservados.</p>
           <p className="flex items-center gap-1">
-            Feito com <Heart className="h-3 w-3 text-red-500 fill-red-500" /> para valorizar o trabalho das manicures.
+            Feito com <Heart className="h-3 w-3 text-red-500 fill-red-500" /> para valorizar o seu trabalho.
           </p>
         </div>
       </div>

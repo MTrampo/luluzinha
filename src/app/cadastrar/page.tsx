@@ -2,8 +2,18 @@ import { SignUpFlow } from "@/features/signup";
 import { Suspense } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { getInvitationCookie, setInvitationCookie } from "@/commons/lib/auth/invitation";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: "Cadastrar Espaço",
+  description:
+    "Crie seu espaço digital na Luluzinha e transforme o seu atendimento com uma gestão organizada e acolhedora.",
+  alternates: {
+    canonical: "/cadastrar",
+  },
+};
 
 export default async function Signup({
   searchParams,
