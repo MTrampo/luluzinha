@@ -6,6 +6,7 @@ import { SubscriptionGuard } from "@/components/subscription/guard";
 import { CookieConsent } from "@/components/feedbacks/cookie-consent";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { APP_URL as appUrl } from "@/commons/constants/env";
 
 export const viewport: Viewport = {
@@ -15,40 +16,51 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: {
-    default: "Luluzinha",
+    default: "Luluzinha | Sistema para Manicures, Nail Designers e Podólogas",
     template: "%s | Luluzinha",
   },
   description:
-    "Criamos um espaço completo e fácil de usar, eliminando a papelada para você focar no que faz de melhor: deixar as unhas maravilhosas.",
+    "O espaço digital completo para Manicures, Pedicures, Nail Designers e Podólogas. Organize sua agenda de atendimentos, suas Poderosas e seu caixa com leveza.",
   applicationName: "Luluzinha",
   authors: [{ name: "Meu Trampo", url: "https://meutrampo.dev.br" }],
   creator: "Meu Trampo",
   publisher: "Meu Trampo",
   keywords: [
     "manicure",
+    "pedicure",
     "nail designer",
+    "designer de unhas",
+    "podologia",
+    "podóloga",
+    "podólogo",
     "agenda manicure",
-    "app manicure",
-    "agenda de unhas",
+    "agenda nail designer",
+    "agenda podologia",
     "agenda para manicure",
-    "agenda de manicures",
-    "aplicativo de unhas",
-    "aplicativo para manicures",
+    "agenda de unhas",
+    "app manicure",
+    "app para manicure",
+    "app para nail designer",
+    "app podologia",
     "aplicativo de manicure e pedicure",
-    "app para manicures",
-    "app de manicure",
-    "app de manicures",
-    "gestão de atendimentos",
     "aplicativo para manicure",
+    "aplicativo para nail designer",
+    "aplicativo designer de unhas",
+    "sistema para manicure",
+    "sistema para nail designer",
     "sistema para salão de unhas",
+    "sistema para podologia",
+    "gestão de atendimentos",
+    "gestão para manicure",
+    "gestão para nail designer",
+    "gestão para podóloga",
     "controle financeiro manicure",
+    "controle de caixa manicure",
+    "ficha de clientes manicure",
     "espaço digital manicure",
     "luluzinha",
     "meu trampo",
     "luluzinha app",
-    "gestão de clientes",
-    "gestão para manicure",
-    "gestão para nail designer",
     "São Paulo",
     "Brasil",
   ],
@@ -59,9 +71,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Luluzinha",
+    title: "Luluzinha | Sistema para Manicures, Nail Designers e Podólogas",
     description:
-      "Organize sua agenda de atendimentos, suas poderosas e seu caixa com leveza e carinho. O sistema feito para você brilhar ainda mais.",
+      "Organize sua agenda de atendimentos, suas poderosas e seu caixa com leveza e carinho. O sistema perfeito para Manicures, Pedicures, Nail Designers e Podólogas brilharem ainda mais.",
     url: appUrl,
     siteName: "Luluzinha",
     locale: "pt_BR",
@@ -71,7 +83,7 @@ export const metadata: Metadata = {
         url: "/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Luluzinha - Seu Espaço Digital",
+        alt: "Luluzinha - O Espaço Digital para Manicures, Nail Designers e Podólogas",
       },
       {
         url: "/logo.png",
@@ -83,9 +95,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luluzinha",
+    title: "Luluzinha | Sistema para Manicures, Nail Designers e Podólogas",
     description:
-      "Organize sua agenda de atendimentos, suas poderosas e seu caixa com leveza e profissionalismo.",
+      "Organize sua agenda de atendimentos, suas poderosas e seu caixa com leveza e profissionalismo. Feito para Manicures, Pedicures, Nail Designers e Podólogas.",
     images: ["/opengraph-image.png"],
   },
   robots: {
@@ -133,7 +145,7 @@ export default function RootLayout({
         className={`${inter.variable} ${lexend.variable} theme-luluzinha antialiased`}
         suppressHydrationWarning
       >
-
+        <GoogleAnalytics gaId="G-5VBC887RXJ" />
         <SubscriptionGuard />
         {children}
         <Analytics />
