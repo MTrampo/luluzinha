@@ -6,7 +6,7 @@ import { getPlanConfigBySlugApi } from "@/back/configuration/service/plan.api"
 import { SubscriptionPayloadCookie, SubscriptionPreApprovalPayload, SubscriptionUpdatePayload, UpdateSubscription, subscriptionFormatter } from "@/commons/models/subscription"
 import { createPreApprovalSubscriptionApi } from "@/back/payment/service/payment.api"
 import { MercadoPagoStatusEnum } from "@/commons/enums/subscription"
-import { clearCookieSubscription, getCookieSubscription, setCookieSubscription } from "@/commons/lib/auth/subscription"
+import { clearCookieSubscription, getCookieSubscription, getCookieSubscriptionPayload, setCookieSubscription } from "@/commons/lib/auth/subscription"
 import { nowBrazilIso } from "@/commons/utils/helper"
 import { clientPreAproval } from "@/commons/lib/mercadopago/server"
 import { getInvoicesByEstablishmentIdApi } from "@/back/payment/service/invoice.api"
@@ -158,12 +158,11 @@ export const upsertSubscriptionApi = async (updateSubscription: UpdateSubscripti
 
 
 export const manageUserSubscriptionApi = async () => {
-  const subscriptionCookieData = await getCookieSubscription()
+  const subscriptionCookieData = await getCookieSubscriptionPayload()
   if (subscriptionCookieData) {
-    const subscriptionParsedData: SubscriptionPayloadCookie = JSON.parse(subscriptionCookieData)
     return ApiResponse.Ok({
       message: "Dados de assinatura encontrados no cookie.",
-      data: subscriptionParsedData
+      data: subscriptionCookieData
     })
   }
 

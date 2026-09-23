@@ -48,8 +48,6 @@ export function SignInFlow() {
           active = establishments[0]
         }
 
-        console.log('SignInFlow: establishments found:', establishments)
-        console.log('SignInFlow: selected active establishment:', active)
         setActiveEstablishment(active)
 
         if (active) {
