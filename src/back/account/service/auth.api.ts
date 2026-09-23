@@ -50,7 +50,8 @@ export const signInUserApi = async (body: SignInRequestBody) => {
     subscriptionPayload = {
       subscriptionId: subscription.id,
       status: subscription.mp_status,
-      currentPeriodEnd: subscription.current_period_end
+      currentPeriodEnd: subscription.current_period_end,
+      userId: data.user.id
     };
 
     // Se estiver autorizado, manda para o painel
@@ -58,9 +59,10 @@ export const signInUserApi = async (body: SignInRequestBody) => {
       redirectPath = '/painel';
     }
 
-    // Salva o cookie de assinatura já no servidor para o Middleware enxergar no próximo request
-    await setCookieSubscription(JSON.stringify(subscriptionPayload));
+    // Salva o cookie de assinatura já no servidor para o Middleware enxergar no próximo request de forma assinada e segura
+    await setCookieSubscription(subscriptionPayload);
   }
+
 
   return ApiResponse.Ok({
     message: "Login realizado com sucesso.",

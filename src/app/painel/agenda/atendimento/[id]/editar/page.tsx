@@ -5,6 +5,8 @@ import { getActiveEstablishmentsAction } from "@/actions/establishment";
 import { ErrorState } from "@/components/errors/error-state";
 import { Metadata } from "next";
 import { EditAppointment } from "@/features/dashboard/schedule/edit/edit-appointment";
+import { ProcedureFormatted } from "@/commons/models/procedure";
+
 
 export const metadata: Metadata = {
   title: "Editar Atendimento | Luluzinha",
@@ -39,8 +41,9 @@ export default async function EditAppointmentPage({ params }: PageProps) {
     );
   }
 
-  const procedures = proceduresRes.data?.filter(p => p.isActive) || [];
+  const procedures = (proceduresRes.data as ProcedureFormatted[] | null)?.filter((p: ProcedureFormatted) => p.isActive) || [];
   const activeEstablishment = activeEstablishmentRes.activeEstablishment;
+
 
   return (
     <>

@@ -2,6 +2,7 @@ import { Profile } from "@/commons/models/user"
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { formatCaseName } from "@/commons/utils/format"
+import { PROFILE_STORAGE_KEY, DEFAULT_BRAND_NAME } from "@/commons/constants"
 
 interface ProfileStore {
   profile: Profile | null
@@ -10,29 +11,26 @@ interface ProfileStore {
   clearStore: () => void
 }
 
-const PROFILE_KEY = 'luluzinha:auth:profile';
-const DEFAULT_NAME = "Luluzinha"
-
 export const useProfileStore = create<ProfileStore>()(
   persist(
     (set) => ({
       profile: null,
-      luluzinha: DEFAULT_NAME,
+      luluzinha: DEFAULT_BRAND_NAME,
 
       setProfile: (userData) => {
         set({
           profile: userData,
-          luluzinha: userData ? formatCaseName(userData.name) : DEFAULT_NAME,
+          luluzinha: userData ? formatCaseName(userData.name) : DEFAULT_BRAND_NAME,
         });
       },
 
       clearStore: () => {
-        set({ profile: null, luluzinha: DEFAULT_NAME })
-        localStorage.removeItem(PROFILE_KEY)
+        set({ profile: null, luluzinha: DEFAULT_BRAND_NAME })
+        localStorage.removeItem(PROFILE_STORAGE_KEY)
       },
     }),
     {
-      name: PROFILE_KEY,
+      name: PROFILE_STORAGE_KEY,
     }
   )
 )

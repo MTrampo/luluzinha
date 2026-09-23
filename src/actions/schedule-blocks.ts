@@ -8,26 +8,30 @@ import {
 } from "@/back/establishment/service/blocks.api";
 import { revalidatePath } from "next/cache";
 import { HttpStatusEnum } from "@/commons/enums/http";
-import { getOrResolveEstablishmentId } from "@/commons/lib/auth/establishment";
+import { getAuthenticatedSessionContext } from "@/commons/lib/auth/establishment";
 import { BlockScheduleFormValues } from "@/commons/models/schedule";
 import { ApiResponse } from "@/commons/lib/http/responses";
 
 export const listScheduleBlocksAction = async () => {
-  const id = await getOrResolveEstablishmentId();
-  if (!id) return ApiResponse.Ok({ message: "Nenhum bloqueio encontrado.", data: [] });
-  return await listScheduleBlocksApi(id);
-}
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) return session.error;
+  const { establishmentId } = session.context;
+
+  return await listScheduleBlocksApi(establishmentId);
+};
 
 export const getScheduleBlocksByDateAction = async (dateIsoString: string) => {
-  const id = await getOrResolveEstablishmentId();
-  if (!id) return ApiResponse.Ok({ message: "Nenhum bloqueio encontrado.", data: [] });
-  return await getScheduleBlocksByDateApi(id, dateIsoString);
-}
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) return session.error;
+  const { establishmentId } = session.context;
 
+  return await getScheduleBlocksByDateApi(establishmentId, dateIsoString);
+};
 
 export const createScheduleBlockAction = async (values: BlockScheduleFormValues) => {
-  const establishmentId = await getOrResolveEstablishmentId();
-  if (!establishmentId) return ApiResponse.NotFound({ message: "Espaço não encontrado." });
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) return session.error;
+  const { establishmentId } = session.context;
 
   const response = await createScheduleBlockApi(values, establishmentId);
 
@@ -36,13 +40,17 @@ export const createScheduleBlockAction = async (values: BlockScheduleFormValues)
     revalidatePath('/painel/agenda');
   }
   return response;
-}
+};
 
 export const deleteScheduleBlockAction = async (id: string) => {
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) return session.error;
+
   const response = await deleteScheduleBlockApi(id);
   if (response.status === HttpStatusEnum.Ok) {
     revalidatePath('/painel/bancada');
     revalidatePath('/painel/agenda');
   }
   return response;
-}
+};
+

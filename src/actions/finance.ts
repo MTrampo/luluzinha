@@ -4,7 +4,7 @@ import {
   getFinanceDashboardApi,
   getFinanceTransactionsPaginatedApi,
 } from "@/back/finance/service/finance.api";
-import { getEstablishmentCookie } from "@/commons/lib/auth/establishment";
+import { getAuthenticatedSessionContext } from "@/commons/lib/auth/establishment";
 import { nowBrazilIso } from "@/commons/utils/helper";
 import { startOfMonth, endOfMonth } from "date-fns";
 import { HttpStatusEnum } from "@/commons/enums/http";
@@ -14,10 +14,11 @@ export async function getFinanceDashboardAction(
   dateLocalIsoString?: string,
   pagination: PaginationParams = { page: 1, pageSize: 10 }
 ) {
-  const establishmentId = await getEstablishmentCookie();
-  if (!establishmentId) {
-    return { success: false, error: "Estabelecimento não encontrado." };
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) {
+    return { success: false, error: session.error.message || "Sua sessão expirou por segurança. Por favor, faça login novamente para acessar o seu espaço.", data: null };
   }
+  const { establishmentId } = session.context;
 
   // Se não vier data, assume agora
   const targetDateStr = dateLocalIsoString || nowBrazilIso();
@@ -46,10 +47,11 @@ export async function getFinanceTransactionsPaginatedAction(
   dateLocalIsoString?: string,
   pagination: PaginationParams = { page: 1, pageSize: 10 }
 ) {
-  const establishmentId = await getEstablishmentCookie();
-  if (!establishmentId) {
-    return { success: false, error: "Estabelecimento não encontrado.", data: null };
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) {
+    return { success: false, error: session.error.message || "Sua sessão expirou por segurança. Por favor, faça login novamente para acessar o seu espaço.", data: null };
   }
+  const { establishmentId } = session.context;
 
   const targetDateStr = dateLocalIsoString || nowBrazilIso();
   const targetDate = new Date(targetDateStr);
@@ -71,4 +73,5 @@ export async function getFinanceTransactionsPaginatedAction(
     error: response.error,
   };
 }
+
 

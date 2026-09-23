@@ -4,8 +4,9 @@ import { handleRouteAccess } from "./commons/lib/http/security"
 
 export async function proxy(request: NextRequest) {
   const { user, supabaseResponse } = await updateSession(request)
-  return handleRouteAccess(request, user, supabaseResponse)
+  return await handleRouteAccess(request, user, supabaseResponse)
 }
+
 
 export const config = {
   matcher: [

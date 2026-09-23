@@ -1,7 +1,6 @@
 import crypto from 'node:crypto';
 import { secret } from './server';
-
-const TIMESTAMP_TOLERANCE_SECONDS = 300; // 5 minutos
+import { MERCADOPAGO_TIMESTAMP_TOLERANCE_SECONDS } from '@/commons/constants';
 
 function parseSignature(header: string) {
   const parts = header.split(',').map(p => p.trim());
@@ -45,7 +44,7 @@ export function verifyMercadoPagoSignature(headers: Headers, rawUrl: string): Ve
   let tsNum = Number(ts);
   if (Number.isNaN(tsNum)) return { ok: false, status: 400, error: 'Timestamp inválido' };
   if (ts.length > 10) tsNum = Math.floor(tsNum / 1000);
-  if (Math.abs(now - tsNum) > TIMESTAMP_TOLERANCE_SECONDS) {
+  if (Math.abs(now - tsNum) > MERCADOPAGO_TIMESTAMP_TOLERANCE_SECONDS) {
     return { ok: false, status: 400, error: 'Timestamp fora do intervalo permitido' };
   }
 

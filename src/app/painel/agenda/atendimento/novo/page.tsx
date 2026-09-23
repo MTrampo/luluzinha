@@ -5,6 +5,8 @@ import { getActiveEstablishmentsAction } from "@/actions/establishment";
 import { NewAppointment } from "@/features/dashboard/schedule/steps/new-appointment";
 import type { Metadata } from "next";
 
+import { ProcedureFormatted } from "@/commons/models/procedure";
+
 export const metadata: Metadata = {
   title: "Novo Atendimento",
 };
@@ -17,8 +19,9 @@ export default async function NewAppointmentPage() {
   ]);
 
   const customers = customersRes.data || [];
-  const procedures = proceduresRes.data?.filter(p => p.isActive) || [];
+  const procedures = (proceduresRes.data as ProcedureFormatted[] | null)?.filter((p: ProcedureFormatted) => p.isActive) || [];
   const activeEstablishment = activeEstablishmentRes.activeEstablishment;
+
 
   return (
     <>

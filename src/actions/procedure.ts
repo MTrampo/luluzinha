@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import {
   ProcedureFormInputs,
   ProcedureInsertPayload,
+  ProcedureFormatted,
   ProcedureLimitInfo,
   createDefaultProcedureLimitInfo,
 } from "@/commons/models/procedure";
@@ -17,15 +18,14 @@ import {
   getProcedureLimitInfoApi,
 } from "@/back/establishment/service/procedure.api";
 import { convertTimeToMinutes, parseCurrencyBRLToNumber } from "@/commons/utils/helper";
-import { getEstablishmentCookie } from "@/commons/lib/auth/establishment";
+import { getAuthenticatedSessionContext } from "@/commons/lib/auth/establishment";
 import { ApiResponse } from "@/commons/lib/http/responses";
+import { ResponseProps } from "@/commons/models/api";
 
 export const addProcedureAction = async (input: ProcedureFormInputs) => {
-  const establishmentId = await getEstablishmentCookie();
-
-  if (!establishmentId) {
-    return ApiResponse.BadRequest({ message: "Estabelecimento não identificado." });
-  }
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) return session.error;
+  const { establishmentId } = session.context;
 
   const payload: ProcedureInsertPayload = {
     ...input,
@@ -44,25 +44,22 @@ export const addProcedureAction = async (input: ProcedureFormInputs) => {
   }
 
   return response;
-}
+};
 
-export const getProceduresAction = async () => {
-  const establishmentId = await getEstablishmentCookie();
-
-  if (!establishmentId) {
-    return ApiResponse.Ok({ message: "Estabelecimento não identificado.", data: [] });
-  }
+export const getProceduresAction = async (): Promise<ResponseProps<ProcedureFormatted[] | null>> => {
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) return session.error as ResponseProps<null>;
+  const { establishmentId } = session.context;
 
   const response = await listProceduresApi(establishmentId);
   return response;
-}
+};
+
+
 
 export const updateProcedureAction = async (id: string, input: ProcedureFormInputs) => {
-  const establishmentId = await getEstablishmentCookie();
-
-  if (!establishmentId) {
-    return ApiResponse.BadRequest({ message: "Estabelecimento não identificado." });
-  }
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) return session.error;
 
   const payload: Partial<ProcedureInsertPayload> = {
     name: input.name.toLowerCase().trim(),
@@ -78,14 +75,11 @@ export const updateProcedureAction = async (id: string, input: ProcedureFormInpu
   }
 
   return response;
-}
+};
 
 export const deleteProcedureAction = async (id: string) => {
-  const establishmentId = await getEstablishmentCookie();
-
-  if (!establishmentId) {
-    return ApiResponse.BadRequest({ message: "Estabelecimento não identificado." });
-  }
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) return session.error;
 
   const response = await deleteProcedureApi(id);
 
@@ -94,14 +88,11 @@ export const deleteProcedureAction = async (id: string) => {
   }
 
   return response;
-}
+};
 
 export const toggleProcedureActiveAction = async (id: string, isActive: boolean) => {
-  const establishmentId = await getEstablishmentCookie();
-
-  if (!establishmentId) {
-    return ApiResponse.BadRequest({ message: "Estabelecimento não identificado." });
-  }
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) return session.error;
 
   const response = await toggleProcedureActiveApi(id, isActive);
 
@@ -110,18 +101,14 @@ export const toggleProcedureActiveAction = async (id: string, isActive: boolean)
   }
 
   return response;
-}
+};
 
 export const getProcedureLimitInfoAction = async () => {
-  const establishmentId = await getEstablishmentCookie();
-
-  if (!establishmentId) {
-    return ApiResponse.Ok<ProcedureLimitInfo>({
-      message: "Nenhum espaço ativo.",
-      data: createDefaultProcedureLimitInfo(),
-    });
-  }
+  const session = await getAuthenticatedSessionContext();
+  if (!session.success) return session.error;
+  const { establishmentId } = session.context;
 
   return await getProcedureLimitInfoApi(establishmentId);
-}
+};
+
 

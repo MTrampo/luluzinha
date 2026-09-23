@@ -2,30 +2,23 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { MercadoPagoStatusEnum } from '@/commons/enums/subscription'
 import type { SubscriptionPayloadCookie } from '@/commons/models/subscription'
 import { SUB_SECRET_KEY } from '@/commons/constants/env'
+import {
+  PUBLIC_API_ROUTES,
+  PUBLIC_PATHS,
+  AUTH_PATHS,
+  ROUTE_ENTRAR,
+  ROUTE_PAINEL,
+  ROUTE_ASSINATURA,
+  ROUTE_CONVITE,
+  SUBSCRIPTION_GRACE_PERIOD_MS,
+} from '@/commons/constants'
+import { verifySecureCookie, getUserCookieSecret } from '@/commons/lib/crypto/secure-cookie'
 
-const publicApiRoutes = ['/api/webhooks']
-const publicPaths = [
-  '/',
-  '/entrar',
-  '/cadastrar',
-  '/assinatura',
-  '/documento/termo',
-  '/documento/politica',
-  '/manifest.webmanifest',
-  '/manifest.json',
-  '/robots.txt',
-  '/sitemap.xml',
-]
-const authPaths = ['/entrar', '/cadastrar']
-
-const GRACE_PERIOD_MS = 3 * 24 * 60 * 60 * 1000 // 3 dias em ms
-
-export function handleRouteAccess(request: NextRequest, user: unknown, supabaseResponse: NextResponse) {
+export async function handleRouteAccess(request: NextRequest, user: unknown, supabaseResponse: NextResponse) {
   const pathname = request.nextUrl.pathname
 
-  const isPublicApiRoute = publicApiRoutes.some(path => pathname.startsWith(path))
-  const isPublicPath = publicPaths.some(path => pathname === path) || pathname.startsWith('/convite')
-
+  const isPublicApiRoute = PUBLIC_API_ROUTES.some(path => pathname.startsWith(path))
+  const isPublicPath = PUBLIC_PATHS.some(path => pathname === path) || pathname.startsWith(ROUTE_CONVITE)
 
   // API não autenticada → 401
   if (!user && pathname.startsWith('/api/') && !isPublicApiRoute) {
@@ -35,35 +28,56 @@ export function handleRouteAccess(request: NextRequest, user: unknown, supabaseR
   // Não autenticado em rota privada → /entrar
   if (!user && !isPublicPath) {
     const url = request.nextUrl.clone()
-    url.pathname = '/entrar'
+    url.pathname = ROUTE_ENTRAR
     return NextResponse.redirect(url)
   }
 
   // Autenticado tentando acessar páginas de auth → /painel
-  if (user && authPaths.includes(pathname)) {
+  if (user && (AUTH_PATHS as readonly string[]).includes(pathname)) {
     const url = request.nextUrl.clone()
-    url.pathname = '/painel'
+    url.pathname = ROUTE_PAINEL
     return NextResponse.redirect(url)
   }
 
-  // Autenticado acessando /painel/** → verificar assinatura
-  if (user && pathname.startsWith('/painel')) {
+  // Autenticado acessando /painel/** → verificar assinatura de forma assinada e segura
+  if (user && pathname.startsWith(ROUTE_PAINEL)) {
     const cookieName = SUB_SECRET_KEY
     const cookieValue = request.cookies.get(cookieName)?.value
 
+    if (!cookieValue) {
+      const url = request.nextUrl.clone()
+      url.pathname = ROUTE_ASSINATURA
+      return NextResponse.redirect(url)
+    }
+
     try {
-      const subscription: SubscriptionPayloadCookie = cookieValue ? JSON.parse(cookieValue) : null
-      if (!subscription || !isSubscriptionActive(subscription)) {
+      const currentUserId =
+        (user as { sub?: string; id?: string })?.sub ||
+        (user as { sub?: string; id?: string })?.id
+
+      const userSecret = getUserCookieSecret(currentUserId)
+      const subscription = await verifySecureCookie<SubscriptionPayloadCookie>(
+        cookieValue,
+        userSecret
+      )
+
+      if (
+        !subscription ||
+        (subscription.userId && currentUserId && subscription.userId !== currentUserId) ||
+        !isSubscriptionActive(subscription)
+      ) {
         const url = request.nextUrl.clone()
-        url.pathname = '/assinatura'
+        url.pathname = ROUTE_ASSINATURA
         return NextResponse.redirect(url)
       }
+
     } catch {
       const url = request.nextUrl.clone()
-      url.pathname = '/assinatura'
+      url.pathname = ROUTE_ASSINATURA
       return NextResponse.redirect(url)
     }
   }
+
 
   return supabaseResponse
 }
@@ -83,7 +97,7 @@ export function isSubscriptionActive(subscription: SubscriptionPayloadCookie): b
     if (!subscription.currentPeriodEnd) return true
 
     const endDate = new Date(subscription.currentPeriodEnd).getTime()
-    return endDate + GRACE_PERIOD_MS > Date.now()
+    return endDate + SUBSCRIPTION_GRACE_PERIOD_MS > Date.now()
   }
 
   return false
