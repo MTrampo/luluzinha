@@ -1,16 +1,14 @@
 import { TZDate } from "@date-fns/tz"
 import { format } from "date-fns"
 import { OpeningHours } from "../models/establishment";
-import { ESTABLISHMENT_WEEKDAY_ORDER } from "../constants/establishment";
-
-const TIMEZONE = "America/Sao_Paulo"
+import { ESTABLISHMENT_WEEKDAY_ORDER, TIMEZONE_SAO_PAULO } from "../constants";
 
 export const nowBrazilIso = (): string => {
-  return format(new TZDate(new Date(), TIMEZONE), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
+  return format(new TZDate(new Date(), TIMEZONE_SAO_PAULO), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
 }
 
 export const todayBrazilIso = (): string => {
-  return format(new TZDate(new Date(), TIMEZONE), "yyyy-MM-dd")
+  return format(new TZDate(new Date(), TIMEZONE_SAO_PAULO), "yyyy-MM-dd")
 }
 
 export const toIsoOrNull = (value?: string | null) => {

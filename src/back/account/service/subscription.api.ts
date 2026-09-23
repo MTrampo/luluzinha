@@ -185,11 +185,11 @@ export const manageUserSubscriptionApi = async () => {
   const payload: SubscriptionPayloadCookie = {
     subscriptionId: subscription.id,
     status: subscription.mp_status,
-    currentPeriodEnd: subscription.current_period_end
+    currentPeriodEnd: subscription.current_period_end,
+    userId
   }
 
-  const payloadString = JSON.stringify(payload)
-  await setCookieSubscription(payloadString)
+  await setCookieSubscription(payload)
 
   return ApiResponse.Ok({
     message: "Dados de assinatura encontrados e armazenados no cookie.",
@@ -244,11 +244,11 @@ export const refreshSubscriptionApi = async () => {
   const payload: SubscriptionPayloadCookie = {
     subscriptionId: subscription.id,
     status: subscription.mp_status,
-    currentPeriodEnd: subscription.current_period_end
+    currentPeriodEnd: subscription.current_period_end,
+    userId
   }
 
-  const payloadString = JSON.stringify(payload)
-  await setCookieSubscription(payloadString)
+  await setCookieSubscription(payload)
 
   return ApiResponse.Ok({
     message: "Dados de assinatura atualizados com sucesso.",
@@ -373,9 +373,10 @@ export const cancelSubscriptionApi = async () => {
   const cookiePayload: SubscriptionPayloadCookie = {
     subscriptionId: subscription.id,
     status: MercadoPagoStatusEnum.Cancelled,
-    currentPeriodEnd: subscription.current_period_end
+    currentPeriodEnd: subscription.current_period_end,
+    userId
   }
-  await setCookieSubscription(JSON.stringify(cookiePayload))
+  await setCookieSubscription(cookiePayload)
 
   // Obter a assinatura atualizada do banco de dados
   const updatedSubscription = await getSubscriptionIdByUserIdSupabase(userId)
@@ -455,9 +456,10 @@ export const syncSubscriptionStatusApi = async () => {
   const cookiePayload: SubscriptionPayloadCookie = {
     subscriptionId: subscription.id,
     status: mpStatus,
-    currentPeriodEnd: currentPeriodEnd
+    currentPeriodEnd: currentPeriodEnd,
+    userId
   }
-  await setCookieSubscription(JSON.stringify(cookiePayload))
+  await setCookieSubscription(cookiePayload)
 
   // Obter a assinatura atualizada
   const updatedSubscription = await getSubscriptionIdByUserIdSupabase(userId)
@@ -572,10 +574,12 @@ export const activateFreeSubscriptionApi = async (userId: string, requestedPlanS
   const payload: SubscriptionPayloadCookie = {
     subscriptionId: updatedSub.id,
     status: MercadoPagoStatusEnum.Authorized,
-    currentPeriodEnd: currentPeriodEnd
+    currentPeriodEnd: currentPeriodEnd,
+    userId
   }
 
-  await setCookieSubscription(JSON.stringify(payload))
+  await setCookieSubscription(payload)
+
 
   return ApiResponse.Ok({
     message: "Assinatura gratuita ativada com sucesso!",

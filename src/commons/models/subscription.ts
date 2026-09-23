@@ -15,6 +15,7 @@ export interface SubscriptionPayloadCookie {
   subscriptionId: string;
   status: string;
   currentPeriodEnd: string | null;
+  userId?: string;
 }
 
 export type SubscriptionPreApprovalPayload = Database['public']['Tables']['subscriptions']['Insert']

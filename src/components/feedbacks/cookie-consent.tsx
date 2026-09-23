@@ -4,19 +4,20 @@ import * as React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { FaCookieBite } from "react-icons/fa6"
+import { COOKIE_CONSENT_KEY } from "@/commons/constants"
 
 export function CookieConsent() {
   const [isVisible, setIsVisible] = React.useState(false)
 
   React.useEffect(() => {
-    const consent = localStorage.getItem("luluzinha_cookie_consent")
+    const consent = localStorage.getItem(COOKIE_CONSENT_KEY)
     if (consent !== "true") {
       setIsVisible(true)
     }
   }, [])
 
   const handleAccept = () => {
-    localStorage.setItem("luluzinha_cookie_consent", "true")
+    localStorage.setItem(COOKIE_CONSENT_KEY, "true")
     setIsVisible(false)
   }
 

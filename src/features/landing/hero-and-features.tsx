@@ -63,7 +63,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
               </div>
 
               <p className="text-lg md:text-xl text-purple-900/80 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0 animate-hero-desc opacity-0">
-                Preparamos cada detalhe com muito carinho para que seu dia a dia como manicure seja mais leve, organizado e profissional. Gerencie sua agenda de atendimentos, encante suas Poderosas e acompanhe o sucesso do seu espaço.
+                Preparamos cada detalhe com muito carinho para que seu dia a dia como Manicure, Nail Designer, Pedicure ou Podóloga seja mais leve, organizado e profissional. Gerencie sua agenda de atendimentos, encante suas Poderosas e acompanhe o sucesso do seu espaço.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4 animate-hero-buttons opacity-0">
@@ -190,7 +190,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
                   Tudo o que seu espaço precisa para crescer
                 </h2>
                 <p className="text-lg text-purple-900/70 animate-features-desc opacity-0">
-                  Criamos um espaço completo e fácil de usar, eliminando a papelada para você focar no que faz de melhor: deixar as unhas maravilhosas.
+                  Criamos um espaço completo e fácil de usar, eliminando a papelada para você focar no que faz de melhor: cuidar das unhas, pés e bem-estar das suas Poderosas.
                 </p>
               </div>
 
@@ -260,7 +260,7 @@ export default function HeroAndFeaturesSection({ user }: HeroAndFeaturesSectionP
                   </CardHeader>
                   <CardContent className="pb-6">
                     <CardDescription className="text-purple-900/70 text-sm leading-relaxed">
-                      Organize e configure seus principais serviços, preços e tempo médio de duração para facilitar seus agendamentos rápidos.
+                      Configure seus serviços com tempo e valor — esmaltação, manicure, pedicure, alongamento em gel ou podologia — agilizando sua rotina.
                     </CardDescription>
                   </CardContent>
                 </Card>

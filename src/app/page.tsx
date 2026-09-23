@@ -19,9 +19,9 @@ import type { Metadata } from "next";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Luluzinha",
+  title: "Luluzinha | Sistema para Manicures, Nail Designers e Podólogas",
   description:
-    "Criamos um espaço completo e fácil de usar, eliminando a papelada para você focar no que faz de melhor: deixar as unhas maravilhosas.",
+    "O espaço digital completo para Manicures, Pedicures, Nail Designers e Podólogas. Organize sua agenda de atendimentos, suas Poderosas e seu caixa com leveza.",
   alternates: {
     canonical: "/",
   },
@@ -51,12 +51,24 @@ export default async function Home() {
         "image": `${appUrl}/opengraph-image.png`,
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web, iOS, Android",
+        "audience": {
+          "@type": "Audience",
+          "audienceType": "Manicures, Pedicures, Nail Designers, Designers de Unhas, Podólogos",
+        },
+        "featureList": [
+          "Agenda de Atendimentos",
+          "Cadastro e Gestão de Poderosas (Clientes)",
+          "Controle de Caixa e Histórico de Recebíveis",
+          "Menu de Procedimentos Personalizado",
+          "Compartilhamento de Arte para Stories e WhatsApp",
+          "Acesso rápido como App no Celular e Computador"
+        ],
         "offers": {
           "@type": "Offer",
           "price": "29.90",
           "priceCurrency": "BRL",
         },
-        "description": "Criamos um espaço completo e fácil de usar, eliminando a papelada para você focar no que faz de melhor: deixar as unhas maravilhosas.",
+        "description": "O espaço digital ideal para Manicures, Pedicures, Nail Designers e Podólogas. Organize seus atendimentos, suas clientes e seu caixa.",
         "inLanguage": "pt-BR",
         "areaServed": "BR",
       },
@@ -66,6 +78,67 @@ export default async function Home() {
         "url": appUrl,
         "logo": `${appUrl}/logo.png`,
       },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "A Luluzinha serve para Nail Designers, Pedicures e Podólogas?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Com certeza! A Luluzinha foi criada para atender com excelência Manicures tradicionais, Nail Designers, Designers de Unhas, Pedicures e Podólogas. Você pode personalizar seu Menu de Procedimentos com os tempos e valores específicos de cada procedimento (alongamentos, esmaltação em gel, spa dos pés, podologia clínica, etc.), além de manter o histórico organizado de cada Poderosa."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "O que significa o sistema estar na fase Alpha?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Significa que a Luluzinha é um sistema novinho e está em desenvolvimento ativo e testes fechados (nosso espaço Alpha)! Todas as funções principais como a Agenda de Atendimentos, Cadastro de Poderosas e Histórico de Caixa funcionam 100%, mas ainda estamos polindo cada detalhe com um grupo seleto de profissionais."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Como funciona o teste gratuito da Luluzinha?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ao se cadastrar na plataforma, você pode experimentar todas as funcionalidades do seu espaço digital gratuitamente. Sem compromissos, para você ver na prática como sua rotina vai ficar muito mais organizada."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Preciso instalar o aplicativo na loja de apps (Play Store ou App Store)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Não é necessário baixar nada pelas lojas! O sistema Luluzinha é um aplicativo web progressivo. Você acessa pelo navegador do celular e, com apenas dois toques, pode criar um atalho na tela inicial que se comporta exatamente como um aplicativo comum, economizando espaço no seu celular."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "O pagamento por Mercado Pago é seguro?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Totalmente seguro! Todo o processamento de pagamento e dados de faturamento é feito de forma exclusiva e direta pelo Mercado Pago. A Luluzinha não tem acesso, não visualiza e não armazena nenhuma informação financeira sensível sua, garantindo privacidade completa."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Posso cancelar a assinatura quando eu quiser?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sim! Não temos contrato de fidelidade nem letras miúdas. Você pode cancelar sua assinatura mensal a qualquer momento através do painel, sem taxas extras ou burocracia de cancelamento."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "O que acontece com os meus dados se eu cancelar?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Respeitamos muito seu trabalho e sua privacidade. Se você cancelar a assinatura ou ficar inadimplente, guardamos seus dados cadastrados e as informações das suas Poderosas em segurança por um período de 6 meses a 1 ano. Caso precise retornar, tudo estará do jeito que deixou."
+            }
+          }
+        ]
+      }
     ],
   };
 
@@ -197,6 +270,15 @@ export default async function Home() {
             </div>
 
             <Accordion type="single" collapsible className="w-full space-y-4">
+
+              <AccordionItem value="faq-nicho" className="border border-purple-100 bg-white rounded-xl px-5 py-2 shadow-sm">
+                <AccordionTrigger className="text-base font-bold text-purple-950 hover:text-purple-600 hover:no-underline font-lexend text-left">
+                  A Luluzinha serve para Nail Designers, Pedicures e Podólogas?
+                </AccordionTrigger>
+                <AccordionContent className="text-purple-900/70 leading-relaxed pt-2 text-sm">
+                  Com certeza! A Luluzinha foi criada para atender com carinho e excelência Manicures tradicionais, Nail Designers, Designers de Unhas, Pedicures e Podólogas. Você pode personalizar seu Menu de Procedimentos com os tempos e valores específicos de cada procedimento (alongamentos, esmaltação em gel, spa dos pés, podologia clínica, etc.), além de manter a ficha e o histórico organizado de cada Poderosa.
+                </AccordionContent>
+              </AccordionItem>
 
               <AccordionItem value="faq-alpha" className="border border-purple-100 bg-white rounded-xl px-5 py-2 shadow-sm">
                 <AccordionTrigger className="text-base font-bold text-purple-950 hover:text-purple-600 hover:no-underline font-lexend text-left">

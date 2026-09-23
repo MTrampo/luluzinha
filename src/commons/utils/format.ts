@@ -1,8 +1,7 @@
 import { format, parseISO, parse, isValid } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { convertTimeToMinutes } from './helper'
-
-const LOWER_PARTICLES = new Set(["de", "do", "da", "dos", "das", "e", "da", "do", "dos", "das", "em"])
+import { LOWER_PARTICLES } from '../constants'
 
 export const formatCaseName = (value?: string): string => {
 	if (!value) return ""
