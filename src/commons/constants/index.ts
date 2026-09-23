@@ -1,5 +1,6 @@
 export * from "./app";
 export * from "./auth";
+export * from "./changelog";
 export * from "./datetime";
 export * from "./env";
 export * from "./establishment";
