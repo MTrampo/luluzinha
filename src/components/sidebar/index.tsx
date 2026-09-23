@@ -10,6 +10,7 @@ import {
 import { NavMain } from "./nav-main"
 import { NavTeamSwitcher } from "./nav-team-switcher"
 import { NavUser } from "./nav-user";
+import { NavVersion } from "./nav-version";
 import type { NavRoot } from "@/commons/types/sidebar";
 
 const navigation: NavRoot = {
@@ -66,11 +67,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain nav={navigation} />
-        {/*<NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="gap-1.5">
         <NavUser />
+        <NavVersion />
       </SidebarFooter>
     </Sidebar>
   )

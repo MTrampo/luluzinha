@@ -51,8 +51,10 @@ export async function setEstablishmentCookie(idOrPayload: string | Establishment
       path: '/',
       sameSite: 'strict',
     })
-  } catch (error) {
-    console.error('Error setting establishment cookie:', error)
+  } catch (error: any) {
+    if (!error?.message?.includes('Cookies can only be modified')) {
+      console.error('Error setting establishment cookie:', error)
+    }
   }
 }
 
@@ -60,8 +62,10 @@ export async function clearEstablishmentCookie(): Promise<void> {
   try {
     const cookieStore = await cookies()
     cookieStore.delete(KEY_ESTABLISHMENT)
-  } catch (error) {
-    console.error('Error clearing establishment cookie:', error)
+  } catch (error: any) {
+    if (!error?.message?.includes('Cookies can only be modified')) {
+      console.error('Error clearing establishment cookie:', error)
+    }
   }
 }
 

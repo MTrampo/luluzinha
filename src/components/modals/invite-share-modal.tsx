@@ -23,6 +23,7 @@ export function InviteShareModal({ isOpen, onClose, availableDays }: InviteShare
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSharing, setIsSharing] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     if (isOpen && availableDays.length > 0) {
@@ -32,6 +33,7 @@ export function InviteShareModal({ isOpen, onClose, availableDays }: InviteShare
       });
       setImageUrl(`/api/og/convite?${params.toString()}`);
       setIsLoading(true);
+      setHasError(false);
     }
   }, [isOpen, availableDays]);
 
@@ -99,7 +101,7 @@ export function InviteShareModal({ isOpen, onClose, availableDays }: InviteShare
 
         <div className="p-6 flex flex-col items-center">
           <div className="relative aspect-9/16 w-full max-w-60 rounded-2xl overflow-hidden shadow-xl border-[6px] border-white ring-1 ring-purple-100 bg-purple-50">
-            {isLoading && (
+            {isLoading && !hasError && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-8 h-8 rounded-full border-3 border-purple-100 border-t-purple-600 animate-spin" />
@@ -107,20 +109,40 @@ export function InviteShareModal({ isOpen, onClose, availableDays }: InviteShare
                 </div>
               </div>
             )}
-            <Image
-              src={imageUrl}
-              alt="Preview do Convite"
-              fill
-              className={`object-cover transition-opacity duration-500 ${isLoading ? "opacity-0" : "opacity-100"}`}
-              onLoad={() => setIsLoading(false)}
-              unoptimized
-            />
+            {hasError && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+                <p className="text-xs text-purple-900 font-semibold mb-2">Ops! Não foi possível gerar a prévia.</p>
+                <Button size="sm" variant="outline" onClick={() => {
+                  setHasError(false);
+                  setIsLoading(true);
+                  setImageUrl(`/api/og/convite?days=${availableDays.join(',')}&v=${Date.now()}`);
+                }}>Tentar novamente</Button>
+              </div>
+            )}
+            {!hasError && imageUrl && (
+              <Image
+                src={imageUrl}
+                alt="Preview do Convite"
+                fill
+                className={`object-cover transition-opacity duration-500 ${isLoading ? "opacity-0" : "opacity-100"}`}
+                onLoad={() => {
+                  setIsLoading(false);
+                  setHasError(false);
+                }}
+                onError={() => {
+                  setIsLoading(false);
+                  setHasError(true);
+                  toast.error("Não foi possível carregar a prévia da imagem.");
+                }}
+                unoptimized
+              />
+            )}
           </div>
 
           <div className="flex flex-col gap-3 w-full mt-8">
             <Button
               onClick={handleShare}
-              disabled={isLoading || isSharing}
+              disabled={isLoading || isSharing || hasError}
               className="bg-linear-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white font-bold h-14 shadow-lg shadow-purple-200 gap-3 text-base transition-all active:scale-95"
             >
               <FaShareNodes className="w-5 h-5" />
@@ -130,7 +152,7 @@ export function InviteShareModal({ isOpen, onClose, availableDays }: InviteShare
             <Button
               variant="outline"
               onClick={handleDownload}
-              disabled={isLoading}
+              disabled={isLoading || hasError}
               className="border-purple-200 text-purple-600 hover:bg-purple-600 hover:text-white hover:border-purple-600 font-bold h-12 gap-2 text-sm transition-all active:scale-95 duration-300 ease-in-out"
             >
               <FaDownload className="w-4 h-4" />

@@ -1,39 +1,45 @@
 import { ImageResponse } from 'next/og';
-
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 
 let outfitData: ArrayBuffer | null = null;
 let interData: ArrayBuffer | null = null;
 let logoData: string | null = null;
 
-async function getAssets(req: Request) {
+async function getAssets() {
   if (!outfitData) {
-    outfitData = await fetch(
-      new URL('../../../../commons/assets/fonts/Outfit-Bold.ttf', import.meta.url)
-    ).then((res) => res.arrayBuffer());
+    try {
+      const outfitBuffer = await readFile(
+        join(process.cwd(), 'src/commons/assets/fonts/Outfit-Bold.ttf')
+      );
+      outfitData = outfitBuffer.buffer.slice(
+        outfitBuffer.byteOffset,
+        outfitBuffer.byteOffset + outfitBuffer.byteLength
+      );
+    } catch (e) {
+      console.error('Erro ao carregar fonte Outfit-Bold:', e);
+    }
   }
 
   if (!interData) {
-    interData = await fetch(
-      new URL('../../../../commons/assets/fonts/Inter-Medium.ttf', import.meta.url)
-    ).then((res) => res.arrayBuffer());
+    try {
+      const interBuffer = await readFile(
+        join(process.cwd(), 'src/commons/assets/fonts/Inter-Medium.ttf')
+      );
+      interData = interBuffer.buffer.slice(
+        interBuffer.byteOffset,
+        interBuffer.byteOffset + interBuffer.byteLength
+      );
+    } catch (e) {
+      console.error('Erro ao carregar fonte Inter-Medium:', e);
+    }
   }
 
   if (!logoData) {
     try {
-      const url = new URL(req.url);
-      const logoUrl = `${url.protocol}//${url.host}/logo.png`;
-      const logoRes = await fetch(logoUrl);
-
-      if (logoRes.ok) {
-        const arrayBuffer = await logoRes.arrayBuffer();
-        const base64 = btoa(
-          new Uint8Array(arrayBuffer).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            ''
-          )
-        );
-        logoData = `data:image/png;base64,${base64}`;
-      }
+      const logoBuffer = await readFile(join(process.cwd(), 'public/logo.png'));
+      const base64 = logoBuffer.toString('base64');
+      logoData = `data:image/png;base64,${base64}`;
     } catch (e) {
       console.error('Erro ao carregar o logo:', e);
     }
@@ -44,10 +50,18 @@ async function getAssets(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const { outfitData: outfit, interData: inter, logoData: logo } = await getAssets(req);
+    const { outfitData: outfit, interData: inter, logoData: logo } = await getAssets();
     const { searchParams } = new URL(req.url);
     const daysParam = searchParams.get('days') || '';
     const days = daysParam.split(',').filter(Boolean);
+
+    const fonts = [];
+    if (outfit) {
+      fonts.push({ name: 'Outfit', data: outfit, style: 'normal' as const, weight: 700 as const });
+    }
+    if (inter) {
+      fonts.push({ name: 'Inter', data: inter, style: 'normal' as const, weight: 500 as const });
+    }
 
     return new ImageResponse(
       (
@@ -156,10 +170,7 @@ export async function GET(req: Request) {
       {
         width: 1080,
         height: 1920,
-        fonts: [
-          { name: 'Outfit', data: outfit!, style: 'normal', weight: 700 },
-          { name: 'Inter', data: inter!, style: 'normal', weight: 500 },
-        ],
+        fonts,
         headers: {
           'cache-control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
         },

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ErrorState } from '@/components/errors/error-state';
 import { isSubscriptionActive } from '@/commons/lib/http/security';
 import { SubscriptionPayloadCookie } from '@/commons/models/subscription';
-import { getCookieSubscription } from '@/commons/lib/auth/subscription';
+import { getCookieSubscriptionPayload } from '@/commons/lib/auth/subscription';
 import { FaArrowLeft } from 'react-icons/fa6';
 
 export default async function NotFound() {
@@ -11,14 +11,11 @@ export default async function NotFound() {
   let buttonLabel = 'Voltar para o Início';
 
   try {
-    const cookieValue = await getCookieSubscription();
+    const subscription = await getCookieSubscriptionPayload();
 
-    if (cookieValue) {
-      const subscription: SubscriptionPayloadCookie = JSON.parse(cookieValue);
-      if (isSubscriptionActive(subscription)) {
-        targetHref = '/painel';
-        buttonLabel = 'Voltar para o Painel';
-      }
+    if (subscription && isSubscriptionActive(subscription)) {
+      targetHref = '/painel';
+      buttonLabel = 'Voltar para o Painel';
     }
   } catch (error) {
     // Ignorar erros de parse ou renderização estática

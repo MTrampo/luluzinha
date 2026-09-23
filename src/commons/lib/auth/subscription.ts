@@ -23,8 +23,12 @@ export async function setCookieSubscription(payload: SubscriptionPayloadCookie |
       path: '/',
       sameSite: 'strict',
     })
-  } catch (error) {
-    console.error('[setCookieSubscription] Erro ao assinar e salvar cookie de assinatura:', error)
+  } catch (error: any) {
+    // No Next.js App Router, cookies não podem ser modificados durante a fase de renderização SSR.
+    // Ignoramos silenciosamente se for erro de contexto SSR, e logamos apenas se for erro inesperado.
+    if (!error?.message?.includes('Cookies can only be modified')) {
+      console.error('[setCookieSubscription] Erro ao assinar e salvar cookie de assinatura:', error)
+    }
   }
 }
 
@@ -46,7 +50,6 @@ export async function getCookieSubscriptionPayload(userId?: string): Promise<Sub
     const secret = getUserCookieSecret(targetUserId)
     return await verifySecureCookie<SubscriptionPayloadCookie>(rawToken, secret)
   } catch (error) {
-    console.error('[getCookieSubscriptionPayload] Erro ao verificar cookie de assinatura:', error)
     return null
   }
 }
@@ -63,7 +66,9 @@ export async function clearCookieSubscription(): Promise<void> {
   try {
     const cookieStore = await cookies()
     cookieStore.delete(KEY_SUB)
-  } catch (error) {
-    console.error('[clearCookieSubscription] Erro ao limpar cookie de assinatura:', error)
+  } catch (error: any) {
+    if (!error?.message?.includes('Cookies can only be modified')) {
+      console.error('[clearCookieSubscription] Erro ao limpar cookie de assinatura:', error)
+    }
   }
 }
