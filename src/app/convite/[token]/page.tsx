@@ -145,7 +145,7 @@ export default async function ConvitePage({ params }: ConvitePageProps) {
                         R$ 0,00
                       </span>
                       <span className="text-sm sm:text-base font-bold text-gray-400">
-                        / 30 dias
+                        / 7 dias
                       </span>
                     </div>
 

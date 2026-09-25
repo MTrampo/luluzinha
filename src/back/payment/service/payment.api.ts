@@ -5,10 +5,11 @@ export const createPreApprovalSubscriptionApi = async (
   payerEmail: string,
   subscriptionId: string,
   planPrice: number,
-  planName: string = "Luluzinha"
+  planName: string = "Luluzinha",
+  includeTrial: boolean = true
 ) => {
   try {
-    console.info(`🌐 [PAYMENT:createPreApproval] Criando assinatura individual no MP | email: ${payerEmail} | subId: ${subscriptionId} | preço: ${planPrice} | plano: ${planName}`)
+    console.info(`🌐 [PAYMENT:createPreApproval] Criando assinatura individual no MP | email: ${payerEmail} | subId: ${subscriptionId} | preço: ${planPrice} | plano: ${planName} | trial7Dias: ${includeTrial}`)
     let baseUrl = process.env.NEXT_PUBLIC_APP_URL
     if (process.env.ENVIRONMENT === "development" && process.env.DEV_TUNNEL_URL) {
       console.info("🔧 [PAYMENT:createPreApproval] Modo dev detectado. Usando URL do Dev Tunnel para retorno do Mercado Pago.")
@@ -16,20 +17,34 @@ export const createPreApprovalSubscriptionApi = async (
     }
     const backUrl = `${baseUrl}/assinatura`
 
+    const autoRecurringBody: {
+      frequency: number
+      frequency_type: string
+      transaction_amount: number
+      currency_id: string
+      free_trial?: {
+        frequency: number
+        frequency_type: string
+      }
+    } = {
+      frequency: 1,
+      frequency_type: "months",
+      transaction_amount: planPrice,
+      currency_id: "BRL",
+    }
+
+    if (includeTrial) {
+      autoRecurringBody.free_trial = {
+        frequency: 7,
+        frequency_type: "days"
+      }
+    }
+
     const response = await clientPreAproval.create({
       body: {
         back_url: backUrl,
         reason: planName,
-        auto_recurring: {
-          frequency: 1,
-          frequency_type: "months",
-          transaction_amount: planPrice,
-          currency_id: "BRL",
-          free_trial: {
-            frequency: 1,
-            frequency_type: "months"
-          }
-        },
+        auto_recurring: autoRecurringBody,
         payer_email: payerEmail,
         external_reference: subscriptionId,
         status: "pending"

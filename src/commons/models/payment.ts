@@ -1,4 +1,5 @@
 import { Database } from "../types/database.types"
+import { formatCurrencyBRL, formatDate } from "../utils/format"
 
 export interface PreApprovalPaymentData {
   mpPlanId: string
@@ -28,7 +29,7 @@ export interface InvoiceFormatted {
   paidAt: string | null
   createdAt: string | null
   updatedAt: string | null
-  rawPayload: any
+  rawPayload: Record<string, unknown> | null
 
   // Formatted
   amountFormatted: string
@@ -66,9 +67,6 @@ export const invoiceFormatter = (data: InvoiceSupabase): InvoiceFormatted => {
       break
   }
 
-  // Import dynamic helper formatting to keep layout clean
-  const { formatCurrencyBRL, formatDate } = require("../utils/format")
-
   return {
     id: data.id,
     establishmentId: data.establishment_id,
@@ -84,7 +82,7 @@ export const invoiceFormatter = (data: InvoiceSupabase): InvoiceFormatted => {
     paidAt: data.paid_at,
     createdAt: data.created_at,
     updatedAt: data.updated_at,
-    rawPayload: data.raw_payload,
+    rawPayload: (data.raw_payload as Record<string, unknown>) ?? null,
 
     amountFormatted: formatCurrencyBRL(data.amount ? Number(data.amount) : 0),
     paidAtFormatted: data.paid_at ? formatDate(data.paid_at) : "Pendente",
