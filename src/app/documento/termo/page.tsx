@@ -6,162 +6,153 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: "Termos de Uso",
   description:
-    "Conheça os termos e condições de uso do ecossistema de gestão Luluzinha para prestadores de serviço.",
+    "Conheça os termos e condições de uso do ecossistema de gestão Luluzinha para profissionais da beleza.",
   alternates: {
     canonical: "/documento/termo",
   },
 };
 
 export default function TermsOfUse() {
-
-  const lastUpdate = "05 de Fevereiro de 2026";
+  const lastUpdate = "25 de Setembro de 2026";
   const appName = "Luluzinha";
 
   return (
     <div className="min-h-screen bg-purple-50/10 text-slate-700">
-      <Header/>
+      <Header />
       <div className="mx-auto px-6 py-12 sm:py-24 max-w-5xl md:max-w-7xl">
         <section className="space-y-12">
           <div className="space-y-4">
-            <h1 className="text-4xl font-black text-purple-950 font-lexend">Termos e Condições de Uso</h1>
-            <p className="text-lg text-slate-600 leading-relaxed">
-              A <strong>{appName}</strong> é um ecossistema de tecnologia voltado à <strong>gestão profissional para Prestadores de Serviço</strong>. 
-              Nosso objetivo é fornecer ferramentas que automatizem processos e organizem o o cotidiano do seu negócio, permitindo que você foque no que realmente importa: o seu atendimento.
+            <h1 className="text-3xl sm:text-4xl font-black text-purple-950 font-lexend">
+              Termos e Condições de Uso
+            </h1>
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
+              A <strong>{appName}</strong> é um ecossistema digital de gestão e organização profissional voltado a Manicures, Nail Designers, Pedicures e Podólogas. Nosso propósito é fornecer ferramentas que tornem o seu dia a dia mais leve, profissional e organizado, permitindo que você foque no cuidado e no encantamento das suas Poderosas clientes.
             </p>
-            <p>
-              Ao contratar a {appName}. você adquire uma licença de uso de software (SaaS), garantindo acesso a um conjunto de funcionalidades que podem incluir organização de agenda, gestão de base de clientes e outras soluções de produtividade,
-              conforme as especificações do plano selecionado. Reservamo-nos o direito de evoluir e modificar essas ferramentas para garantir a constante modernização do serviço.
-            </p>
-            <p>
-              Para fins destes Termos, as referências a &quot;você&quot; ou &quot;usuário&quot; referem-se ao Prestador de Serviço titular da conta e responsável pelo pagamento da assinatura. Ressaltamos que o {appName} atua exclusivamente como fornecedor de tecnologia de
-              gestão; portanto, não intermediamos pagamentos entre você e seus clientes, não garantimos o cumprimento de agendas e não possuímos qualquer responsabilidade sobre a execução dos seus serviços ou sua relação comercial com terceiros.
+            <p className="text-sm sm:text-base leading-relaxed">
+              Ao criar uma conta ou assinar a {appName}, você adquire uma licença de uso de software como serviço (SaaS), tendo acesso a recursos como Agenda de Atendimentos, Gestão de Poderosas, Histórico de Recebíveis (Seu Caixa) e Menu de Procedimentos, conforme as especificações do plano contratado.
             </p>
           </div>
 
           {/* 1. Aceite */}
-          <div className="space-y-4">
-            <h2>1. Aceite dos Termos</h2>
-            <p>
-              Ao cadastrar-se e utilizar o sistema, você concordam integralmente com estas normas. Este sistema está sob responsabilidade do desenvolvedor, ora identificado como Pessoa Física, com foro eleito na cidade de São Paulo/SP.
+          <div className="space-y-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-purple-950 font-lexend">
+              1. Aceite dos Termos
+            </h2>
+            <p className="text-sm sm:text-base leading-relaxed">
+              Ao cadastrar-se, acessar ou utilizar a plataforma {appName}, você declara ter lido, compreendido e concordado integralmente com estes Termos de Uso e com nossa Política de Privacidade. Caso não concorde com qualquer disposição aqui estabelecida, solicitamos que não prossiga com o cadastro ou utilização do sistema.
             </p>
           </div>
 
-          {/* 2. Natureza do Serviço - Destaque de Segurança */}
-          <div className="space-y-4">
-            <h2>2. Natureza do Serviço e Isenção Financeira</h2>
-            <p>
-              O serviço é estritamente uma ferramenta de GESTÃO e ORGANIZAÇÃO. A {appName} é utilizado por sua conta e risco, sem garantias de resultados comerciais ou operacionais. O sistema não é responsável por falhas técnicas,
-              indisponibilidade ou qualquer impacto financeiro decorrente do uso da plataforma.
+          {/* 2. Fase Beta e Isenção de Responsabilidade Técnica */}
+          <div className="space-y-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-purple-950 font-lexend">
+              2. Versão em Fase de Testes (Beta Público) e Limitações
+            </h2>
+            <p className="text-sm sm:text-base leading-relaxed">
+              O Usuário declara ciência expressa de que a plataforma encontra-se atualmente em fase de <strong>Beta Público</strong> (em constante desenvolvimento ativo, testes de estresse e aprimoramento de funcionalidades).
             </p>
-            <ul className="list-disc pl-5 mt-4 space-y-3">
-              <li><strong>Sem Responsabilidade Financeira:</strong> Não nos responsabilizamos por perdas financeiras, lucros cessantes ou danos decorrentes do seu uso do software.</li>
-              <li><strong>Independência de Relação:</strong> Não interferimos na relação entre você e seus clientes. O sistema não é responsável por faltas, cancelamentos de última hora ou inadimplência de terceiros.</li>
-              <li><strong>Falhas Técnicas:</strong> Eventos inesperados (quedas de servidores ou erros de provedores externos) não geram direito a indenizações</li>
+            <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base leading-relaxed">
+              <li>
+                <strong>Possibilidade de Instabilidades e Ajustes:</strong> Por se tratar de uma versão de testes, o sistema pode apresentar instabilidades temporárias, lentidões momentâneas, bugs inesperados, necessidades de manutenção técnica ou eventuais ajustes e perdas de dados.
+              </li>
+              <li>
+                <strong>Isenção de Responsabilidade por Danos Indiretos:</strong> A contratação e uso da versão Beta ocorrem por conta e risco do Usuário, que se beneficia de condições financeiras especiais de lançamento exatamente por colaborar com essa fase de testes. A {appName} não se responsabiliza por lucros cessantes, perdas financeiras, faltas de clientes ou quaisquer danos decorrentes de indisponibilidades técnicas do software.
+              </li>
+              <li>
+                <strong>Canal Direto de Feedback:</strong> As participantes da fase Beta contam com canal de suporte direto via WhatsApp para reporte ágil de bugs e sugestões de melhorias.
+              </li>
             </ul>
           </div>
 
-          {/* 3. Assinaturas */}
-          <div className="space-y-4">
-            <h2>3. Assinaturas e Processamento de Pagamento</h2>
-            <p>
-              O pagamento e processamento das mensalidades é gerido de forma automatizada via <strong>Mercado Pago</strong>.
+          {/* 3. Oferta de Lançamento (Fundadoras) e Limite de 30 Vagas */}
+          <div className="space-y-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-purple-950 font-lexend">
+              3. Oferta Especial de Lançamento (Plano Fundadoras) e Vagas Limitadas
+            </h2>
+            <p className="text-sm sm:text-base leading-relaxed">
+              A oferta de assinatura no valor promocional de <strong>R$ 9,90 (nove reais e noventa centavos) mensais</strong> é uma condição especial e temporária de lançamento, vinculada à colaboração na fase Beta.
             </p>
-            <ul className="list-disc pl-5 space-y-3">
-              <li><strong>Cobrança:</strong> Seguimos as políticas de retentativas do provedor (podem variar entre o dia da falha, 3 dias após a falha, 7 dias após a falha e até 30 dias).</li>
-              <li><strong>Bloqueio:</strong> O vencimento ocorre todo <strong>dia 05</strong>. Caso o pagamento não seja identificado em até 3 dias após o vencimento, seu acesso será bloqueado até a regularização.</li>
-              <li><strong>Reembolso:</strong> Não trabalhamos com política de reembolso sob nenhuma circunstância.</li>
+            <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base leading-relaxed">
+              <li>
+                <strong>Limite de 30 Usuárias:</strong> Esta condição promocional de R$ 9,90/mês é <strong>estritamente limitada aos primeiros 30 (trinta) assinantes</strong> que aderirem ao plano Fundadoras.
+              </li>
+              <li>
+                <strong>Reajuste Futuro Pós-Fase de Testes:</strong> Após o encerramento da fase de testes (Alpha/Beta) e o lançamento da versão estável da plataforma, o valor da mensalidade poderá ser atualizado para o preço padrão de tabela da {appName}.
+              </li>
+              <li>
+                <strong>Comunicação Prévia de 30 Dias:</strong> Qualquer reajuste de valor será comunicado formalmente com antecedência mínima de <strong>30 (trinta) dias</strong> por e-mail e aviso em destaque no painel. O Usuário terá total liberdade para manter a assinatura ou cancelá-la sem nenhum custo ou penalidade antes da vigência do novo valor.
+              </li>
             </ul>
           </div>
 
-          {/* 3.1. Cancelamento de Assinatura */}
-          <div className="space-y-4">
-            <h3>3.1. Cancelamento de Assinatura</h3>
-            <p>
-              Você pode cancelar sua assinatura a qualquer momento através das configurações da sua conta. O cancelamento interrompe a renovação futura, mas não é retroativo e não gera reembolso de valores já pagos.
-              Ao cancelar, você continuará tendo acesso às funcionalidades do serviço até o final do período de faturamento vigente, após o qual o acesso será bloqueado.
+          {/* 4. Degustação Gratuita de 7 Dias (Art. 49 CDC) e Pagamentos */}
+          <div className="space-y-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-purple-950 font-lexend">
+              4. Degustação Gratuita (7 Dias CDC), Pagamento e Recorrência
+            </h2>
+            <p className="text-sm sm:text-base leading-relaxed">
+              O processamento dos pagamentos é realizado de forma automatizada e segura exclusivamente pela infraestrutura do <strong>Mercado Pago</strong>.
             </p>
-          </div>
-
-          {/* 3.2. Renovação Automática */}
-          <div className="space-y-4">
-            <h3>3.2. Renovação Automática</h3>
-            <p>
-              Para garantir a continuidade dos seus serviços de gestão, a assinatura do {appName} possui renovação automática mensal. A cobrança é realizada de forma recorrente via Mercado Pago, com vencimento fixado no dia 05 de cada mês.
-              É de sua responsabilidade garantir que haja saldo ou limite disponível na forma de pagamento selecionada para evitar a suspensão do serviço.
-            </p>
-          </div>
-
-          {/* 3.3 Segurança no Pagamento e Dados Sensíveis */}
-          <div className="space-y-4">
-            <h3>3.3 Segurança no Pagamento e Dados Sensíveis</h3>
-            <p>
-              A {appName} prioriza a segurança dos seus dados financeiros. Por questões de segurança, não armazenamos em nossos servidores informações sensíveis como números de cartão de crédito ou débito.
-            </p>
-            <ul className="list-disc pl-5 space-y-3">
-              <li><strong>Intermediação Exclusiva:</strong> Toda a infraestrutura de pagamentos é fornecida pelo Mercado Pago, que é o único responsável pela captura e processamento dos dados financeiros.</li>
-              <li><strong>Isenção de Responsabilidade:</strong> A {appName} não se responsabiliza por falhas, cobranças indevidas, fraudes ou quaisquer problemas decorrentes da relação entre você e o provedor de pagamentos. Qualquer disputa financeira deve ser resolvida diretamente com o Mercado Pago ou sua operadora de cartão.</li>
+            <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base leading-relaxed">
+              <li>
+                <strong>Degustação Gratuita de 7 Dias (Art. 49 do CDC):</strong> Em conformidade com o Código de Defesa do Consumidor, toda <strong>1ª assinatura</strong> realizada na plataforma concede <strong>7 (sete) dias corridos de degustação 100% gratuita</strong>.
+              </li>
+              <li>
+                <strong>Cancelamento no Período Gratuito:</strong> Se você optar por cancelar sua assinatura durante os 7 dias de degustação, o cancelamento é realizado instantaneamente e <strong>nenhum valor será debitado do seu cartão</strong>.
+              </li>
+              <li>
+                <strong>Primeira Cobrança e Renovação Recorrente:</strong> Passados os 7 dias de degustação sem cancelamento prévio, a primeira cobrança de R$ 9,90 será efetuada no 8º dia e a assinatura passará a renovar-se automaticamente a cada 30 (trinta) dias no cartão cadastrado.
+              </li>
+              <li>
+                <strong>Regra de Reassinatura (Sem Duplicidade de Gratuidade):</strong> O benefício da degustação gratuita de 7 dias é concedido <strong>uma única vez por titular/espaço</strong>. Em caso de cancelamento e posterior retorno/reativação, a cobrança da nova assinatura ocorrerá imediatamente no ato da contratação.
+              </li>
+              <li>
+                <strong>Sem Fidelidade e Sem Multas:</strong> Nossos planos não exigem fidelidade, tempo mínimo de permanência ou taxas de cancelamento. Você pode cancelar a qualquer momento nas configurações do seu painel.
+              </li>
             </ul>
           </div>
 
-          {/* 3.4. Alterações nos Preços */}
-          <div className="space-y-4">
-            <h3>3.4 Alterações nos Preços</h3>
-            <p>
-              Reservamo-nos o direito de ajustar os valores dos nossos planos de assinatura para refletir mudanças em nosso serviço, atualizações de mercado ou novos custos operacionais.
-            </p>
-            <ul className="list-disc pl-5 space-y-3">
-              <li><strong>Comunicação Prévia:</strong> Caso haja qualquer alteração no valor do plano que Você assina, notificaremos você com antecedência mínima de 30 (trinta) dias através do e-mail cadastrado em sua conta ou por aviso direto na interface do sistema.</li>
-              <li><strong>Aceitação:</strong> A continuidade do uso do serviço após a data de vigência do novo valor será considerada como sua aceitação aos novos preços.</li>
-              <li><strong>Direito de Cancelamento:</strong> Caso você não concorde com o novo valor, poderá cancelar sua assinatura a qualquer momento antes da próxima renovação, conforme as regras de cancelamento descritas no item 3.1.</li>
-            </ul>
-          </div>
-
-          {/* 4. Planos */}
-          <div className="space-y-4">
-            <h2>4. Limitações de Uso e Planos</h2>
-            <ul className="list-disc pl-5 space-y-3">
-              <li><strong>Plano Inicial (MVP):</strong> Cadastro ilimitado de clientes, porém limitado a <strong>6 (seis) tipos de serviços</strong>.</li>
-              <li><strong>Uso Individual:</strong> O acesso é individual. O compartilhamento de sua conta com outros profissionais é proibido e pode gerar suspensão.</li>
-              <li><strong>Evolução:</strong> Funções multiusuário (equipes) são restritas a planos superiores futuros.</li>
-            </ul>
-          </div>
-
-          {/* 5. Clientes */}
-          <div className="space-y-4">
-            <h2>5. Uso por Seus Clientes (Terceiros)</h2>
-            <p>
-              Quando disponível, a função de agendamento por seus clientes serve apenas como facilitador. Cancelamentos pela cliente poderão ser feitos via sistema com até 6 horas de antecedência.
-              O cumprimento do horário é um acordo privado entre você e seu cliente. A {appName} não é responsável por faltas, cancelamentos de última hora ou inadimplência de terceiros.
+          {/* 5. Cancelamento e Suspensão */}
+          <div className="space-y-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-purple-950 font-lexend">
+              5. Cancelamento e Vigência de Acesso
+            </h2>
+            <p className="text-sm sm:text-base leading-relaxed">
+              Ao cancelar uma assinatura ativa após o período de degustação de 7 dias, a cobrança para os meses subsequentes é interrompida. Você continuará com acesso integral a todas as funcionalidades do seu espaço até o término do ciclo mensal que já foi pago, data após a qual o acesso aos recursos restritos será suspenso.
             </p>
           </div>
 
-          {/* 6. Dados */}
-          <div className="space-y-4">
-            <h2>6. Retenção e Exclusão de Dados</h2>
-            <ul className="list-disc pl-5 space-y-3">
-              <li><strong>Suspensão:</strong> Em caso de inadimplência, você não poderá consultar ou exportar sua lista de clientes ou histórico até quitar a pendência.</li>
-              <li><strong>Prazo:</strong> Dados de contas inativas são mantidos de 6 meses a 1 ano. Após este prazo, o sistema poderá realizar a exclusão definitiva.</li>
-            </ul>
+          {/* 6. Segurança e Dados Financeiros */}
+          <div className="space-y-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-purple-950 font-lexend">
+              6. Segurança nos Pagamentos e Dados Sensíveis
+            </h2>
+            <p className="text-sm sm:text-base leading-relaxed">
+              A {appName} não coleta, não processa e não armazena em seus servidores dados sensíveis de cartão de crédito ou débito. Toda a captura, tokenização e liquidação financeira são realizadas diretamente em ambiente certificado PCI-DSS pelo Mercado Pago.
+            </p>
           </div>
 
-          {/* 7. Alterações */}
-          <div className="space-y-4">
-            <h2>7. Alterações no Serviço</h2>
-            <p>
-              O sistema evolui constantemente. Podemos alterar funcionalidades e interfaces sem aviso prévio para melhoria do serviço. Mudanças em planos contratados
-              serão comunicadas com antecedência.
+          {/* 7. Uso com Clientes e Relações Comerciais */}
+          <div className="space-y-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-purple-950 font-lexend">
+              7. Relação Comercial com suas Clientes (Poderosas)
+            </h2>
+            <p className="text-sm sm:text-base leading-relaxed">
+              A {appName} é estritamente uma ferramenta de gestão e apoio à rotina do seu espaço. Não intermediamos pagamentos entre você e suas clientes, não cobramos taxas sobre os seus atendimentos e não possuímos qualquer responsabilidade sobre a realização dos procedimentos, comparecimento de clientes ou acordos privados de preço e horário firmados no seu negócio.
             </p>
           </div>
 
           {/* 8. Foro */}
-          <div className="space-y-4">
-            <h2>8. Foro</h2>
-            <p>
-              Para resolver qualquer questão técnica ou jurídica, fica eleito o Foro da Comarca de São Paulo/SP.
+          <div className="space-y-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-purple-950 font-lexend">
+              8. Legislação Aplicável e Foro
+            </h2>
+            <p className="text-sm sm:text-base leading-relaxed">
+              Estes Termos são regidos pelas leis da República Federativa do Brasil, em especial pelo Código de Defesa do Consumidor (Lei nº 8.078/1990), pelo Marco Civil da Internet (Lei nº 12.965/2014) e pela Lei Geral de Proteção de Dados (Lei nº 13.709/2018). Para dirimir eventuais controvérsias decorrentes destes Termos, fica eleito o Foro da Comarca de São Paulo/SP, com renúncia a qualquer outro, por mais privilegiado que seja.
             </p>
           </div>
 
-          <p>
+          <p className="text-xs text-slate-500 pt-4 border-t border-purple-100">
             <strong>Última atualização:</strong> {lastUpdate}
           </p>
         </section>

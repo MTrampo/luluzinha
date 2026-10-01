@@ -6,8 +6,8 @@ import { getPlanConfigBySlugApi } from "@/back/configuration/service/plan.api"
 import { SubscriptionPayloadCookie, SubscriptionPreApprovalPayload, SubscriptionUpdatePayload, UpdateSubscription, subscriptionFormatter } from "@/commons/models/subscription"
 import { createPreApprovalSubscriptionApi } from "@/back/payment/service/payment.api"
 import { MercadoPagoStatusEnum } from "@/commons/enums/subscription"
-import { clearCookieSubscription, getCookieSubscription, getCookieSubscriptionPayload, setCookieSubscription } from "@/commons/lib/auth/subscription"
-import { nowBrazilIso } from "@/commons/utils/helper"
+import { clearCookieSubscription, getCookieSubscriptionPayload, setCookieSubscription } from "@/commons/lib/auth/subscription"
+import { nowBrazilIso, toIsoOrNull } from "@/commons/utils/helper"
 import { clientPreAproval } from "@/commons/lib/mercadopago/server"
 import { getInvoicesByEstablishmentIdApi } from "@/back/payment/service/invoice.api"
 import { invoiceFormatter } from "@/commons/models/payment"
@@ -97,12 +97,38 @@ export const createCheckoutSessionApi = async (mpPayerEmail: string, requestedPl
     ? process.env.MP_EMAIL_COMPRADOR_TEST
     : mpPayerEmail
 
-  // Criar assinatura individual pendente no Mercado Pago enviando o external_reference (subscriptionId)
+  // Verificar se a usuária/estabelecimento já utilizou o período de degustação prévio (1ª assinatura vs Reassinatura)
+  let includeTrial = true
+  if (establishment.subscription_id) {
+    const existingSub = await getSubscriptionIdByUserIdSupabase(userId)
+    if (existingSub) {
+      const hasActiveHistory = Boolean(
+        existingSub.current_period_start ||
+        existingSub.mp_status === MercadoPagoStatusEnum.Authorized ||
+        existingSub.mp_status === MercadoPagoStatusEnum.Cancelled
+      )
+      if (hasActiveHistory) {
+        includeTrial = false
+      }
+    }
+  }
+
+  if (includeTrial) {
+    const invoicesResult = await getInvoicesByEstablishmentIdApi(establishment.id)
+    if (Array.isArray(invoicesResult.data) && invoicesResult.data.length > 0) {
+      includeTrial = false
+    }
+  }
+
+  console.info(`💳 [CHECKOUT] Elegibilidade ao trial de 7 dias (CDC): ${includeTrial} | establishmentId: ${establishment.id}`)
+
+  // Criar assinatura individual pendente no Mercado Pago enviando o external_reference (subscriptionId) e elegibilidade ao trial
   const initPoint = await createPreApprovalSubscriptionApi(
     targetPayerEmail,
     subscriptionId,
     planConfig.price,
-    planConfig.name
+    planConfig.name,
+    includeTrial
   )
 
   if (initPoint.error || !initPoint.data) {
@@ -222,7 +248,6 @@ export const refreshSubscriptionApi = async () => {
       console.info(`[SERVICE:refreshSubscription] Status obtido no MP:`, { status: mpData?.status })
 
       if (mpData && mpData.status) {
-        const { toIsoOrNull } = await import("@/commons/utils/helper")
         const updatePayload: SubscriptionUpdatePayload = {
           mp_status: mpData.status,
           current_period_start: toIsoOrNull(mpData.date_created),
@@ -358,7 +383,7 @@ export const cancelSubscriptionApi = async () => {
     updated_at: nowBrazilIso(),
   }
 
-  const { data, error } = await updateSubscriptionByIdSupabase(subscription.id, payload)
+  const { error } = await updateSubscriptionByIdSupabase(subscription.id, payload)
   if (error) {
     console.error(`[SERVICE:cancelSubscription] Erro ao atualizar no Supabase local:`, error)
     return ApiResponse.InternalError({
@@ -422,7 +447,6 @@ export const syncSubscriptionStatusApi = async () => {
     if (mpData.status) {
       mpStatus = mpData.status
     }
-    const { toIsoOrNull } = require("@/commons/utils/helper")
     if (mpData.next_payment_date) {
       currentPeriodEnd = toIsoOrNull(mpData.next_payment_date)
     }
@@ -442,7 +466,7 @@ export const syncSubscriptionStatusApi = async () => {
       updated_at: nowBrazilIso(),
     }
 
-    const { data, error } = await updateSubscriptionByIdSupabase(subscription.id, payload)
+    const { error } = await updateSubscriptionByIdSupabase(subscription.id, payload)
     if (error) {
       console.error(`[SERVICE:syncSubscription] Falha ao atualizar banco de dados local:`, error)
     } else {
@@ -543,8 +567,8 @@ export const activateFreeSubscriptionApi = async (userId: string, requestedPlanS
 
   const now = new Date()
   const currentPeriodStart = now.toISOString()
-  // Validade de 30 dias para o plano Alpha
-  const periodEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
+  // Validade de 7 dias para o plano gratuito / degustação
+  const periodEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
   const currentPeriodEnd = periodEnd.toISOString()
 
   const subscriptionData: SubscriptionPreApprovalPayload = {

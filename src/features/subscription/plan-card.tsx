@@ -19,28 +19,30 @@ export function PlanCard({ plan }: PlanCardProps) {
         }`}
     >
       {/* Badge de Destaque Superior */}
-      {plan.badge && (
-        <div className="absolute top-0 right-0">
-          <span
-            className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-bl-2xl text-xs font-bold tracking-wide uppercase ${isFeatured
-                ? "bg-linear-to-r from-purple-700 to-purple-900 text-white shadow-xs"
-                : "bg-purple-100 text-purple-900"
-              }`}
-          >
-            <LuSparkles className="w-3 h-3 text-amber-300" />
-            {plan.badge}
-          </span>
-        </div>
-      )}
+      <div className="absolute top-0 right-0">
+        <span
+          className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-bl-2xl text-xs font-bold tracking-wide uppercase ${isFeatured
+              ? "bg-linear-to-r from-purple-700 to-purple-900 text-white shadow-xs"
+              : "bg-purple-100 text-purple-900"
+            }`}
+        >
+          <LuSparkles className="w-3 h-3 text-amber-300" />
+          {plan.badge || "Oferta Beta • 30 Vagas"}
+        </span>
+      </div>
 
       <div>
         <CardHeader className="pt-8 pb-4 px-6 sm:px-8">
           <div className="flex items-center gap-2 mb-1">
-            {isFeatured && <FaCrown className="w-5 h-5 text-purple-600 shrink-0" />}
-            <CardTitle className="text-xl sm:text-2xl font-black text-purple-950 tracking-tight">
-              {plan.name}
-            </CardTitle>
+            <FaCrown className="w-4 h-4 text-purple-600 shrink-0" />
+            <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700">
+              Fase Beta Público • Vagas Limitadas
+            </span>
           </div>
+
+          <CardTitle className="text-xl sm:text-2xl font-black text-purple-950 tracking-tight">
+            {plan.name}
+          </CardTitle>
 
           {plan.description && (
             <CardDescription className="text-xs sm:text-sm text-gray-500 font-medium leading-relaxed">
@@ -62,7 +64,7 @@ export function PlanCard({ plan }: PlanCardProps) {
         <CardContent className="px-6 sm:px-8 pb-6">
           <div className="border-t border-purple-100/60 pt-4 flex flex-col gap-3">
             <span className="text-[11px] font-bold uppercase tracking-wider text-purple-950/60">
-              O que está incluído:
+              O que está incluído no seu plano:
             </span>
 
             <ul className="flex flex-col gap-2.5">
@@ -79,15 +81,24 @@ export function PlanCard({ plan }: PlanCardProps) {
         </CardContent>
       </div>
 
-      <CardFooter className="px-6 sm:px-8 pb-8 pt-2">
+      <CardFooter className="px-6 sm:px-8 pb-8 pt-2 flex flex-col gap-3">
         <ButtonSubscription
           planSlug={plan.slug}
           variant={isFeatured ? "theme" : "outline"}
           size="lg"
           className="w-full font-bold text-sm tracking-wide shadow-sm active:scale-[0.99] transition-transform"
         >
-          ASSINAR {plan.name.toUpperCase()}
+          COMEÇAR 7 DIAS GRÁTIS
         </ButtonSubscription>
+
+        <div className="text-center space-y-1">
+          <p className="text-xs font-bold text-purple-950">
+            7 dias grátis na 1ª assinatura
+          </p>
+          <p className="text-[11px] text-gray-500 leading-normal">
+            Primeira cobrança apenas no 8º dia. Cancele quando quiser no painel sem multas.
+          </p>
+        </div>
       </CardFooter>
     </Card>
   );

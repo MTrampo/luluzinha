@@ -102,7 +102,7 @@ export default async function Home() {
             "name": "Como funciona o teste gratuito da Luluzinha?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Ao se cadastrar na plataforma, você pode experimentar todas as funcionalidades do seu espaço digital gratuitamente. Sem compromissos, para você ver na prática como sua rotina vai ficar muito mais organizada."
+              "text": "Ao se cadastrar na plataforma, você tem 7 dias grátis para experimentar todas as funcionalidades do seu espaço digital. Sem compromissos, para você ver na prática como sua rotina vai ficar muito mais organizada."
             }
           },
           {
@@ -294,7 +294,7 @@ export default async function Home() {
                   Como funciona o teste gratuito da Luluzinha?
                 </AccordionTrigger>
                 <AccordionContent className="text-purple-900/70 leading-relaxed pt-2 text-sm">
-                  Ao se cadastrar na plataforma, você pode experimentar todas as funcionalidades do seu espaço digital gratuitamente. Sem compromissos, para você ver na prática como sua rotina vai ficar muito mais organizada.
+                  Ao se cadastrar na plataforma, você tem 7 dias grátis para experimentar todas as funcionalidades do seu espaço digital. Sem compromissos, para você ver na prática como sua rotina vai ficar muito mais organizada.
                 </AccordionContent>
               </AccordionItem>
 
