@@ -28,7 +28,7 @@ export function verifyMercadoPagoSignature(headers: Headers, rawUrl: string): Ve
   }
 
   const url = new URL(rawUrl);
-  const dataIdFromUrl = url.searchParams.get('data.id');
+  const dataIdFromUrl = url.searchParams.get('data.id') || url.searchParams.get('id');
 
   if (!requestId || !dataIdFromUrl) {
     return { ok: false, status: 400, error: 'Missing required webhook identifiers' };
