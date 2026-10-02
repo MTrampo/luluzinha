@@ -63,8 +63,8 @@ export const getUserSubscriptionAction = async () => {
   }
 }
 
-export const cancelSubscriptionAction = async () => {
-  const response = await cancelSubscriptionApi()
+export const cancelSubscriptionAction = async (reason?: string, reasonDetails?: string) => {
+  const response = await cancelSubscriptionApi(reason, reasonDetails)
   return {
     status: response.status,
     message: response.message,

@@ -21,8 +21,8 @@ import { setInvitationCookie } from "@/commons/lib/auth/invitation";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Convite VIP",
-  description: "Você foi convidada com muito carinho para fazer parte da fase exclusiva da Luluzinha.",
+  title: "Seu Convite",
+  description: "Você foi convidada com muito carinho para fazer parte da Luluzinha.",
   robots: {
     index: false,
     follow: false,
@@ -49,7 +49,7 @@ export default async function ConvitePage({ params }: ConvitePageProps) {
 
   const errorMessage =
     result.message ||
-    "Este convite VIP já foi utilizado por outra Luluzinha ou expirou após o prazo limite de 24 horas.";
+    "Este convite já foi utilizado ou expirou.";
 
 
   return (
@@ -102,25 +102,25 @@ export default async function ConvitePage({ params }: ConvitePageProps) {
         ) : (
           /* Estado de Convite Válido e Especial */
           <>
-            {/* Cabeçalho da Página VIP */}
+            {/* Cabeçalho da Página */}
             <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
               <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-purple-950 tracking-tight leading-tight">
                 {invitation.recipientName ? `Bem-vinda, ${invitation.recipientName}!` : "Um convite especial para você brilhar"}
               </h1>
 
               <p className="mt-3 text-sm sm:text-base text-gray-600 font-medium max-w-2xl mx-auto">
-                Preparamos cada detalhe com muito carinho para que seu dia a dia seja mais leve, organizado e profissional. Você foi escolhida para inaugurar o nosso espaço digital.
+                Preparamos cada detalhe com muito carinho para que seu dia a dia seja mais leve, organizado e profissional. Você foi convidada para inaugurar o nosso espaço digital.
               </p>
             </div>
 
-            {/* Card Principal do Convite VIP */}
+            {/* Card Principal do Convite */}
             <div className="max-w-2xl mx-auto">
               <Card className="relative border-2 border-purple-500 shadow-2xl shadow-purple-500/15 rounded-3xl overflow-hidden bg-white ring-4 ring-purple-100/60 transition-all">
-                {/* Badge VIP Superior */}
+                {/* Badge Superior */}
                 <div className="absolute top-0 right-0">
                   <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-bl-2xl text-xs font-black tracking-wide uppercase bg-linear-to-r from-purple-700 to-purple-900 text-white shadow-xs">
                     <FaCrown className="w-3 h-3 text-amber-300" />
-                    Convite VIP Alpha
+                    Convite Especial
                   </span>
                 </div>
 
@@ -217,7 +217,7 @@ export default async function ConvitePage({ params }: ConvitePageProps) {
               </Card>
             </div>
 
-            {/* Seção de Benefícios e Confiança Exclusiva do Alpha */}
+            {/* Seção de Benefícios do Convite */}
             <div className="mt-14 sm:mt-20 pt-10 border-t border-purple-100/80 max-w-5xl mx-auto">
               <div className="text-center mb-8">
                 <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-purple-900 mb-1">
@@ -225,7 +225,7 @@ export default async function ConvitePage({ params }: ConvitePageProps) {
                   Nossa Parceria com Você
                 </div>
                 <h3 className="text-lg sm:text-xl font-bold text-purple-950">
-                  Por que o seu teste Alpha é tão especial para nós?
+                  Por que este convite é especial para nós?
                 </h3>
                 <p className="text-xs sm:text-sm text-gray-500">
                   Estamos construindo o Luluzinha ouvindo de perto a sua rotina real de atendimento.

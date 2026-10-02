@@ -22,10 +22,10 @@ export default async function Header() {
               width={40}
               height={40}
               priority
-              className="h-auto w-10 object-contain"
+              className="w-10 h-10 object-contain"
             />
             <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-purple-100 text-purple-700 tracking-wider uppercase font-lexend">
-              Alpha
+              Beta
             </span>
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">

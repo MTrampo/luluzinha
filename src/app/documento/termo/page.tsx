@@ -77,7 +77,7 @@ export default function TermsOfUse() {
                 <strong>Limite de 30 Usuárias:</strong> Esta condição promocional de R$ 9,90/mês é <strong>estritamente limitada aos primeiros 30 (trinta) assinantes</strong> que aderirem ao plano Fundadoras.
               </li>
               <li>
-                <strong>Reajuste Futuro Pós-Fase de Testes:</strong> Após o encerramento da fase de testes (Alpha/Beta) e o lançamento da versão estável da plataforma, o valor da mensalidade poderá ser atualizado para o preço padrão de tabela da {appName}.
+                <strong>Reajuste Futuro Pós-Fase de Testes:</strong> Após o encerramento da fase de testes (Beta) e o lançamento da versão estável da plataforma, o valor da mensalidade poderá ser atualizado para o preço padrão de tabela da {appName}.
               </li>
               <li>
                 <strong>Comunicação Prévia de 30 Dias:</strong> Qualquer reajuste de valor será comunicado formalmente com antecedência mínima de <strong>30 (trinta) dias</strong> por e-mail e aviso em destaque no painel. O Usuário terá total liberdade para manter a assinatura ou cancelá-la sem nenhum custo ou penalidade antes da vigência do novo valor.

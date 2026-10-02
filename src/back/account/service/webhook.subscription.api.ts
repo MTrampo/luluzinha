@@ -5,6 +5,13 @@ import { getPreapprovalApi, getAuthorizedPaymentApi } from "@/back/payment/servi
 import { PreApprovalResponse } from "mercadopago/dist/clients/preApproval/commonTypes"
 import { InvoiceResponse } from "mercadopago/dist/clients/invoice/commonTypes"
 import { nowBrazilIso, toIsoOrNull } from "@/commons/utils/helper"
+import { formatCurrencyBRL, formatDate } from "@/commons/utils/format"
+import {
+  sendWelcomeSubscriptionEmailApi,
+  sendRenewalSuccessEmailApi,
+  sendRenewalFailedEmailApi,
+  sendCancellationEmailApi,
+} from "@/back/email"
 import {
   webhookGetSubscriptionByIdSupabase,
   webhookGetSubscriptionByPayerEmailSupabase,
@@ -60,19 +67,50 @@ const webhookUpdateSubscriptionPreapprovalApi = async (preapproval: PreApprovalR
     return null
   }
 
+  const previousStatus = subscription.mp_status
+  const nextStatus = preapproval.status
+
   const payload: SubscriptionUpdatePayload = {
-    mp_status: preapproval.status,
+    mp_status: nextStatus,
     mp_payer_id: preapproval.payer_id,
     mp_payer_email: preapproval.payer_email || null,
     mp_subscription_id: preapproval.id,
-    current_period_start: toIsoOrNull(preapproval.date_created),
-    current_period_end: toIsoOrNull(preapproval.next_payment_date),
+    current_period_start: toIsoOrNull(preapproval.date_created) || subscription.current_period_start,
+    current_period_end: toIsoOrNull(preapproval.next_payment_date) || subscription.current_period_end,
     updated_at: nowBrazilIso(),
   }
 
   console.info(`🔄 [WEBHOOK_SERVICE:updatePreapproval] Payload de atualização:`, payload)
   const updateResult = await webhookSyncSubscriptionSupabase(payload, subscription.id)
   console.info(`🔄 [WEBHOOK_SERVICE:updatePreapproval] Resultado syncSubscription:`, updateResult)
+
+  // Disparo de E-mails conforme transição de estado da assinatura
+  const targetEmail = preapproval.payer_email || subscription.mp_payer_email
+  if (targetEmail) {
+    const establishment = await webhookGetEstablishmentBySubscriptionIdSupabase(subscription.id)
+    const recipientName = establishment?.name || "Poderosa"
+
+    // 1. Primeira Ativação / Boas-vindas (de pending/inativo para authorized)
+    if (nextStatus === "authorized" && previousStatus !== "authorized") {
+      const isTrial = Boolean((preapproval as unknown as { auto_recurring?: { free_trial?: unknown } })?.auto_recurring?.free_trial)
+      void sendWelcomeSubscriptionEmailApi(targetEmail, {
+        recipientName,
+        planName: subscription.plan_name || "Luluzinha Parceira",
+        isTrial,
+        trialDays: 7,
+        currentPeriodEnd: formatDate(preapproval.next_payment_date),
+      })
+    } 
+    // 2. Cancelamento (de qualquer status para cancelled)
+    else if (nextStatus === "cancelled" && previousStatus !== "cancelled") {
+      void sendCancellationEmailApi(targetEmail, {
+        recipientName,
+        planName: subscription.plan_name || "Luluzinha Parceira",
+        accessUntil: formatDate(subscription.current_period_end || preapproval.next_payment_date),
+      })
+    }
+  }
+
   return updateResult
 }
 
@@ -99,6 +137,8 @@ const webhookSaveInvoiceFromAuthorizedPaymentApi = async (authorizedPayment: Inv
 
     const establishment = await webhookGetEstablishmentBySubscriptionIdSupabase(subscription.id)
 
+    const paymentStatus = authorizedPayment.payment?.status ?? authorizedPayment.status ?? null
+
     const payload: InvoiceInsertPayload = {
       mp_invoice_id: authorizedPayment.id!,
       mp_subscription_id: authorizedPayment.preapproval_id,
@@ -107,7 +147,7 @@ const webhookSaveInvoiceFromAuthorizedPaymentApi = async (authorizedPayment: Inv
       mp_payer_email: subscription.mp_payer_email,
       amount: authorizedPayment.transaction_amount ?? 0,
       currency: authorizedPayment.currency_id ?? 'BRL',
-      status: authorizedPayment.payment?.status ?? authorizedPayment.status ?? null,
+      status: paymentStatus,
       paid_at: toIsoOrNull(authorizedPayment.debit_date),
       establishment_id: establishment?.id ?? null,
       subscription_id: subscription.id,
@@ -122,6 +162,29 @@ const webhookSaveInvoiceFromAuthorizedPaymentApi = async (authorizedPayment: Inv
         message: "Falha ao salvar fatura no banco de dados",
         error: error.message,
       })
+    }
+
+    // Disparo de E-mails para Renovação Recorrente
+    const targetEmail = subscription.mp_payer_email
+    if (targetEmail) {
+      const recipientName = establishment?.name || "Poderosa"
+      const amountFormatted = formatCurrencyBRL(authorizedPayment.transaction_amount ?? subscription.base_value ?? 0)
+
+      if (paymentStatus === "approved") {
+        void sendRenewalSuccessEmailApi(targetEmail, {
+          recipientName,
+          planName: subscription.plan_name || "Luluzinha Parceira",
+          amountFormatted,
+          nextPaymentDate: formatDate(authorizedPayment.debit_date || authorizedPayment.date_created),
+        })
+      } else if (paymentStatus === "rejected") {
+        void sendRenewalFailedEmailApi(targetEmail, {
+          recipientName,
+          planName: subscription.plan_name || "Luluzinha Parceira",
+          amountFormatted,
+          reason: "Cartão não autorizado pela operadora",
+        })
+      }
     }
 
     return ApiResponse.Ok({

@@ -203,3 +203,29 @@ export const getPlanConfigByEstablishmentIdSupabase = async (establishmentId: st
 
   return { data: fallbackLimits, error: null };
 };
+
+export interface SubscriptionCancellationReasonPayload {
+  user_id?: string | null;
+  establishment_id?: string | null;
+  subscription_id?: string | null;
+  mp_subscription_id?: string | null;
+  reason: string;
+  reason_details?: string | null;
+  created_at?: string;
+}
+
+export const insertCancellationReasonSupabase = async (payload: SubscriptionCancellationReasonPayload) => {
+  const supabase = await getClient();
+
+  const { data, error } = await supabase
+    .from('subscription_cancellation_reasons')
+    .insert(payload)
+    .select('id')
+    .single();
+
+  if (error) {
+    console.error("Erro ao inserir motivo de cancelamento:", error);
+  }
+
+  return { data, error };
+};

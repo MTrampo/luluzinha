@@ -205,7 +205,7 @@ export default function Account({ user, subscription }: AccountProps) {
 
                       <div className="bg-purple-50/50 p-3 rounded-md">
                         <p className="text-[10px] uppercase font-black tracking-wider text-gray-400">
-                          {subscription.mpStatus === "cancelled" ? "Cancelado em" : "Renovação"}
+                          {subscription.mpStatus === "cancelled" ? "Acesso até" : "Renovação"}
                         </p>
                         <p className="text-xs font-semibold text-gray-900">
                           {subscription.currentPeriodEndFormatted || "N/A"}
@@ -254,10 +254,18 @@ export default function Account({ user, subscription }: AccountProps) {
                 )}
               </div>
 
-              {subscription?.mpStatus !== "authorized" && (
+              {subscription?.mpStatus === "authorized" || (subscription?.mpStatus === "cancelled" && subscription.currentPeriodEnd && new Date(subscription.currentPeriodEnd).getTime() + 3 * 24 * 60 * 60 * 1000 > Date.now()) ? (
+                <Button
+                  variant="outline"
+                  onClick={() => window.location.href = "/painel/pagamentos"}
+                  className="w-full border-purple-200 text-purple-700 hover:bg-purple-50 font-semibold rounded-md transition-colors cursor-pointer"
+                >
+                  Gerenciar Assinatura
+                </Button>
+              ) : (
                 <Button
                   onClick={() => window.location.href = "/assinatura"}
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-colors"
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-md transition-colors cursor-pointer"
                 >
                   Tornar-me uma Luluzinha
                 </Button>

@@ -91,10 +91,10 @@ export default async function Home() {
           },
           {
             "@type": "Question",
-            "name": "O que significa o sistema estar na fase Alpha?",
+            "name": "O que significa o sistema estar na fase Beta?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Significa que a Luluzinha é um sistema novinho e está em desenvolvimento ativo e testes fechados (nosso espaço Alpha)! Todas as funções principais como a Agenda de Atendimentos, Cadastro de Poderosas e Histórico de Caixa funcionam 100%, mas ainda estamos polindo cada detalhe com um grupo seleto de profissionais."
+              "text": "Significa que a Luluzinha está na sua fase Beta com todas as funções principais (Agenda de Atendimentos, Cadastro de Poderosas e Seu Caixa) ativas e validadas! Estamos aprimorando continuamente a experiência com nossas profissionais parceiras, oferecendo suporte próximo via WhatsApp e condições exclusivas de lançamento."
             }
           },
           {
@@ -280,12 +280,12 @@ export default async function Home() {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="faq-alpha" className="border border-purple-100 bg-white rounded-xl px-5 py-2 shadow-sm">
+              <AccordionItem value="faq-beta" className="border border-purple-100 bg-white rounded-xl px-5 py-2 shadow-sm">
                 <AccordionTrigger className="text-base font-bold text-purple-950 hover:text-purple-600 hover:no-underline font-lexend text-left">
-                  O que significa o sistema estar na fase Alpha?
+                  O que significa o sistema estar na fase Beta?
                 </AccordionTrigger>
                 <AccordionContent className="text-purple-900/70 leading-relaxed pt-2 text-sm">
-                  Significa que a Luluzinha é um sistema novinho e está em desenvolvimento ativo e testes fechados (nosso espaço Alpha)! Todas as funções principais como a Agenda de Atendimentos, Cadastro de Poderosas e Histórico de Caixa funcionam 100%, mas ainda estamos polindo cada detalhe com um grupo seleto de profissionais. Por fazer parte dessa fase inicial, você conta com suporte direto e exclusivo via WhatsApp e garante condições especiais de lançamento!
+                  Significa que a Luluzinha está na sua fase Beta com todas as funções principais (Agenda de Atendimentos, Cadastro de Poderosas e Seu Caixa) ativas e validadas! Estamos aprimorando continuamente a experiência com nossas profissionais parceiras. Por fazer parte dessa fase, você conta com suporte direto e exclusivo via WhatsApp e garante condições especiais de lançamento!
                 </AccordionContent>
               </AccordionItem>
 

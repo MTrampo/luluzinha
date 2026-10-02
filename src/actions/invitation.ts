@@ -39,7 +39,7 @@ export const activateInvitationAction = async (userId: string, token: string) =>
 
   return {
     status: 200,
-    message: "Convite VIP ativado com sucesso! Bem-vinda ao seu novo espaço digital.",
+    message: "Convite ativado com sucesso! Bem-vinda ao seu novo espaço digital.",
     data: {
       planSlug,
       redirectTo: "/painel"

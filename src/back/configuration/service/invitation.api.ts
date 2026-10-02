@@ -27,7 +27,7 @@ export async function validateInvitationTokenApi(token: string) {
 
   if (!formatted.isActive || formatted.usedCount >= formatted.maxUses) {
     return ApiResponse.BadRequest({
-      message: "Este convite VIP já foi utilizado por outra Luluzinha ou expirou.",
+      message: "Este convite já foi utilizado ou expirou.",
       error: "convite_indisponivel"
     });
   }
@@ -38,7 +38,7 @@ export async function validateInvitationTokenApi(token: string) {
       await deactivateInvitationSupabase(invitation.id);
     }
     return ApiResponse.BadRequest({
-      message: "Este convite VIP expirou após o prazo limite.",
+      message: "Este convite expirou após o prazo limite.",
       error: "convite_expirado"
     });
   }

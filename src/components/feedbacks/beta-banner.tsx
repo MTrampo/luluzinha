@@ -5,16 +5,16 @@ import { IoCloseSharp, IoSparklesSharp } from "react-icons/io5"
 import { FaWhatsapp } from "react-icons/fa6"
 import { whatsappNumber } from "@/commons/constants/support"
 
-export function AlphaBanner() {
+export function BetaBanner() {
   const [isDismissed, setIsDismissed] = React.useState<boolean | null>(null)
 
   React.useEffect(() => {
-    const dismissed = localStorage.getItem("luluzinha_alpha_banner_dismissed")
+    const dismissed = localStorage.getItem("luluzinha_beta_banner_dismissed")
     setIsDismissed(dismissed === "true")
   }, [])
 
   const handleDismiss = () => {
-    localStorage.setItem("luluzinha_alpha_banner_dismissed", "true")
+    localStorage.setItem("luluzinha_beta_banner_dismissed", "true")
     setIsDismissed(true)
   }
 
@@ -23,7 +23,7 @@ export function AlphaBanner() {
   }
 
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    "Olá! Estou usando a Luluzinha (Espaço Alpha) e encontrei um detalhe ou gostaria de dar uma sugestão..."
+    "Olá! Estou usando a Luluzinha (Espaço Beta) e encontrei um detalhe ou gostaria de dar uma sugestão..."
   )}`
 
   return (
@@ -34,7 +34,7 @@ export function AlphaBanner() {
             <IoSparklesSharp className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-purple-200" />
           </div>
           <span>
-            🌸 <strong className="font-lexend font-bold text-purple-100">Espaço Alpha:</strong> Estamos lapidando cada detalhe! Se tiver sugestões ou dúvidas, fale com a gente.
+            🌸 <strong className="font-lexend font-bold text-purple-100">Espaço Beta:</strong> Estamos lapidando cada detalhe! Se tiver sugestões ou dúvidas, fale com a gente.
           </span>
         </div>
         <div className="shrink-0 pl-7 sm:pl-0">
@@ -59,3 +59,6 @@ export function AlphaBanner() {
     </div>
   )
 }
+
+export const AlphaBanner = BetaBanner
+

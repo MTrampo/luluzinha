@@ -27,6 +27,7 @@ export function StoryShareShowcase() {
                   src={diasDisponiveisImg}
                   alt="Arte de Dias Disponíveis gerada pelo sistema Luluzinha"
                   fill
+                  sizes="(max-width: 640px) 280px, 320px"
                   className="object-cover"
                   priority
                 />

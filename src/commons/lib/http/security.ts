@@ -85,18 +85,27 @@ export async function handleRouteAccess(request: NextRequest, user: unknown, sup
 export function isSubscriptionActive(subscription: SubscriptionPayloadCookie): boolean {
   const status = subscription.status as MercadoPagoStatusEnum
 
-  if (
-    status === MercadoPagoStatusEnum.Cancelled ||
-    status === MercadoPagoStatusEnum.Paused ||
-    status === MercadoPagoStatusEnum.Rejected
-  ) {
+  if (status === MercadoPagoStatusEnum.Paused || status === MercadoPagoStatusEnum.Rejected) {
     return false
   }
 
+  // Cancelado pelo usuário ou sistema, mas ainda dentro do ciclo pago
+  if (status === MercadoPagoStatusEnum.Cancelled) {
+    if (!subscription.currentPeriodEnd) return false
+
+    const endDate = new Date(subscription.currentPeriodEnd).getTime()
+    if (isNaN(endDate)) return false
+
+    return endDate + SUBSCRIPTION_GRACE_PERIOD_MS > Date.now()
+  }
+
+  // Autorizado / Ativo
   if (status === MercadoPagoStatusEnum.Authorized) {
     if (!subscription.currentPeriodEnd) return true
 
     const endDate = new Date(subscription.currentPeriodEnd).getTime()
+    if (isNaN(endDate)) return true
+
     return endDate + SUBSCRIPTION_GRACE_PERIOD_MS > Date.now()
   }
 
