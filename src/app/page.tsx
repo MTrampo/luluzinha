@@ -3,7 +3,7 @@ import Footer from "@/components/footer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { CheckCircle2, Heart, ArrowRight } from "lucide-react";
+import { Heart, ArrowRight } from "lucide-react";
 import { getUserLoggedApi } from "@/back/account/service/auth.api";
 import { getActivePlansAction } from "@/actions/subscription";
 import HomeAnimations from "@/components/animations/home-animations";
@@ -13,6 +13,7 @@ import { HowItWorksSection } from "@/features/landing/how-it-works";
 import { LandingPricingCard } from "@/features/landing/pricing-card";
 
 import { APP_URL as appUrl } from "@/commons/constants/env";
+import { redirect } from "next/navigation";
 
 import type { Metadata } from "next";
 
@@ -29,12 +30,14 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 
-  const [userResponse, plansResponse] = await Promise.all([
-    getUserLoggedApi(),
-    getActivePlansAction()
-  ]);
-
+  const userResponse = await getUserLoggedApi();
   const user = userResponse?.data?.user;
+
+  if (user) {
+    redirect('/painel');
+  }
+
+  const plansResponse = await getActivePlansAction();
   // Planos públicos da vitrine (exclui convites privados de valor 0), ordenados por prioridade (sort_order ASC) e limitados a 3
   const publicPlans = (plansResponse?.data || [])
     .filter((p) => p.price > 0)

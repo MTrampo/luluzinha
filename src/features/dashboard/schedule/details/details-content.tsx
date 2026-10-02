@@ -111,18 +111,18 @@ export function DetailsContent({ schedule }: DetailsContentProps) {
   const handleShareSummary = () => {
     const cleanPhone = `55${schedule.customer.phone}`.replace(/\D/g, '');
 
-    const message = `Olá, ${schedule.customer.nameFormatted}! ✨
+    const message = `Olá, ${schedule.customer.nameFormatted}!
 
 Passando para confirmar seu atendimento:
 
-🗓️ *Data:* ${schedule.dateFormatted}
-🕒 *Horário:* ${schedule.startTimeFormatted}
-💅 *Procedimentos:*
+*Data:* ${schedule.dateFormatted}
+*Horário:* ${schedule.startTimeFormatted}
+*Procedimentos:*
 ${schedule.procedures.map(p => `• ${p.name}`).join('\n')}
 
-💰 *Total:* ${schedule.totalPriceFormatted}
+*Total:* ${schedule.totalPriceFormatted}
 
-Estou te esperando com muito carinho! ❤️`;
+Estou te esperando com muito carinho!`;
 
     if (schedule.customer.phone) {
       const url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(message)}`;

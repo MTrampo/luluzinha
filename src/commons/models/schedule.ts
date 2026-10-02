@@ -7,7 +7,7 @@ import { ScheduleStatusEnum, formatScheduleStatus, BlockRecurringTypeEnum } from
 import { Database } from "@/commons/types/database.types";
 import { blockScheduleSchema } from "../validations/schedule";
 import { formatCurrencyBRL, formatDuration, formatCaseName, formatTimeRangeToDuration } from "../utils/format";
-import { getInitials, checkIsBirthdayToday, checkIsNewCustomer } from "../utils/helper";
+import { getInitials, checkIsBirthdayToday, checkIsNewCustomer, buildAppointmentReminderWaLink } from "../utils/helper";
 
 export interface ScheduleProcedureFormatted extends ProcedureSupabase {
   priceAtTime: number;
@@ -57,6 +57,7 @@ export interface CustomerDash {
   isNew: boolean;
   isBirthdayToday: boolean;
   waLink: string | null;
+  reminderWaLink?: string | null;
 }
 
 export interface ScheduleDash {
@@ -206,6 +207,12 @@ export function formatScheduleDash(
       isNew: checkIsNewCustomer(customer?.created_at ?? null),
       isBirthdayToday: checkIsBirthdayToday(customer?.birthday ?? null),
       waLink: customer?.phone ? `https://wa.me/55${customer.phone}` : null,
+      reminderWaLink: buildAppointmentReminderWaLink({
+        phone: customer?.phone,
+        customerName: customer ? formatCaseName(customer.name) : "Poderosa",
+        timeFormatted: format(start, "HH:mm", { locale: ptBR }),
+        dateFormatted: format(start, "dd/MM", { locale: ptBR }),
+      }),
     },
     procedures: (schedule.schedule_procedures || [])
       .filter(sp => !!sp.procedure)
@@ -291,4 +298,4 @@ export const createEmptyScheduleDateData = (historyRetentionDays = 30): Schedule
 export const createDefaultScheduleRetentionData = (): ScheduleRetentionData => ({
   historyRetentionDays: 30,
   planName: "Fundadoras",
-});
+});

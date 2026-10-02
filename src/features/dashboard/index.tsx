@@ -1,14 +1,17 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ptBR } from "date-fns/locale";
 import { format, isBefore, isToday } from "date-fns"
 import { generateServiceWeek } from "@/commons/utils/data"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/commons/lib/tw-merge"
 import { ScheduleWeekDay } from "@/commons/models/schedule";
+import { ScheduleStatusEnum } from "@/commons/enums/schedule";
+import { setAppBadgeCount } from "@/commons/utils/pwa";
 import { AppointmentSummaryCard } from "./appointment-summary-card";
 import { AppointmentFeedbackEmpty } from "./feedback-empty";
+import { AppointmentSoundAlert } from "@/components/feedbacks/appointment-sound-alert";
 
 const variants = cva(
   "w-16 h-20 p-2 flex flex-col items-center justify-center gap-1 rounded-lg transition cursor-pointer shrink-0",
@@ -42,6 +45,19 @@ export function CardWeekDay({ initialSchedules }: { initialSchedules: ScheduleWe
 
   const [selectedDay, setSelectedDay] = useState<Date>(today)
 
+  useEffect(() => {
+    const todayStr = new Date().toDateString();
+    const pendingToday = initialSchedules.filter((s) => {
+      const sDate = new Date(s.startAtIso);
+      const isPending =
+        s.status === ScheduleStatusEnum.PENDING ||
+        s.status === ScheduleStatusEnum.CONFIRMED;
+      return sDate.toDateString() === todayStr && isPending;
+    });
+
+    setAppBadgeCount(pendingToday.length);
+  }, [initialSchedules]);
+
   const appointments = initialSchedules.filter(s => {
     const sDate = new Date(s.startAtIso)
     return sDate.toDateString() === selectedDay.toDateString()
@@ -57,6 +73,7 @@ export function CardWeekDay({ initialSchedules }: { initialSchedules: ScheduleWe
 
   return (
     <>
+      <AppointmentSoundAlert schedules={initialSchedules} />
       <div className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth">
         {weekDays.map((day) => {
           const isPast = isBefore(day, today) && !isToday(day)
