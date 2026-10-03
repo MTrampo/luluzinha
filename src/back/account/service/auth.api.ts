@@ -9,6 +9,7 @@ import { SubscriptionPayloadCookie } from "@/commons/models/subscription";
 import { establishmentsFormatter } from "@/commons/models/establishment";
 import { clearCookieSubscription, setCookieSubscription } from "@/commons/lib/auth/subscription";
 import { clearEstablishmentCookie } from "@/commons/lib/auth/establishment";
+import { isSubscriptionActive } from "@/commons/lib/http/security";
 
 export const signInUserApi = async (body: SignInRequestBody) => {
   const { data, error } = await signInWithEmail(body.email, body.password)
@@ -54,8 +55,8 @@ export const signInUserApi = async (body: SignInRequestBody) => {
       userId: data.user.id
     };
 
-    // Se estiver autorizado, manda para o painel
-    if (subscription.mp_status === MercadoPagoStatusEnum.Authorized) {
+    // Se estiver ativo ou cancelado dentro do período pago, manda para o painel
+    if (isSubscriptionActive(subscriptionPayload)) {
       redirectPath = '/painel';
     }
 

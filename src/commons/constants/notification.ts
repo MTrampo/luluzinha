@@ -1,0 +1,1 @@
+export const APPLICATION_SERVER_KEY_PUBLIC = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''

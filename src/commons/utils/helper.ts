@@ -89,3 +89,21 @@ export const getEstablishmentLiveStatus = (hours: OpeningHours): { isOpen: boole
 
   return { isOpen: false, label: "Fechado" };
 }
+
+export const buildAppointmentReminderWaLink = (params: {
+  phone?: string | null;
+  customerName: string;
+  timeFormatted: string;
+  dateFormatted?: string;
+  establishmentName?: string | null;
+}): string | null => {
+  if (!params.phone) return null;
+  const cleanPhone = params.phone.replace(/\D/g, "");
+  if (!cleanPhone) return null;
+
+  const dateText = params.dateFormatted ? ` no dia ${params.dateFormatted}` : " hoje";
+  const spaceText = params.establishmentName ? ` no ${params.establishmentName}` : " no Meu Espaço";
+  const message = `Olá, ${params.customerName}! Passando para lembrar do seu atendimento agendado${dateText} às ${params.timeFormatted}${spaceText}. Preparamos tudo com muito carinho para receber você! Caso precise remarcar, por favor nos avise com antecedência. Até breve!`;
+
+  return `https://wa.me/55${cleanPhone}?text=${encodeURIComponent(message)}`;
+}

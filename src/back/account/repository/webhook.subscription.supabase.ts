@@ -124,7 +124,7 @@ export const webhookGetEstablishmentBySubscriptionIdSupabase = async (subscripti
 
   const { data } = await supabase
     .from('establishments')
-    .select('id')
+    .select('id, name, owner_id')
     .eq('subscription_id', subscriptionId)
     .single()
 

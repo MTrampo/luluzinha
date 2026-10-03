@@ -43,7 +43,7 @@ export function SignUpFlow({ initialToken }: SignUpFlowProps) {
         if (res.data && res.data.isAvailable) {
           setInvitation(res.data);
         } else {
-          toast.error(res.message || "Este convite VIP já foi utilizado por outra Poderosa ou expirou.");
+          toast.error(res.message || "Este convite já foi utilizado por outra Poderosa ou expirou.");
         }
         setIsValidating(false);
       });
@@ -92,7 +92,7 @@ export function SignUpFlow({ initialToken }: SignUpFlowProps) {
       <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
         <Spinner className="w-8 h-8 text-purple-700" />
         <p className="text-sm font-semibold text-purple-900/70">
-          Verificando seu convite VIP...
+          Verificando seu convite...
         </p>
       </div>
     );
@@ -110,7 +110,7 @@ export function SignUpFlow({ initialToken }: SignUpFlowProps) {
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-purple-200 flex items-center gap-1.5">
                 <LuSparkles className="w-3 h-3 text-amber-300" />
-                Convite VIP Ativo
+                Convite Ativo
               </p>
 
               <h4 className="text-sm sm:text-base font-extrabold text-white">

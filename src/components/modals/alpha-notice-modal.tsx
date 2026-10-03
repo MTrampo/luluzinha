@@ -102,15 +102,15 @@ export function AlphaNoticeModal({ isOpen, onClose, origin = "landing_pricing" }
           <DialogHeader className="space-y-3 relative z-10 text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-amber-300 text-xs font-bold uppercase tracking-wider w-fit">
               <FaCrown className="w-3.5 h-3.5" />
-              Fase Alpha Fechada
+              Fase Beta da Luluzinha
             </div>
 
             <DialogTitle className="text-xl sm:text-2xl font-black text-white font-lexend leading-snug">
-              Estamos em fase de testes exclusivos!
+              Estamos na fase Beta de testes!
             </DialogTitle>
 
             <p className="text-xs sm:text-sm text-purple-200 leading-relaxed font-medium">
-              Preparamos cada detalhe com muito carinho. O acesso está liberado apenas para manicures convidadas. Quer ser avisada com prioridade na abertura do <strong>Beta Público</strong>?
+              Preparamos cada detalhe com muito carinho para que seu dia a dia seja mais leve. Deixe seu contato para garantir acesso imediato e condições exclusivas de lançamento!
             </p>
           </DialogHeader>
         </div>

@@ -1,6 +1,7 @@
 import Header from "@/components/header/dashboard";
 import { getSchedulesWeekAction } from "@/actions/schedule";
 import { CardWeekDay } from "@/features/dashboard";
+import { GreetingBanner } from "@/components/feedbacks/greeting-banner";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ export default async function Home() {
     <>
       <Header title="Início" />
       <div className="main-content">
+        <GreetingBanner />
         <h2 className="text-purple-900">Semana</h2>
         <CardWeekDay initialSchedules={schedules} />
       </div>

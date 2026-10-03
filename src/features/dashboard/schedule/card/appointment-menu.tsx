@@ -106,10 +106,27 @@ export function AppointmentMenu({ schedule }: AppointmentMenuProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-52">
-          {schedule.customer.waLink && (
+          {schedule.customer.reminderWaLink && !isCancelled && (
             <DropdownMenuItem
               asChild
               className="flex items-center gap-2 px-2 py-2 cursor-pointer rounded-md transition-colors focus:bg-green-50 focus:text-green-700"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <a
+                href={schedule.customer.reminderWaLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaWhatsapp className="w-4 h-4 text-green-500" />
+                <span className="font-medium">Lembrar Poderosa</span>
+              </a>
+            </DropdownMenuItem>
+          )}
+
+          {schedule.customer.waLink && (
+            <DropdownMenuItem
+              asChild
+              className="flex items-center gap-2 px-2 py-2 cursor-pointer rounded-md transition-colors focus:bg-purple-50 focus:text-purple-700"
               onClick={(e) => e.stopPropagation()}
             >
               <a
@@ -117,8 +134,8 @@ export function AppointmentMenu({ schedule }: AppointmentMenuProps) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FaWhatsapp className="w-4 h-4 text-green-500" />
-                <span className="font-medium">Chamar Poderosa</span>
+                <FaWhatsapp className="w-4 h-4 text-purple-500" />
+                <span className="font-medium">Chamar no WhatsApp</span>
               </a>
             </DropdownMenuItem>
           )}

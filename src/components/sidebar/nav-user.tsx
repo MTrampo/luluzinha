@@ -1,22 +1,35 @@
 'use client'
 
-import { FaCirclePlus, FaCircleUser, FaCreditCard, FaIdCard, FaPersonWalkingArrowRight, FaLock, FaPaintbrush } from "react-icons/fa6";
+import { FaCircleUser, FaCreditCard, FaIdCard, FaPersonWalkingArrowRight, FaPaintbrush } from "react-icons/fa6";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "../ui/sidebar";
 import { AvatarMap } from "@/components/maps/avatar-map";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, Smartphone, Laptop } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useState } from "react";
 import { signOutAction } from "@/actions/auth";
 import { useProfileStore } from "@/store/use-profile";
 import { useEstablishmentStore } from "@/store/use-establishment";
+import { usePwaInstall } from "@/commons/hooks/use-pwa-install";
+import { IosGuideDialog } from "@/components/pwa";
 
 export function NavUser() {
   const profile = useProfileStore((state) => state.profile)
   const luluzinha = useProfileStore((state) => state.luluzinha)
   const { isMobile } = useSidebar()
   const router = useRouter()
+  const { isStandalone, isIOS, isDesktop, installTitle, installApp } = usePwaInstall()
+  const [showIosGuide, setShowIosGuide] = useState(false)
+
+  const handleInstallClick = async () => {
+    if (isIOS) {
+      setShowIosGuide(true)
+    } else {
+      await installApp()
+    }
+  }
 
   const handleSignOut = async () => {
     await signOutAction()
@@ -100,6 +113,24 @@ export function NavUser() {
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
+            {!isStandalone && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onClick={handleInstallClick}
+                    className="cursor-pointer text-primary focus:text-primary font-medium focus:bg-purple-50"
+                  >
+                    {isDesktop ? (
+                      <Laptop className="size-4 text-primary" />
+                    ) : (
+                      <Smartphone className="size-4 text-primary" />
+                    )}
+                    {installTitle}
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer" variant='destructive' onSelect={handleSignOut}>
               <FaPersonWalkingArrowRight />
@@ -108,6 +139,7 @@ export function NavUser() {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
+      <IosGuideDialog open={showIosGuide} onOpenChange={setShowIosGuide} />
     </SidebarMenu>
   )
 }

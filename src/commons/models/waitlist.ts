@@ -3,11 +3,11 @@ export interface WaitlistEntry {
   name: string;
   phone: string | null;
   email: string | null;
-  origin: string;
-  status: string;
+  origin: string | null;
+  status: string | null;
   notes: string | null;
-  created_at: string;
-  updated_at: string;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 export interface WaitlistCreateInput {
@@ -23,7 +23,7 @@ export interface WaitlistFormatted {
   name: string;
   phone: string | null;
   email: string | null;
-  origin: string;
-  status: string;
-  createdAt: string;
+  origin: string | null;
+  status: string | null;
+  createdAt: string | null;
 }

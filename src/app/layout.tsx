@@ -4,6 +4,7 @@ import "@/commons/styles/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { SubscriptionGuard } from "@/components/subscription/guard";
 import { CookieConsent } from "@/components/feedbacks/cookie-consent";
+import { PwaRegister } from "@/components/pwa";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -147,6 +148,7 @@ export default function RootLayout({
       >
         <GoogleAnalytics gaId="G-5VBC887RXJ" />
         <SubscriptionGuard />
+        <PwaRegister />
         {children}
         <Analytics />
         <SpeedInsights />

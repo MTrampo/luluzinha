@@ -1,5 +1,5 @@
 import { getUserLoggedApi } from "./auth.api"
-import { getSubscriptionIdByUserIdSupabase, updateSubscriptionByIdSupabase, upsertSubscriptionSupabase } from "../repository/subscription.supabase"
+import { getSubscriptionIdByUserIdSupabase, updateSubscriptionByIdSupabase, upsertSubscriptionSupabase, insertCancellationReasonSupabase } from "../repository/subscription.supabase"
 import { ApiResponse } from "@/commons/lib/http/responses"
 import { getEstablishmentsByOwnerIdApi } from "./establishment.api"
 import { getPlanConfigBySlugApi } from "@/back/configuration/service/plan.api"
@@ -8,9 +8,11 @@ import { createPreApprovalSubscriptionApi } from "@/back/payment/service/payment
 import { MercadoPagoStatusEnum } from "@/commons/enums/subscription"
 import { clearCookieSubscription, getCookieSubscriptionPayload, setCookieSubscription } from "@/commons/lib/auth/subscription"
 import { nowBrazilIso, toIsoOrNull } from "@/commons/utils/helper"
+import { formatDate } from "@/commons/utils/format"
 import { clientPreAproval } from "@/commons/lib/mercadopago/server"
 import { getInvoicesByEstablishmentIdApi } from "@/back/payment/service/invoice.api"
 import { invoiceFormatter } from "@/commons/models/payment"
+import { sendCancellationEmailApi } from "@/back/email"
 
 export const createCheckoutSessionApi = async (mpPayerEmail: string, requestedPlanSlug: string) => {
   const userResult = await getUserLoggedApi()
@@ -250,8 +252,8 @@ export const refreshSubscriptionApi = async () => {
       if (mpData && mpData.status) {
         const updatePayload: SubscriptionUpdatePayload = {
           mp_status: mpData.status,
-          current_period_start: toIsoOrNull(mpData.date_created),
-          current_period_end: toIsoOrNull(mpData.next_payment_date),
+          current_period_start: toIsoOrNull(mpData.date_created) || subscription.current_period_start,
+          current_period_end: toIsoOrNull(mpData.next_payment_date) || subscription.current_period_end,
           updated_at: nowBrazilIso()
         }
         await updateSubscriptionByIdSupabase(subscription.id, updatePayload)
@@ -335,9 +337,11 @@ export const getUserSubscriptionDetailsApi = async () => {
   })
 }
 
-export const cancelSubscriptionApi = async () => {
+export const cancelSubscriptionApi = async (reason?: string, reasonDetails?: string) => {
   const userResult = await getUserLoggedApi()
-  const userId = userResult.data?.user?.id
+  const user = userResult.data?.user
+  const userId = user?.id
+  const userEmail = user?.email
   if (!userId) {
     return ApiResponse.Unauthorized({
       message: "Usuário não autenticado."
@@ -357,6 +361,25 @@ export const cancelSubscriptionApi = async () => {
     return ApiResponse.BadRequest({
       message: "Assinatura não possui registro correspondente no Mercado Pago."
     })
+  }
+
+  if (reason) {
+    console.info(`[SERVICE:cancelSubscription] Registrando motivo do cancelamento: ${reason} | detalhes: ${reasonDetails || 'N/A'}`)
+    try {
+      const establishmentResult = await getEstablishmentsByOwnerIdApi(userId)
+      const establishmentId = establishmentResult.data?.[0]?.id ?? null
+      await insertCancellationReasonSupabase({
+        user_id: userId,
+        establishment_id: establishmentId,
+        subscription_id: subscription.id,
+        mp_subscription_id: mpSubscriptionId,
+        reason,
+        reason_details: reasonDetails || null,
+        created_at: nowBrazilIso(),
+      })
+    } catch (err) {
+      console.warn("[SERVICE:cancelSubscription] Erro ao salvar motivo do cancelamento na tabela:", err)
+    }
   }
 
   // 2. Chamar o Mercado Pago para cancelar a assinatura
@@ -401,6 +424,17 @@ export const cancelSubscriptionApi = async () => {
     userId
   }
   await setCookieSubscription(cookiePayload)
+
+  // 5. Disparar e-mail de confirmação de cancelamento (não-bloqueante)
+  if (userEmail) {
+    const establishmentResult = await getEstablishmentsByOwnerIdApi(userId)
+    const establishmentName = establishmentResult.data?.[0]?.name
+    void sendCancellationEmailApi(userEmail, {
+      recipientName: user?.user_metadata?.display_name || user?.user_metadata?.name || establishmentName || "Poderosa",
+      planName: subscription.plan_name || "Luluzinha Parceira",
+      accessUntil: formatDate(subscription.current_period_end),
+    })
+  }
 
   // Obter a assinatura atualizada do banco de dados
   const updatedSubscription = await getSubscriptionIdByUserIdSupabase(userId)

@@ -19,6 +19,7 @@ export function AppointmentFeedbackEmpty({ availableDays = [] }: AppointmentFeed
           src={powerfulContactSvg}
           alt="Sem agendamentos"
           fill
+          sizes="192px"
           className="object-contain opacity-80"
           priority
         />

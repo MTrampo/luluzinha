@@ -3,7 +3,7 @@ import Footer from "@/components/footer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { CheckCircle2, Heart, ArrowRight } from "lucide-react";
+import { Heart, ArrowRight } from "lucide-react";
 import { getUserLoggedApi } from "@/back/account/service/auth.api";
 import { getActivePlansAction } from "@/actions/subscription";
 import HomeAnimations from "@/components/animations/home-animations";
@@ -13,6 +13,7 @@ import { HowItWorksSection } from "@/features/landing/how-it-works";
 import { LandingPricingCard } from "@/features/landing/pricing-card";
 
 import { APP_URL as appUrl } from "@/commons/constants/env";
+import { redirect } from "next/navigation";
 
 import type { Metadata } from "next";
 
@@ -29,12 +30,14 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 
-  const [userResponse, plansResponse] = await Promise.all([
-    getUserLoggedApi(),
-    getActivePlansAction()
-  ]);
-
+  const userResponse = await getUserLoggedApi();
   const user = userResponse?.data?.user;
+
+  if (user) {
+    redirect('/painel');
+  }
+
+  const plansResponse = await getActivePlansAction();
   // Planos públicos da vitrine (exclui convites privados de valor 0), ordenados por prioridade (sort_order ASC) e limitados a 3
   const publicPlans = (plansResponse?.data || [])
     .filter((p) => p.price > 0)
@@ -91,10 +94,10 @@ export default async function Home() {
           },
           {
             "@type": "Question",
-            "name": "O que significa o sistema estar na fase Alpha?",
+            "name": "O que significa o sistema estar na fase Beta?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Significa que a Luluzinha é um sistema novinho e está em desenvolvimento ativo e testes fechados (nosso espaço Alpha)! Todas as funções principais como a Agenda de Atendimentos, Cadastro de Poderosas e Histórico de Caixa funcionam 100%, mas ainda estamos polindo cada detalhe com um grupo seleto de profissionais."
+              "text": "Significa que a Luluzinha está na sua fase Beta com todas as funções principais (Agenda de Atendimentos, Cadastro de Poderosas e Seu Caixa) ativas e validadas! Estamos aprimorando continuamente a experiência com nossas profissionais parceiras, oferecendo suporte próximo via WhatsApp e condições exclusivas de lançamento."
             }
           },
           {
@@ -280,12 +283,12 @@ export default async function Home() {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="faq-alpha" className="border border-purple-100 bg-white rounded-xl px-5 py-2 shadow-sm">
+              <AccordionItem value="faq-beta" className="border border-purple-100 bg-white rounded-xl px-5 py-2 shadow-sm">
                 <AccordionTrigger className="text-base font-bold text-purple-950 hover:text-purple-600 hover:no-underline font-lexend text-left">
-                  O que significa o sistema estar na fase Alpha?
+                  O que significa o sistema estar na fase Beta?
                 </AccordionTrigger>
                 <AccordionContent className="text-purple-900/70 leading-relaxed pt-2 text-sm">
-                  Significa que a Luluzinha é um sistema novinho e está em desenvolvimento ativo e testes fechados (nosso espaço Alpha)! Todas as funções principais como a Agenda de Atendimentos, Cadastro de Poderosas e Histórico de Caixa funcionam 100%, mas ainda estamos polindo cada detalhe com um grupo seleto de profissionais. Por fazer parte dessa fase inicial, você conta com suporte direto e exclusivo via WhatsApp e garante condições especiais de lançamento!
+                  Significa que a Luluzinha está na sua fase Beta com todas as funções principais (Agenda de Atendimentos, Cadastro de Poderosas e Seu Caixa) ativas e validadas! Estamos aprimorando continuamente a experiência com nossas profissionais parceiras. Por fazer parte dessa fase, você conta com suporte direto e exclusivo via WhatsApp e garante condições especiais de lançamento!
                 </AccordionContent>
               </AccordionItem>
 

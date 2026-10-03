@@ -3,8 +3,9 @@ import { AppSidebar } from "@/components/sidebar"
 import { SubscriptionHydrator } from "@/components/subscription/hydrator"
 import { EstablishmentHydrator } from "@/components/establishment/hydrator"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { AlphaBanner } from "@/components/feedbacks/beta-banner"
+import { BetaBanner } from "@/components/feedbacks/beta-banner"
 import { OnboardingGuard } from "@/components/establishment/onboarding-guard"
+import { HotkeysProvider } from "@/components/system/hotkeys-provider"
 
 import type { Metadata } from "next"
 
@@ -36,10 +37,11 @@ export default async function Layout({ children }: { children: React.ReactNode }
         >
           <EstablishmentHydrator />
           <SubscriptionHydrator />
+          <HotkeysProvider />
           <OnboardingGuard>
             <AppSidebar />
             <SidebarInset>
-              <AlphaBanner />
+              <BetaBanner />
               {children}
             </SidebarInset>
           </OnboardingGuard>

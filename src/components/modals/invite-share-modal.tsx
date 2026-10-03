@@ -124,6 +124,7 @@ export function InviteShareModal({ isOpen, onClose, availableDays }: InviteShare
                 src={imageUrl}
                 alt="Preview do Convite"
                 fill
+                sizes="(max-width: 640px) 100vw, 400px"
                 className={`object-cover transition-opacity duration-500 ${isLoading ? "opacity-0" : "opacity-100"}`}
                 onLoad={() => {
                   setIsLoading(false);
