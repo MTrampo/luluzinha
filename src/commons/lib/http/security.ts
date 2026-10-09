@@ -89,14 +89,15 @@ export function isSubscriptionActive(subscription: SubscriptionPayloadCookie): b
     return false
   }
 
-  // Cancelado pelo usuário ou sistema, mas ainda dentro do ciclo pago
+  // Cancelado pelo usuário ou sistema, mas ainda dentro do ciclo pago já contratado
   if (status === MercadoPagoStatusEnum.Cancelled) {
     if (!subscription.currentPeriodEnd) return false
 
     const endDate = new Date(subscription.currentPeriodEnd).getTime()
     if (isNaN(endDate)) return false
 
-    return endDate + SUBSCRIPTION_GRACE_PERIOD_MS > Date.now()
+    // Assinatura cancelada não possui carência. Encerra estritamente no fim do período pago.
+    return endDate > Date.now()
   }
 
   // Autorizado / Ativo
@@ -110,4 +111,25 @@ export function isSubscriptionActive(subscription: SubscriptionPayloadCookie): b
   }
 
   return false
+}
+
+export function isSubscriptionInGracePeriod(subscription: SubscriptionPayloadCookie): boolean {
+  const status = subscription.status as MercadoPagoStatusEnum
+  if (status !== MercadoPagoStatusEnum.Authorized) return false
+  if (!subscription.currentPeriodEnd) return false
+
+  const endDate = new Date(subscription.currentPeriodEnd).getTime()
+  if (isNaN(endDate)) return false
+
+  const now = Date.now()
+  return endDate <= now && endDate + SUBSCRIPTION_GRACE_PERIOD_MS > now
+}
+
+export function getGracePeriodDaysRemaining(subscription: SubscriptionPayloadCookie): number {
+  if (!subscription.currentPeriodEnd) return 0
+  const endDate = new Date(subscription.currentPeriodEnd).getTime()
+  if (isNaN(endDate)) return 0
+
+  const msRemaining = endDate + SUBSCRIPTION_GRACE_PERIOD_MS - Date.now()
+  return Math.max(1, Math.ceil(msRemaining / (1000 * 60 * 60 * 24)))
 }

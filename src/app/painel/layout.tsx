@@ -1,6 +1,7 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/sidebar"
 import { SubscriptionHydrator } from "@/components/subscription/hydrator"
+import { SubscriptionGraceBanner } from "@/components/subscription/grace-banner"
 import { EstablishmentHydrator } from "@/components/establishment/hydrator"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { BetaBanner } from "@/components/feedbacks/beta-banner"
@@ -41,6 +42,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
           <OnboardingGuard>
             <AppSidebar />
             <SidebarInset>
+              <SubscriptionGraceBanner />
               <BetaBanner />
               {children}
             </SidebarInset>

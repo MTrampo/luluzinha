@@ -21,6 +21,7 @@ import {
   FaBan,
   FaLock,
   FaCalendarCheck,
+  FaTriangleExclamation,
 } from "react-icons/fa6"
 import { getSubscriptionStatus } from "@/components/maps/status-map"
 import {
@@ -116,11 +117,15 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
     const percentage = Math.min(100, Math.max(0, Math.round((elapsed / totalDuration) * 100)))
     const msRemaining = endDate - now
     const daysRemaining = Math.max(0, Math.ceil(msRemaining / (1000 * 60 * 60 * 24)))
+    const isPeriodActive = endDate > now
+    const isInGrace = endDate <= now && endDate + 3 * 24 * 60 * 60 * 1000 > now
     const isWithinGraceOrFuture = endDate + 3 * 24 * 60 * 60 * 1000 > now
 
     return {
       percentage,
       daysRemaining,
+      isPeriodActive,
+      isInGrace,
       isWithinGraceOrFuture,
       isExpired: !isWithinGraceOrFuture
     }
@@ -163,8 +168,9 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
   }
 
   const subStatus = getSubscriptionStatus(subscription?.mpStatus)
-  const isCancelledActive = subscription?.mpStatus === "cancelled" && cycleMetrics?.isWithinGraceOrFuture
+  const isCancelledActive = subscription?.mpStatus === "cancelled" && cycleMetrics?.isPeriodActive
   const isAuthorized = subscription?.mpStatus === "authorized"
+  const isGraceActive = isAuthorized && cycleMetrics?.isInGrace
 
   const supportWhatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     "Olá! Gostaria de tirar uma dúvida sobre a minha assinatura e pagamentos da Luluzinha..."
@@ -175,6 +181,36 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
       <Header title="Minha Assinatura" />
 
       <div className="main-content space-y-6">
+
+        {/* ALERTA DE TOLERÂNCIA DE RENOVAÇÃO */}
+        {isGraceActive && (
+          <aside
+            aria-label="Alerta de pendência na renovação"
+            className="bg-amber-50 border border-amber-300 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-900 shadow-xs"
+          >
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-amber-200/70 text-amber-800 rounded-xl shrink-0 mt-0.5">
+                <FaTriangleExclamation className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-bold text-sm sm:text-base text-amber-950">
+                  Renovação pendente no Mercado Pago
+                </h3>
+                <p className="text-xs sm:text-sm text-amber-800/90 leading-relaxed">
+                  Não foi possível renovar seu plano automaticamente. Seu espaço continua liberado pelo período de tolerância de 3 dias. Verifique seu cartão no Mercado Pago para não ter interrupções.
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://www.mercadopago.com.br/subscriptions"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-xs transition-all"
+            >
+              Ver no Mercado Pago
+            </a>
+          </aside>
+        )}
 
         {/* 1. HERO CARD DA ASSINATURA */}
         <div className="bg-white border border-purple-100 hover:border-purple-200 shadow-sm rounded-2xl p-5 sm:p-7 transition-all duration-300">
@@ -192,10 +228,12 @@ export default function PaymentsDashboard({ subscription, invoices: initialInvoi
                 <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-0.5 text-xs font-bold uppercase tracking-wider ${
                   isCancelledActive
                     ? "bg-amber-100 text-amber-800 border border-amber-300"
+                    : isGraceActive
+                    ? "bg-orange-100 text-orange-800 border border-orange-300"
                     : subStatus.className
                 }`}>
-                  <span className={`w-2 h-2 rounded-full ${isCancelledActive ? "bg-amber-500 animate-pulse" : isAuthorized ? "bg-emerald-500 animate-pulse" : "bg-gray-400"}`} />
-                  {isCancelledActive ? "Cancelada (Acesso Ativo)" : subscription?.mpStatusFormatted || "Sem Assinatura"}
+                  <span className={`w-2 h-2 rounded-full ${isCancelledActive ? "bg-amber-500 animate-pulse" : isGraceActive ? "bg-orange-500 animate-pulse" : isAuthorized ? "bg-emerald-500 animate-pulse" : "bg-gray-400"}`} />
+                  {isCancelledActive ? "Cancelada (Acesso Ativo)" : isGraceActive ? "Tolerância de Renovação" : subscription?.mpStatusFormatted || "Sem Assinatura"}
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-gray-500 font-medium">

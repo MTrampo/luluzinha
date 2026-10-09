@@ -1,43 +1,41 @@
 'use client'
 
-import { useEffect, useCallback, useState } from "react"
+import { useEffect, useCallback } from "react"
 import { manageSubscriptionEndpointAction, refreshSubscriptionAction } from "@/actions/subscription"
 import { useProfileStore } from "@/store/use-profile"
+import { useSubscriptionStore } from "@/store/use-subscription"
 import { isSubscriptionActive } from "@/commons/lib/http/security"
 import { ExpiredDialog } from "../dialogs/subscription/expired"
-import { SubscriptionPayloadCookie } from "@/commons/models/subscription"
 
 export function SubscriptionHydrator() {
   const luluzinha = useProfileStore((state) => state.luluzinha)
-  const [subscription, setSubscription] = useState<SubscriptionPayloadCookie | null>(null)
-  const [dismissed, setDismissed] = useState(false)
+  const subscription = useSubscriptionStore((state) => state.subscription)
+  const setSubscription = useSubscriptionStore((state) => state.setSubscription)
 
   const hydrateSubscription = useCallback(async () => {
     try {
-      const response = await manageSubscriptionEndpointAction()
+      let response = await manageSubscriptionEndpointAction()
       if (response?.data) {
-        setSubscription(response.data)
-
         if (!isSubscriptionActive(response.data)) {
           const refreshResponse = await refreshSubscriptionAction()
           if (refreshResponse?.data) {
-            setSubscription(refreshResponse.data)
+            response = refreshResponse
           }
         }
+        setSubscription(response.data)
       }
     } catch (error) {
       console.error("Failed to hydrate subscription", error)
     }
-  }, [])
+  }, [setSubscription])
 
   useEffect(() => {
     hydrateSubscription()
   }, [hydrateSubscription])
 
   const isExpired = subscription ? !isSubscriptionActive(subscription) : false
-  const open = !!subscription && isExpired && !dismissed
 
-  if (!open) return null
+  if (!subscription || !isExpired) return null
 
-  return <ExpiredDialog name={luluzinha} open={open} onDismiss={() => setDismissed(true)} />
+  return <ExpiredDialog name={luluzinha} open={isExpired} />
 }

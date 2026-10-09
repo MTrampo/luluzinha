@@ -11,36 +11,62 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { FaTriangleExclamation, FaUserCheck, FaUserLock } from "react-icons/fa6"
+import { FaCrown, FaRightFromBracket, FaTriangleExclamation } from "react-icons/fa6"
+import { useRouter } from "next/navigation"
+import { signOutAction } from "@/actions/auth"
+import { useTransition } from "react"
 
 type ExpiredDialogProps = {
   name: string
   open: boolean
-  onDismiss: () => void
 }
 
-export function ExpiredDialog({ name, open, onDismiss }: ExpiredDialogProps) {
+export function ExpiredDialog({ name, open }: ExpiredDialogProps) {
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+
+  const handleRenew = () => {
+    router.push("/assinatura")
+  }
+
+  const handleSignOut = () => {
+    startTransition(async () => {
+      await signOutAction()
+    })
+  }
+
   return (
-    <AlertDialog open={open} onOpenChange={(value) => { if (!value) onDismiss() }}>
-      <AlertDialogContent className="bg-red-100">
+    <AlertDialog open={open} onOpenChange={() => {}}>
+      <AlertDialogContent className="bg-purple-50/95 border border-purple-200 text-purple-950 sm:max-w-md shadow-2xl backdrop-blur-md">
         <AlertDialogHeader>
-          <AlertDialogMedia className="bg-red-200">
-            <FaTriangleExclamation className="text-red-700"/>
+          <AlertDialogMedia className="bg-purple-100 text-purple-700">
+            <FaTriangleExclamation className="w-5 h-5" />
           </AlertDialogMedia>
 
-          <AlertDialogTitle className="text-red-700">Assinatura Expirada</AlertDialogTitle>
-          <AlertDialogDescription className="mt-0 text-red-500">
-            {name}, sua assinatura expirou e algumas funcionalidades foram limitadas.
-            Quer continuar usando o serviço completo? Renove sua assinatura.
+          <AlertDialogTitle className="text-purple-950 text-xl font-bold">
+            Seu Espaço precisa de uma assinatura ativa
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-gray-600 text-sm mt-2 leading-relaxed">
+            {name ? `${name}, o` : "O"} período da sua assinatura encerrou. Para continuar organizando sua Agenda de Atendimentos, cuidando das suas Poderosas e acompanhando Seu Caixa, renove seu plano e continue brilhando!
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel className="text-red-700 border-red-700 hover:text-red-800" onClick={onDismiss}>
-            <FaUserLock/> MANTER
+        <AlertDialogFooter className="mt-4 gap-2 sm:gap-3">
+          <AlertDialogCancel
+            disabled={isPending}
+            onClick={handleSignOut}
+            className="border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+          >
+            <FaRightFromBracket className="w-4 h-4 mr-1.5" />
+            Sair da Conta
           </AlertDialogCancel>
-          <AlertDialogAction onClick={() => {}}>
-            <FaUserCheck/> RENOVAR
+          <AlertDialogAction
+            disabled={isPending}
+            onClick={handleRenew}
+            className="bg-purple-900 hover:bg-purple-950 text-white font-semibold transition-all shadow-md"
+          >
+            <FaCrown className="w-4 h-4 mr-1.5 text-amber-300" />
+            Renovar Plano
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

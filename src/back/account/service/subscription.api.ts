@@ -11,6 +11,7 @@ import { nowBrazilIso, toIsoOrNull } from "@/commons/utils/helper"
 import { formatDate } from "@/commons/utils/format"
 import { clientPreAproval } from "@/commons/lib/mercadopago/server"
 import { getInvoicesByEstablishmentIdApi } from "@/back/payment/service/invoice.api"
+import { isSubscriptionActive } from "@/commons/lib/http/security"
 import { invoiceFormatter } from "@/commons/models/payment"
 import { sendCancellationEmailApi } from "@/back/email"
 
@@ -187,7 +188,7 @@ export const upsertSubscriptionApi = async (updateSubscription: UpdateSubscripti
 
 export const manageUserSubscriptionApi = async () => {
   const subscriptionCookieData = await getCookieSubscriptionPayload()
-  if (subscriptionCookieData) {
+  if (subscriptionCookieData && isSubscriptionActive(subscriptionCookieData)) {
     return ApiResponse.Ok({
       message: "Dados de assinatura encontrados no cookie.",
       data: subscriptionCookieData
